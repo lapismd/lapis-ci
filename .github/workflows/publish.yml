@@ -1,0 +1,69 @@
+name: Publish Lapis CI image
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Immutable image version tag, for example 2026.08.1
+        required: true
+        type: string
+      approval:
+        description: Enter PUBLISH_LAPIS_CI_IMAGE after the manual release gate
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+  attestations: write
+
+jobs:
+  publish:
+    if: inputs.approval == 'PUBLISH_LAPIS_CI_IMAGE'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v7
+      - uses: docker/setup-buildx-action@v4
+      - name: Check repository contract
+        run: corepack pnpm verify
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Resolve image metadata
+        id: metadata
+        uses: docker/metadata-action@v6
+        with:
+          images: ghcr.io/lapismd/lapis-ci
+          tags: type=raw,value=${{ inputs.tag }}
+          labels: |
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.version=${{ inputs.tag }}
+      - name: Build and publish multi-architecture image
+        id: build
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ steps.metadata.outputs.tags }}
+          labels: ${{ steps.metadata.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          provenance: mode=max
+          sbom: true
+      - name: Attest published image provenance
+        uses: actions/attest-build-provenance@v4
+        with:
+          subject-name: ghcr.io/lapismd/lapis-ci
+          subject-digest: ${{ steps.build.outputs.digest }}
+          push-to-registry: true
+      - name: Report immutable reference
+        run: |
+          echo "ghcr.io/lapismd/lapis-ci@${{ steps.build.outputs.digest }}" \
+            >> "$GITHUB_STEP_SUMMARY"
+

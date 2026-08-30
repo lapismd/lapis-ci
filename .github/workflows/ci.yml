@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lapis-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+      - uses: docker/setup-buildx-action@v4
+      - name: Check repository contract
+        run: corepack pnpm verify
+      - name: Build native candidate image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          load: true
+          platforms: linux/amd64
+          tags: lapismd/lapis-ci:candidate
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          provenance: false
+      - name: Verify candidate image
+        run: >-
+          docker run --rm lapismd/lapis-ci:candidate
+          node /usr/local/share/lapis-ci/verify-image.mjs
+

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "node": "24.15.0",
+  "pnpm": "10.34.5",
+  "playwright": "1.61.1",
+  "mdbook": "0.5.4",
+  "mdbookAssets": {
+    "linux/amd64": {
+      "target": "x86_64-unknown-linux-gnu",
+      "sha256": "3f28de05dafca9d0f2eab99c662116b0e37b89b1d96a08f8f430b9eeae958cd7"
+    },
+    "linux/arm64": {
+      "target": "aarch64-unknown-linux-musl",
+      "sha256": "753e5c5c363ee8a56972344dcf91466f005a51db84a7aeffe427ae3ef83d6d44"
+    }
+  },
+  "baseImage": "node:24.15.0-bookworm@sha256:f22d6a1f082c02f292e86929b5b0442ac2e5eaf438a5dea9b1566601c3e05940",
+  "platforms": ["linux/amd64", "linux/arm64"]
+}
