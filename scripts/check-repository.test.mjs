@@ -31,6 +31,17 @@ test("a single-platform publication is rejected", async () => {
   await assert.rejects(checkRepository(root), /amd64 and arm64/);
 });
 
+test("a runner Node version that drifts from the image is rejected", async () => {
+  const root = await fixtureRoot();
+  const workflowPath = path.join(root, ".github/workflows/ci.yml");
+  const workflow = await readFixture(workflowPath);
+  await writeFile(
+    workflowPath,
+    workflow.replace("node-version: 24.15.0", "node-version: 24.16.0"),
+  );
+  await assert.rejects(checkRepository(root), /CI workflow is out of sync/);
+});
+
 async function fixtureRoot() {
   const root = await mkdtemp(path.join(tmpdir(), "lapis-ci-contract-"));
   await mkdir(path.join(root, ".github/workflows"), { recursive: true });
@@ -52,4 +63,3 @@ async function readFixture(file) {
   const { readFile } = await import("node:fs/promises");
   return readFile(file, "utf8");
 }
-

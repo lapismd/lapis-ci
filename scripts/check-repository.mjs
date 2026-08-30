@@ -71,6 +71,22 @@ export async function checkRepository(root = repositoryRoot) {
   if (!/workflow_dispatch:/.test(publishWorkflow)) {
     throw new Error("Image publication must remain manually dispatched.");
   }
+  for (const [name, workflow] of [
+    ["CI", ciWorkflow],
+    ["publish", publishWorkflow],
+  ]) {
+    for (const expected of [
+      "actions/setup-node@v7",
+      `node-version: ${versions.node}`,
+      `corepack prepare pnpm@${versions.pnpm} --activate`,
+    ]) {
+      if (!workflow.includes(expected)) {
+        throw new Error(
+          `${name} workflow is out of sync: missing ${expected}`,
+        );
+      }
+    }
+  }
 
   return versions;
 }
