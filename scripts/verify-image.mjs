@@ -15,6 +15,8 @@ assertEqual(
   `Version ${versions.playwright}`,
 );
 assertEqual("mdBook", command("mdbook", ["--version"]), `mdbook v${versions.mdbook}`);
+const ghVersion = command("gh", ["--version"]).split("\n")[0].split(" ")[2];
+assertEqual("GitHub CLI", ghVersion, versions.gh);
 
 for (const executable of [
   "bash",
@@ -47,6 +49,7 @@ console.log(
       pnpm: versions.pnpm,
       playwright: versions.playwright,
       mdbook: versions.mdbook,
+      gh: versions.gh,
       platform: `${process.platform}/${process.arch}`,
     },
     null,
@@ -63,4 +66,3 @@ function assertEqual(label, actual, expected) {
     throw new Error(`${label} mismatch: expected ${expected}, received ${actual}`);
   }
 }
-

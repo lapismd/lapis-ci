@@ -11,6 +11,33 @@ test("the repository image contract is internally consistent", async () => {
   assert.deepEqual(versions.platforms, ["linux/amd64", "linux/arm64"]);
 });
 
+test("a missing GitHub CLI version is rejected", async () => {
+  const root = await fixtureRoot();
+  const versionsPath = path.join(root, "versions.json");
+  const versions = JSON.parse(await readFixture(versionsPath));
+  delete versions.gh;
+  await writeFile(versionsPath, JSON.stringify(versions));
+  await assert.rejects(checkRepository(root), /gh must be pinned/);
+});
+
+test("a missing architecture-specific GitHub CLI checksum is rejected", async () => {
+  const root = await fixtureRoot();
+  const versionsPath = path.join(root, "versions.json");
+  const versions = JSON.parse(await readFixture(versionsPath));
+  versions.gh = "2.102.0";
+  versions.ghAssets = {};
+  await writeFile(versionsPath, JSON.stringify(versions));
+  await assert.rejects(checkRepository(root), /GitHub CLI asset for linux\/amd64/);
+});
+
+test("a Dockerfile missing the pinned GitHub CLI version is rejected", async () => {
+  const root = await fixtureRoot();
+  const dockerfilePath = path.join(root, "Dockerfile");
+  const dockerfile = await readFixture(dockerfilePath);
+  await writeFile(dockerfilePath, dockerfile.replace(/^ARG GH_VERSION=.*\n/m, ""));
+  await assert.rejects(checkRepository(root), /missing ARG GH_VERSION/);
+});
+
 test("floating latest tags are rejected", async () => {
   const root = await fixtureRoot();
   await writeFile(
