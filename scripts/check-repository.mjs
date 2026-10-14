@@ -27,6 +27,7 @@ export async function checkRepository(root = repositoryRoot) {
   assertVersion(versions, "pnpm");
   assertVersion(versions, "playwright");
   assertVersion(versions, "mdbook");
+  assertVersion(versions, "gh");
   if (!versions.baseImage?.includes(`node:${versions.node}-bookworm@sha256:`)) {
     throw new Error("versions.json must pin the Node base image by digest.");
   }
@@ -37,6 +38,11 @@ export async function checkRepository(root = repositoryRoot) {
     throw new Error("versions.json must declare amd64 and arm64 in order.");
   }
   for (const platform of versions.platforms) {
+    const ghAsset = versions.ghAssets?.[platform];
+    const expectedTarget = platform.replace("/", "_");
+    if (ghAsset?.target !== expectedTarget || !/^[a-f0-9]{64}$/.test(ghAsset.sha256 ?? "")) {
+      throw new Error(`versions.json must pin the GitHub CLI asset for ${platform}.`);
+    }
     const asset = versions.mdbookAssets?.[platform];
     if (!asset?.target || !/^[a-f0-9]{64}$/.test(asset.sha256 ?? "")) {
       throw new Error(`versions.json must pin the mdBook asset for ${platform}.`);
@@ -48,6 +54,9 @@ export async function checkRepository(root = repositoryRoot) {
     `ARG PNPM_VERSION=${versions.pnpm}`,
     `ARG PLAYWRIGHT_VERSION=${versions.playwright}`,
     `ARG MDBOOK_VERSION=${versions.mdbook}`,
+    `ARG GH_VERSION=${versions.gh}`,
+    `ARG GH_AMD64_SHA256=${versions.ghAssets["linux/amd64"].sha256}`,
+    `ARG GH_ARM64_SHA256=${versions.ghAssets["linux/arm64"].sha256}`,
     `ARG MDBOOK_AMD64_SHA256=${versions.mdbookAssets["linux/amd64"].sha256}`,
     `ARG MDBOOK_ARM64_SHA256=${versions.mdbookAssets["linux/arm64"].sha256}`,
   ]) {
@@ -100,6 +109,6 @@ function assertVersion(versions, key) {
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const versions = await checkRepository();
   console.log(
-    `Lapis CI repository contract is valid for Node ${versions.node}, pnpm ${versions.pnpm}, Playwright ${versions.playwright}, and mdBook ${versions.mdbook}.`,
+    `Lapis CI repository contract is valid for Node ${versions.node}, pnpm ${versions.pnpm}, Playwright ${versions.playwright}, mdBook ${versions.mdbook}, and GitHub CLI ${versions.gh}.`,
   );
 }

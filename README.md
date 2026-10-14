@@ -1,7 +1,7 @@
 # Lapis CI
 
 `lapismd/lapis-ci` defines the shared, deterministic Linux CI toolchain used by
-LapisMD repositories. It provides Node, pnpm, Playwright with Chromium, mdBook,
+LapisMD repositories. It provides Node, pnpm, Playwright with Chromium, mdBook, GitHub CLI,
 and the browser/system utilities required by package and Storybook validation.
 
 The shared image deliberately does not contain an application's source,
@@ -17,10 +17,15 @@ must still run a frozen install in its checked-out workspace.
 | pnpm | 10.34.5 |
 | Playwright and Chromium | 1.61.1 |
 | mdBook | 0.5.4 |
+| GitHub CLI | 2.102.0 |
 | Platforms | `linux/amd64`, `linux/arm64` |
 
 [`versions.json`](./versions.json) is the machine-readable source of truth.
 The repository check fails when the Dockerfile or workflows drift from it.
+GitHub CLI and mdBook downloads use architecture-specific SHA-256 checksums.
+The image smoke test checks each tool's exact version. GitHub CLI supports
+package release records and registry dispatch; authentication is supplied only
+at job runtime.
 
 ## Local validation
 

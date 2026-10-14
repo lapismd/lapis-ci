@@ -4,6 +4,17 @@
   "pnpm": "10.34.5",
   "playwright": "1.61.1",
   "mdbook": "0.5.4",
+  "gh": "2.102.0",
+  "ghAssets": {
+    "linux/amd64": {
+      "target": "linux_amd64",
+      "sha256": "bb766f710eef8ede859c18578c72c327597cd4c8a85b06001b1f3843c6019386"
+    },
+    "linux/arm64": {
+      "target": "linux_arm64",
+      "sha256": "7862c86c72f43df3a2d93ddde6f473285b4e2af61b494849846827e513ef6484"
+    }
+  },
   "mdbookAssets": {
     "linux/amd64": {
       "target": "x86_64-unknown-linux-gnu",
