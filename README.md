@@ -86,8 +86,11 @@ to a reviewed commit. It binds the shared toolchain digest, both target
 platforms, every permitted file's path/content/mode and directory modes, then
 emits a full SHA-256 identity and lookup tag.
 
-This helper does not publish or resolve images, verify attestations, or replace
-consumer digest pins. Those migrations must qualify producer provenance,
-immutable digest resolution and a frozen-install cache-miss path first. The
-lookup tag is never sufficient authority to run an image. See
+The separate `actions/resolve-dependency-image` action computes current inputs
+and verifies the immutable multi-architecture image's signed receipt. A missing
+or unavailable cache returns the reviewed toolchain digest; every result still
+requires a frozen install. Invalid provenance fails instead of using the image.
+Neither helper publishes images or changes consumer pins. Source migrations
+must qualify their producer and cold/warm paths first. A lookup tag is never
+sufficient authority to run an image. See
 [the receipt contract](docs/dependency-image-receipts.md).
