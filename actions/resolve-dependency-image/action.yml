@@ -1,0 +1,49 @@
+name: Resolve verified dependency image
+description: Verify a signed input identity before returning an immutable multi-architecture dependency image.
+inputs:
+  context:
+    description: Current source-owned dependency-only context
+    required: true
+  base-image:
+    description: Reviewed shared toolchain pinned by digest, used on cache misses
+    required: true
+  image:
+    description: Dependency image repository without tag or digest
+    required: true
+  repository:
+    description: Trusted source repository that owns publication
+    required: true
+  workflow:
+    description: Trusted main-branch publication workflow
+    default: .github/workflows/dependency-image.yml
+  report:
+    description: Resolution receipt outside the build context
+    default: .ci/dependency-image-resolution.json
+outputs:
+  reference:
+    description: Verified image digest or reviewed base digest for a frozen install
+    value: ${{ steps.resolve.outputs.reference }}
+  state:
+    description: hit, miss, or unavailable; every path still requires a frozen install
+    value: ${{ steps.resolve.outputs.state }}
+  identity:
+    description: Current complete input identity
+    value: ${{ steps.resolve.outputs.identity }}
+runs:
+  using: composite
+  steps:
+    - id: resolve
+      shell: bash
+      env:
+        DEPENDENCY_CONTEXT: ${{ inputs.context }}
+        DEPENDENCY_BASE_IMAGE: ${{ inputs.base-image }}
+        DEPENDENCY_IMAGE: ${{ inputs.image }}
+        DEPENDENCY_REPOSITORY: ${{ inputs.repository }}
+        DEPENDENCY_WORKFLOW: ${{ inputs.workflow }}
+        DEPENDENCY_REPORT: ${{ inputs.report }}
+      run: |
+        node "$GITHUB_ACTION_PATH/../../scripts/dependency-resolver.mjs" \
+          --context "$DEPENDENCY_CONTEXT" --base-image "$DEPENDENCY_BASE_IMAGE" \
+          --image "$DEPENDENCY_IMAGE" --repository "$DEPENDENCY_REPOSITORY" \
+          --workflow "$DEPENDENCY_WORKFLOW" --report "$DEPENDENCY_REPORT" \
+          --github-output "$GITHUB_OUTPUT"
