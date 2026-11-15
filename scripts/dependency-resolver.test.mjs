@@ -175,6 +175,18 @@ test("CLI bridge uses repository, workflow, main-ref and hosted-runner verificat
     { repository, workflow },
     (command, args) => {
       assert.equal(command, "gh");
+      assert.deepEqual(
+        args.filter((arg) =>
+          [
+            "--cert-identity",
+            "--cert-identity-regex",
+            "--signer-repo",
+            "--signer-workflow",
+          ].includes(arg),
+        ),
+        ["--cert-identity"],
+        "gh accepts exactly one certificate identity selector",
+      );
       assert(args.includes("--deny-self-hosted-runners"));
       assert(
         args.includes(

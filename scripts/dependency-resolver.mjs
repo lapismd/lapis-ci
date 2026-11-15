@@ -83,8 +83,6 @@ export function verifyImage(
         `oci://${reference}`,
         "--repo",
         repository,
-        "--signer-workflow",
-        `${repository}/${workflow}`,
         "--cert-identity",
         identity,
         "--source-ref",
