@@ -1,0 +1,37 @@
+name: Identify dependency-only image inputs
+description: Bind a source-owned Docker context to a complete, immutable input receipt.
+inputs:
+  context:
+    description: Prepared dependency-only build context
+    required: true
+  base-image:
+    description: Reviewed shared Lapis CI image pinned by SHA-256 digest
+    required: true
+  receipt:
+    description: Receipt path outside the Docker context
+    default: .ci/dependency-image-receipt.json
+outputs:
+  identity:
+    description: Complete SHA-256 input identity
+    value: ${{ steps.identity.outputs.identity }}
+  tag:
+    description: Full-content identity lookup tag, never a substitute for digest verification
+    value: ${{ steps.identity.outputs.tag }}
+  receipt:
+    description: Receipt file for producer attestation and consumer comparison
+    value: ${{ steps.identity.outputs.receipt }}
+runs:
+  using: composite
+  steps:
+    - id: identity
+      shell: bash
+      env:
+        DEPENDENCY_CONTEXT: ${{ inputs.context }}
+        DEPENDENCY_BASE_IMAGE: ${{ inputs.base-image }}
+        DEPENDENCY_RECEIPT: ${{ inputs.receipt }}
+      run: |
+        node "$GITHUB_ACTION_PATH/../../scripts/dependency-identity.mjs" \
+          --context "$DEPENDENCY_CONTEXT" \
+          --base-image "$DEPENDENCY_BASE_IMAGE" \
+          --receipt "$DEPENDENCY_RECEIPT" \
+          --github-output "$GITHUB_OUTPUT"

@@ -11,14 +11,14 @@ must still run a frozen install in its checked-out workspace.
 
 ## Pinned toolchain
 
-| Tool | Version |
-| --- | --- |
-| Node | 24.15.0 |
-| pnpm | 10.34.5 |
-| Playwright and Chromium | 1.61.1 |
-| mdBook | 0.5.4 |
-| GitHub CLI | 2.102.0 |
-| Platforms | `linux/amd64`, `linux/arm64` |
+| Tool                    | Version                      |
+| ----------------------- | ---------------------------- |
+| Node                    | 24.15.0                      |
+| pnpm                    | 10.34.5                      |
+| Playwright and Chromium | 1.61.1                       |
+| mdBook                  | 0.5.4                        |
+| GitHub CLI              | 2.102.0                      |
+| Platforms               | `linux/amd64`, `linux/arm64` |
 
 [`versions.json`](./versions.json) is the machine-readable source of truth.
 The repository check fails when the Dockerfile or workflows drift from it.
@@ -49,12 +49,12 @@ its pinned workspace Turbo version and receives cache configuration at runtime.
 
 The organization-level contract is:
 
-| GitHub setting | Kind | Purpose |
-| --- | --- | --- |
-| `TURBO_API` | Actions variable | Self-hosted cache API URL |
-| `TURBO_TEAM` | Actions variable | Shared LapisMD cache namespace |
-| `TURBO_TOKEN` | Actions secret | Cache-server authentication |
-| `TURBO_REMOTE_CACHE_SIGNATURE_KEY` | Actions secret | HMAC integrity for uploaded artifacts |
+| GitHub setting                     | Kind             | Purpose                               |
+| ---------------------------------- | ---------------- | ------------------------------------- |
+| `TURBO_API`                        | Actions variable | Self-hosted cache API URL             |
+| `TURBO_TEAM`                       | Actions variable | Shared LapisMD cache namespace        |
+| `TURBO_TOKEN`                      | Actions secret   | Cache-server authentication           |
+| `TURBO_REMOTE_CACHE_SIGNATURE_KEY` | Actions secret   | HMAC integrity for uploaded artifacts |
 
 Restrict both secrets to the selected LapisMD repositories that run Turbo.
 Fork pull requests do not receive the secrets and must remain able to execute
@@ -77,3 +77,17 @@ container:
 ```
 
 Do not consume `latest` or another mutable tag in CI.
+
+## Dependency-image input receipts
+
+The source-owned `actions/dependency-identity` composite action computes a
+receipt for an already prepared dependency-only Docker context. Pin the action
+to a reviewed commit. It binds the shared toolchain digest, both target
+platforms, every permitted file's path/content/mode and directory modes, then
+emits a full SHA-256 identity and lookup tag.
+
+This helper does not publish or resolve images, verify attestations, or replace
+consumer digest pins. Those migrations must qualify producer provenance,
+immutable digest resolution and a frozen-install cache-miss path first. The
+lookup tag is never sufficient authority to run an image. See
+[the receipt contract](docs/dependency-image-receipts.md).
