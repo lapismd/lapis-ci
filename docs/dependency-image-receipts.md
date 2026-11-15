@@ -29,6 +29,7 @@ other unexpected files. Authentication must never be copied into this context.
 Directory depth, entry count and total input bytes are bounded.
 
 Identity is SHA-256 over the canonical ordered schema, immutable base digest,
+the pinned Buildx/BuildKit builder cohort,
 the ordered `linux/amd64`/`linux/arm64` platform pair, directories and files.
 The lookup tag includes the complete digest, with no truncated hash. Repository,
 source commit and workflow metadata are recorded separately in the receipt;
@@ -146,8 +147,12 @@ verified CLI. `actions/setup-image-tools` reads the separate host controller
 pins: Buildx 0.38.1 and the immutable BuildKit 0.35.0 manifest. Producer and
 resolver call the same owned contract; the shared container image is unchanged.
 
+The builder cohort is part of identity and signed receipt comparison; changing
+only the host client or daemon also invalidates the optimization. All consumer
+and producer identity/resolver calls must pin the same reviewed helper cohort.
+
 Local publication qualification: the initial promotion target failed once for
-its missing module, then passed 8/8. The complete suite passes 42/42, covering
+its missing module, then passed 8/8. The complete suite passes 44/44, covering
 staging-before-write, existing/concurrent identity reuse, unavailable/invalid
 inputs, uncertain writes, byte-preserving read-back, main-only authority and
 action pins. The host's initial GitHub CLI was 2.103.3; the real checksum-verified

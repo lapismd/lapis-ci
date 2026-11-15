@@ -187,3 +187,38 @@ test("incomplete contexts and mutable toolchain references fail closed", async (
     /Missing required/,
   );
 });
+
+test("host builder cohort changes invalidate the identity even when source bytes match", async (t) => {
+  const root = await context(t);
+  const hostTools = JSON.parse(
+    await readFile(new URL("../host-tools.json", import.meta.url), "utf8"),
+  );
+  const original = await dependencyIdentity({ root, baseImage, hostTools });
+  const version = hostTools.buildx.split(".").map(Number);
+  version[2]++;
+  assert.notEqual(
+    (
+      await dependencyIdentity({
+        root,
+        baseImage,
+        hostTools: { ...hostTools, buildx: version.join(".") },
+      })
+    ).identity,
+    original.identity,
+  );
+  assert.notEqual(
+    (
+      await dependencyIdentity({
+        root,
+        baseImage,
+        hostTools: {
+          ...hostTools,
+          buildkit:
+            hostTools.buildkit.slice(0, -1) +
+            (hostTools.buildkit.endsWith("0") ? "1" : "0"),
+        },
+      })
+    ).identity,
+    original.identity,
+  );
+});

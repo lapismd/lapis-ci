@@ -16,6 +16,10 @@ const sha = "a".repeat(40),
 const expected = {
   schemaVersion: 1,
   baseImage: `ghcr.io/lapismd/lapis-ci@sha256:${"c".repeat(64)}`,
+  builder: {
+    buildx: "v0.38.1",
+    buildkit: `moby/buildkit:v0.35.0@sha256:${"f".repeat(64)}`,
+  },
   platforms: ["linux/amd64", "linux/arm64"],
   files: { Dockerfile: { sha256: "d".repeat(64), mode: 420 } },
   directories: {},
@@ -107,6 +111,10 @@ for (const state of ["miss", "unavailable"])
   });
 
 const mutations = {
+  "different builder cohort": (f) => {
+    f.proof[0].verificationResult.statement.predicate.builder.buildx =
+      "v0.38.2";
+  },
   "different identity": (f) => {
     f.proof[0].verificationResult.statement.predicate.identity = `sha256:${"0".repeat(64)}`;
   },
