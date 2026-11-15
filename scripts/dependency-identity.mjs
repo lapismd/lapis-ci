@@ -10,6 +10,7 @@ import {
 import path from "node:path";
 import { parseArgs } from "node:util";
 import { fileURLToPath } from "node:url";
+import { hostImageTools } from "./host-image-tools.mjs";
 
 const required = [
   "Dockerfile",
@@ -21,11 +22,17 @@ const digest = (bytes) => createHash("sha256").update(bytes).digest("hex");
 
 // Hash the actual dependency-only Docker context, rather than predicting which
 // lockfile changes might affect it. Source repositories own context assembly.
-export async function dependencyIdentity({ root, baseImage }) {
+export async function dependencyIdentity({ root, baseImage, hostTools }) {
   if (
     !/^ghcr\.io\/lapismd\/lapis-ci@sha256:[a-f0-9]{64}$/.test(baseImage ?? "")
   )
     throw Error("Dependency toolchain must use an immutable Lapis CI digest");
+  const builder = hostImageTools(
+    hostTools ??
+      JSON.parse(
+        await readFile(new URL("../host-tools.json", import.meta.url), "utf8"),
+      ),
+  );
   const files = {};
   const directories = {};
   let bytes = 0;
@@ -80,6 +87,7 @@ export async function dependencyIdentity({ root, baseImage }) {
   const inputs = {
     schemaVersion: 1,
     baseImage,
+    builder,
     platforms: ["linux/amd64", "linux/arm64"],
     directories,
     files,

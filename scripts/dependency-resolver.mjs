@@ -25,6 +25,7 @@ const inputs = (receipt) =>
     [
       "schemaVersion",
       "baseImage",
+      "builder",
       "platforms",
       "directories",
       "files",
@@ -122,6 +123,10 @@ export async function resolveDependencyImage({
     throw Error("Unreviewed image producer scope");
   if (
     expected.schemaVersion !== 1 ||
+    !/^v\d+\.\d+\.\d+$/.test(expected.builder?.buildx ?? "") ||
+    !/^moby\/buildkit:v\d+\.\d+\.\d+@sha256:[a-f0-9]{64}$/.test(
+      expected.builder?.buildkit ?? "",
+    ) ||
     !sha256.test(expected.identity) ||
     expected.tag !== `deps-${expected.identity.slice(7)}` ||
     !/^ghcr\.io\/lapismd\/lapis-ci@sha256:[a-f0-9]{64}$/.test(
