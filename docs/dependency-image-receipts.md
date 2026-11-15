@@ -107,3 +107,52 @@ read-only GHCR lookup of Plugins' current candidate returned `miss` and the
 reviewed base digest for its same 29-file identity. Positive signed-receipt
 publication and actual cold/warm consumer execution remain acceptance work for
 the source producer migration.
+
+## Shared source-owned publication
+
+`actions/publish-dependency-image` takes `context`, `base-image` and `image`,
+with an optional `workflow` defaulting to `.github/workflows/dependency-image.yml`.
+The caller checks out its reviewed main source, prepares the dependency-only
+context, selects Node 24.15.0, and serializes publication with cancellation off.
+Its job grants contents read, packages write, attestations write and id-token
+write. The helper does not require contents/PR writes, an App key or product
+signing secrets. The source retains layer ownership and release authority.
+
+The action validates trusted main, uses the pinned host tools and logs into
+the registry with the job token. A verified full identity is reused without
+building. Confirmed misses build only a run-specific staging tag with both
+architectures, SBOM and maximum BuildKit provenance. An uncertain lookup stops
+publication work instead of guessing that a tag is absent.
+
+The custom attestation binds the exact staging index to the complete input
+receipt. Promotion verifies it through the same resolver, checks the identity
+tag again, and reuses a valid winner instead of overwriting it. It promotes
+the unchanged index and verifies read-back before reporting success. An
+uncertain write is not retried; a later invocation reconciles the signed tag.
+Registry tags have no compare-and-swap operation, so the caller's single-writer
+publication lock is required. Administrative registry changes remain outside
+that lock.
+
+The action outputs `reference`, `identity` and `state` (`published`/`reused`).
+The caller retains `.ci/dependency-image-receipt.json`,
+`.ci/dependency-image-resolution.json` and `.ci/dependency-image-publication.json`
+through its ordinary repository artifact access controls. These files contain
+input hashes and public producer coordinates, never signing credentials.
+
+Host runners use `actions/setup-gh` to install the exact GitHub CLI already
+governed by `versions.json`, including its architecture-specific archive hash.
+It uses public official assets without credentials and extracts only the
+verified CLI. `actions/setup-image-tools` reads the separate host controller
+pins: Buildx 0.38.1 and the immutable BuildKit 0.35.0 manifest. Producer and
+resolver call the same owned contract; the shared container image is unchanged.
+
+Local publication qualification: the initial promotion target failed once for
+its missing module, then passed 8/8. The complete suite passes 42/42, covering
+staging-before-write, existing/concurrent identity reuse, unavailable/invalid
+inputs, uncertain writes, byte-preserving read-back, main-only authority and
+action pins. The host's initial GitHub CLI was 2.103.3; the real checksum-verified
+installer produced the governed 2.102.0 executable. A fresh isolated pinned
+BuildKit builder produced and checked an OCI index for Linux amd64 and arm64;
+only that task's builder was removed afterward. Source-owned package build,
+custom-attestation publication and full cold/warm consumer execution remain
+hosted adoption gates, not claims made by these helper tests.

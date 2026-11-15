@@ -1,0 +1,7 @@
+name: Install the pinned Lapis CI GitHub CLI
+description: Use versions.json and architecture-specific archive checksums without credentials.
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: node "$GITHUB_ACTION_PATH/../../scripts/setup-gh.mjs"

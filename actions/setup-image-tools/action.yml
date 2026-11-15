@@ -1,0 +1,12 @@
+name: Install the pinned Lapis image tools
+description: Use the exact Buildx client and immutable BuildKit daemon from host-tools.json.
+runs:
+  using: composite
+  steps:
+    - id: tools
+      shell: bash
+      run: node "$GITHUB_ACTION_PATH/../../scripts/host-image-tools.mjs"
+    - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4
+      with:
+        version: ${{ steps.tools.outputs.version }}
+        driver-opts: image=${{ steps.tools.outputs.buildkit }}

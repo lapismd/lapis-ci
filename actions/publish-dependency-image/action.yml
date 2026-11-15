@@ -1,0 +1,142 @@
+name: Publish a verified dependency-image identity
+description: Reuse verified inputs or attest staging bytes before immutable tag promotion.
+inputs:
+  context:
+    description: Prepared source-owned dependency-only Docker context
+    required: true
+  base-image:
+    description: Reviewed shared Lapis CI image pinned by digest
+    required: true
+  image:
+    description: Source-owned dependency image without tag or digest
+    required: true
+  workflow:
+    description: Trusted main-branch publication workflow
+    default: .github/workflows/dependency-image.yml
+outputs:
+  reference:
+    description: Verified immutable image reference
+    value: ${{ steps.promote.outputs.reference || steps.reuse.outputs.reference }}
+  state:
+    description: published or reused
+    value: ${{ steps.promote.outputs.state || steps.reuse.outputs.state }}
+  identity:
+    description: Complete current input identity
+    value: ${{ steps.identity.outputs.identity }}
+runs:
+  using: composite
+  steps:
+    - name: Require trusted main and pinned Node
+      shell: bash
+      run: |
+        set -euo pipefail
+        test "$GITHUB_REF" = refs/heads/main
+        case "$GITHUB_REPOSITORY" in lapismd/*) ;; *) exit 1 ;; esac
+        test "$(node --version)" = v24.15.0
+    - name: Install checksum-verified shared GitHub CLI
+      shell: bash
+      run: node "$GITHUB_ACTION_PATH/../../scripts/setup-gh.mjs"
+    - id: tools
+      shell: bash
+      run: node "$GITHUB_ACTION_PATH/../../scripts/host-image-tools.mjs"
+    - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4
+      with:
+        version: ${{ steps.tools.outputs.version }}
+        driver-opts: image=${{ steps.tools.outputs.buildkit }}
+    - uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ github.token }}
+    - name: Bind source-owned context inputs
+      id: identity
+      shell: bash
+      env:
+        IMAGE_CONTEXT: ${{ inputs.context }}
+        BASE_IMAGE: ${{ inputs.base-image }}
+      run: |
+        node "$GITHUB_ACTION_PATH/../../scripts/dependency-identity.mjs" \
+          --context "$IMAGE_CONTEXT" --base-image "$BASE_IMAGE" \
+          --github-output "$GITHUB_OUTPUT"
+    - name: Reconcile an existing verified identity
+      id: cache
+      shell: bash
+      env:
+        IMAGE_CONTEXT: ${{ inputs.context }}
+        BASE_IMAGE: ${{ inputs.base-image }}
+        DEPENDENCY_IMAGE: ${{ inputs.image }}
+        SIGNER_WORKFLOW: ${{ inputs.workflow }}
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        node "$GITHUB_ACTION_PATH/../../scripts/dependency-resolver.mjs" \
+          --context "$IMAGE_CONTEXT" --base-image "$BASE_IMAGE" \
+          --image "$DEPENDENCY_IMAGE" --repository "$GITHUB_REPOSITORY" \
+          --workflow "$SIGNER_WORKFLOW" --github-output "$GITHUB_OUTPUT"
+    - name: Require a confirmed cache state before publication work
+      shell: bash
+      env:
+        CACHE_STATE: ${{ steps.cache.outputs.state }}
+      run: |
+        case "$CACHE_STATE" in
+          hit|miss) ;;
+          *) echo '::error::Cache state is uncertain; publication must reconcile before building.'; exit 1 ;;
+        esac
+    - name: Reuse verified bytes and retain a publication receipt
+      if: steps.cache.outputs.state == 'hit'
+      id: reuse
+      shell: bash
+      env:
+        IMAGE_CONTEXT: ${{ inputs.context }}
+        BASE_IMAGE: ${{ inputs.base-image }}
+        DEPENDENCY_IMAGE: ${{ inputs.image }}
+        VERIFIED_REFERENCE: ${{ steps.cache.outputs.reference }}
+        SIGNER_WORKFLOW: ${{ inputs.workflow }}
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        node "$GITHUB_ACTION_PATH/../../scripts/dependency-promotion.mjs" \
+          --context "$IMAGE_CONTEXT" --base-image "$BASE_IMAGE" \
+          --image "$DEPENDENCY_IMAGE" --digest "${VERIFIED_REFERENCE##*@}" \
+          --workflow "$SIGNER_WORKFLOW" --github-output "$GITHUB_OUTPUT"
+    - name: Build a staging multi-architecture image
+      if: steps.cache.outputs.state != 'hit'
+      id: build
+      uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
+      with:
+        context: ${{ inputs.context }}
+        build-args: LAPIS_CI_IMAGE=${{ inputs.base-image }}
+        push: true
+        platforms: linux/amd64,linux/arm64
+        tags: ${{ inputs.image }}:staging-${{ github.run_id }}-${{ github.run_attempt }}
+        labels: |
+          org.opencontainers.image.source=https://github.com/${{ github.repository }}
+          org.opencontainers.image.revision=${{ github.sha }}
+        provenance: mode=max
+        sbom: true
+        cache-from: type=gha,scope=dependency-image
+        cache-to: type=gha,scope=dependency-image,mode=max
+    - name: Attest the exact staging index and complete inputs
+      if: steps.cache.outputs.state != 'hit'
+      uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4
+      with:
+        subject-name: ${{ inputs.image }}
+        subject-digest: ${{ steps.build.outputs.digest }}
+        predicate-type: https://lapis.md/attestations/dependency-image/v1
+        predicate-path: ${{ steps.identity.outputs.receipt }}
+        push-to-registry: true
+        create-storage-record: false
+    - name: Verify, reconcile and promote unchanged index bytes
+      if: steps.cache.outputs.state != 'hit'
+      id: promote
+      shell: bash
+      env:
+        IMAGE_CONTEXT: ${{ inputs.context }}
+        BASE_IMAGE: ${{ inputs.base-image }}
+        DEPENDENCY_IMAGE: ${{ inputs.image }}
+        IMAGE_DIGEST: ${{ steps.build.outputs.digest }}
+        SIGNER_WORKFLOW: ${{ inputs.workflow }}
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        node "$GITHUB_ACTION_PATH/../../scripts/dependency-promotion.mjs" \
+          --context "$IMAGE_CONTEXT" --base-image "$BASE_IMAGE" \
+          --image "$DEPENDENCY_IMAGE" --digest "$IMAGE_DIGEST" \
+          --workflow "$SIGNER_WORKFLOW" --github-output "$GITHUB_OUTPUT"
