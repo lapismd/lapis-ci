@@ -68,6 +68,8 @@ actionlint also pass. The updated exact hosted run must still pass before
 consumer adoption.
 
 Pending: hosted acceptance and shared source landing, then source-owned Tasks,
+whose [new helper-closure recipe case](tasks-readiness-recipe-qualification.md)
+must run successfully before its draft source can merge,
 Docs and Mira adoption at an immutable helper pin, preserving each owner's
 reviewed budget, strict peers, npm ci, signatures, provenance, publint and
 skip-different publication disposition. Notes deduplication follows its own
