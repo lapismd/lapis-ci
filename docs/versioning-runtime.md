@@ -34,6 +34,76 @@ before its existing App minting step. Supply `working-directory` and
 commit mode, activation and package publication/signing approvals unchanged.
 The actual adoption must pin the helper's reviewed commit, never a branch/tag.
 
+## Explicit AI native profile (qualification pending)
+
+Node24 remains the default. A source qualification MAY explicitly select
+`nodeMajor: 22` only for a CLI whose reviewed runtime contract includes it.
+Current additional review is limited to CLI2.31.1; all existing qualification
+files retain Node24 without modification. This runtime-input acceptance is not
+whole-recipe or native qualification.
+
+The fixed AI case retains source Node22, Rust1.99.0, pnpm10.34.5 and the actual
+`pnpm release:version` wrapper. Its profile MUST verify official Node/cargo/rustc
+executable hashes, at least30GiB free, the source's frozen hook policy, native
+release check and real locked Cargo bootstrap before the unchanged offline
+recipe. Missing tools, wrong bytes, missing caches or any failed command MUST
+fail qualification. No Deno, credentials, writer App or publisher participates.
+The Node24 GitHub-changelog cases retain their existing read-only token step.
+Tool preflight precedes source install hooks; the unchanged managed-Cargo
+bootstrap checks its free-disk threshold again after installation.
+
+AI's genuine ancestor note is disposable validation input only, never current
+release intent. Before/after evidence MUST establish both private npm versions,
+all15 coordinated Cargo records, internal ranges, lockfiles, both changelogs,
+applicable README install commands, note consumption and unchanged canonical
+and milestone evidence. Only a successful actual hosted proof permits a later
+source-owned AI guard adoption. The existing Node22 consumer workflow, command,
+CLI major, publication/tag orchestration and native gates remain unchanged.
+
+### Reviewed AI inputs and current evidence
+
+The fixed `ai-changesets2-native` case selects current public source
+`3e29e16f15652ba239d256af49ffcba314355a5e`. It restores only the genuine
+`bounded-stream-handoff.md` note from ancestor
+`46fceebd76bfcdcc6e5e629205e1779406ead3d3`, whose SHA256 is
+`fa167ff89119d3f8e6200b751278260bbd866118576c1bdcd3251dc8a6771ff2`.
+That note is already consumed in source history and is labelled historical
+validation input, never an intention to release another version.
+
+The case binds77 captured source/lock/manifest inputs and17 stable recipe,
+configuration and transitive import files. Inactive image installer, worker,
+smoke and routing-audit files are not runtime-guard inputs. Cargo and pnpm
+lockfiles remain immutable inputs to this proof; package versions are changed
+only in its fenced disposable checkout. Full current-source CI and audit gates
+remain required independently of the runtime-input guard.
+
+The official Node22.23.5 linux-x64 archive was verified against its published
+SHASUMS256; official Rust1.99.0 cargo/rustc archives were verified against the
+2026-10-01 channel manifest. Extracted executable hashes are tracked public
+review inputs in the case. Actual Node22 and cargo version probes passed; both
+installed Rust executable hashes in the existing qualified AI tool image match
+the official archive bytes. The hosted profile independently checks installed
+bytes and versions again before actual bootstrap. No image inputs changed.
+
+The new explicit Node22 guard regression failed1/1 before the repair and passes
+1/1 afterward. Focused runtime/native/fence tests pass26/26; the complete helper
+suite passes88/88 on Node24. Native/runtime unit controls pass21/21 on the actual
+official Node22.23.5 binary. An intermediate full run had72 passes and one
+command-shape assertion failure; retaining the default install invocation
+literally restored that existing assertion without weakening it. Actionlint1.7.12
+and formatting pass. Unit fixtures test missing/wrong tools, disk, credentials,
+Cargo/client/range drift, stale install commands and changed canonical evidence;
+they do not stand in for real offline preparation.
+
+Actual AI whole-recipe qualification and consumer guard adoption are pending.
+The existing main-only disposable fence is preserved, so a helper PR cannot
+claim success or bypass it with simulated hosted environment variables. After
+reviewed landing, dispatch this fixed case once and inspect the complete receipt.
+Any tool, bootstrap, offline metadata or mutation failure remains a binding
+failure. Only its complete successful real proof permits a separate AI source
+adoption PR. No dummy changeset, live package/tag publication or credential
+retrieval is part of this helper slice.
+
 ## Actual Plugins proof
 
 The fixed case in `version-recipe-cases.json` selects public Plugins commit

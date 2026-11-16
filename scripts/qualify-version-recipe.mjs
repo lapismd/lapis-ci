@@ -21,6 +21,15 @@ import {
   selectRecipeCase,
 } from "./version-recipe-layout.mjs";
 import { verifyVersionOutputs } from "./version-recipe-outputs.mjs";
+import {
+  aiRecipeEnvironment,
+  bootstrapAiRecipe,
+  verifyAiRecipeTools,
+} from "./ai-version-recipe.mjs";
+import {
+  snapshotAiRecipeOutputs,
+  verifyAiRecipeOutputs,
+} from "./ai-version-recipe-outputs.mjs";
 
 const root = path.resolve(process.argv[2] ?? "");
 if (!process.argv[2])
@@ -33,6 +42,7 @@ const cases = JSON.parse(
 );
 const caseName = process.env.RECIPE_CASE ?? "plugins-changesets2";
 const example = selectRecipeCase(cases, caseName);
+const aiProfile = example.profile === "ai-node22-rust-offline";
 const contracts = JSON.parse(
   await readFile(
     new URL("../changesets-runtime.json", import.meta.url),
@@ -68,7 +78,10 @@ function run(args, env) {
   if (result.status !== 0) throw Error("Recipe subprocess failed");
 }
 try {
-  assert.equal(Number(process.versions.node.split(".")[0]), 24);
+  assert.equal(
+    Number(process.versions.node.split(".")[0]),
+    example.qualification.nodeMajor ?? 24,
+  );
   assert.equal(readGit(["rev-parse", "HEAD"]), example.sourceSha);
   assert.equal(readGit(["status", "--porcelain", "--untracked-files=no"]), "");
   if (example.historicalNoteSourceSha) {
@@ -110,15 +123,26 @@ try {
   );
   await save();
   // Fresh exact install; never change source configuration or dependency recipes.
-  run(
-    [
-      "install",
-      "--frozen-lockfile",
-      "--ignore-scripts",
-      ...(example.ignorePnpmfile ? ["--ignore-pnpmfile"] : []),
-    ],
-    process.env,
-  );
+  const setupEnv = aiProfile ? aiRecipeEnvironment(process.env) : process.env;
+  const nativeTools = aiProfile
+    ? await verifyAiRecipeTools(root, example, setupEnv)
+    : null;
+  if (aiProfile) {
+    receipt.nativeTools = nativeTools.receipt;
+    await save();
+  }
+  if (aiProfile)
+    run(["install", "--frozen-lockfile", "--ignore-pnpmfile"], setupEnv);
+  else
+    run(
+      [
+        "install",
+        "--frozen-lockfile",
+        "--ignore-scripts",
+        ...(example.ignorePnpmfile ? ["--ignore-pnpmfile"] : []),
+      ],
+      setupEnv,
+    );
   const local = path.join(root, ".local");
   await mkdir(local, { recursive: true });
   const sandbox = await mkdtemp(path.join(local, "node-versioning-proof-")),
@@ -133,17 +157,19 @@ try {
     "sed",
     "dirname",
     "uname",
+    ...(aiProfile ? ["cargo", "rustc"] : []),
   ]) {
     const actual =
-      name === "node"
+      nativeTools?.paths[name] ??
+      (name === "node"
         ? process.execPath
-        : execFileSync("which", [name], { encoding: "utf8" }).trim();
+        : execFileSync("which", [name], { encoding: "utf8" }).trim());
     await symlink(await realpath(actual), path.join(bin, name));
   }
   const env = {
-    ...process.env,
+    ...setupEnv,
     PATH: bin,
-    LAPIS_PLUGINS_VALIDATION_RUNTIME: "native",
+    ...(aiProfile ? {} : { LAPIS_PLUGINS_VALIDATION_RUNTIME: "native" }),
   };
   assert.equal(spawnSync("deno", ["--version"], { env }).error?.code, "ENOENT");
   receipt.denoOnPath = false;
@@ -153,6 +179,9 @@ try {
     contracts,
   );
   receipt.cliVersion = guard.version;
+  if (aiProfile) {
+    receipt.bootstrap = bootstrapAiRecipe(root, env);
+  }
   const statusFile = path.join(sandbox, "status.json");
   run(["exec", "changeset", "status", "--output", statusFile], env);
   const status = JSON.parse(await readFile(statusFile, "utf8"));
@@ -185,11 +214,28 @@ try {
     changes,
     "before",
   );
+  if (aiProfile)
+    receipt.nativeOutputsBefore = await snapshotAiRecipeOutputs(
+      root,
+      example,
+      changes,
+    );
   await save();
   // This is the unchanged real command, including source metadata sync and
   // the actual Bases compatibility/provenance tests owned by the consumer.
   run(["release:version"], env);
   for (const args of example.afterVersionChecks ?? []) run(args, env);
+  if (aiProfile)
+    receipt.nativeOutputsAfter = await verifyAiRecipeOutputs(
+      root,
+      example,
+      changes,
+      receipt.nativeOutputsBefore,
+      readGit(["diff", "--name-only"]).split("\n").filter(Boolean),
+      readGit(["ls-files", "--others", "--exclude-standard"])
+        .split("\n")
+        .filter(Boolean),
+    );
   receipt.versionOutputsAfter = await verifyVersionOutputs(
     root,
     example.versionOutputs ?? [],
@@ -214,14 +260,18 @@ try {
   receipt.status = "passed";
   receipt.completedAt = new Date().toISOString();
   receipt.command = "pnpm release:version";
-  receipt.recipeQualification = example.historicalNoteSourceSha
-    ? "current-source-historical-validation-input-node24-no-deno"
-    : "actual-source-node24-no-deno";
+  receipt.recipeQualification = aiProfile
+    ? "current-source-historical-validation-input-node22-rust-offline-no-deno"
+    : example.historicalNoteSourceSha
+      ? "current-source-historical-validation-input-node24-no-deno"
+      : "actual-source-node24-no-deno";
   receipt.inputBindings = example.qualification;
   receipt.sourceChanges = readGit(["diff", "--name-only"]).split("\n");
   await save();
   console.log(
-    "Actual source-owned version/status/changelog recipe passed on Node24 with Deno absent; nothing published.",
+    aiProfile
+      ? "Actual AI Node22/Rust offline version recipe passed with Deno absent; nothing published."
+      : "Actual source-owned version/status/changelog recipe passed on Node24 with Deno absent; nothing published.",
   );
 } catch (error) {
   receipt.status = "failed";

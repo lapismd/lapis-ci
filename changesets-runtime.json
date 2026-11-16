@@ -20,7 +20,8 @@
         "dist/changesets-cli.cjs.mjs": "020bc4600bc4ab49f1dffbd525b4c2cd12118e4c0cf45c26c404eb5198e3186d",
         "dist/changesets-cli.esm.js": "3fa4ba5b9d057aebf248720fb1ada84200043c9f05ca85d97b985c407b5715b0",
         "package.json": "125f72a39cf1f14126d793f016982579a491107e3441faf715e78b53ae5cabf7"
-      }
+      },
+      "nodeMajors": [22, 24]
     },
     "3.0.3": {
       "engines": "^22.11 || ^24 || >=26",

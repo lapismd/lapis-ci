@@ -3,6 +3,7 @@ import { readFile, realpath } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { validateVersionOutputs } from "./version-recipe-outputs.mjs";
+import { validateAiRecipeProfile } from "./ai-version-recipe.mjs";
 
 export function selectRecipeCase(data, name) {
   if (data.schemaVersion !== 1 || !Object.hasOwn(data.cases ?? {}, name))
@@ -15,6 +16,7 @@ export function selectRecipeCase(data, name) {
       "lapismd/mira-mde",
       "lapismd/lapis-plugin-tasks",
       "lapismd/lapis-plugin-docs",
+      "lapismd/lapis-ai",
     ].includes(selected.repository) ||
     !/^[a-f0-9]{40}$/.test(selected.sourceSha ?? "") ||
     !/^pnpm@\d+\.\d+\.\d+$/.test(selected.qualification?.packageManager ?? "")
@@ -28,6 +30,7 @@ export function selectRecipeCase(data, name) {
   )
     throw Error("Frozen install hook policy must be explicit");
   validateVersionOutputs(selected.versionOutputs ?? []);
+  validateAiRecipeProfile(selected);
   if (
     !/^\.changeset\/[a-zA-Z0-9_-]+\.md$/.test(selected.pending?.path ?? "") ||
     selected.pending.path === ".changeset/README.md" ||

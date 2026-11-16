@@ -14,5 +14,5 @@ const selected = selectRecipeCase(data, name);
 if (!process.env.GITHUB_OUTPUT) throw Error("Hosted step output is required");
 await appendFile(
   process.env.GITHUB_OUTPUT,
-  `case=${name}\nrepository=${selected.repository}\nsource=${selected.sourceSha}\npnpm=${selected.qualification.packageManager}\n`,
+  `case=${name}\nrepository=${selected.repository}\nsource=${selected.sourceSha}\npnpm=${selected.qualification.packageManager}\nprofile=${selected.profile ?? "node24"}\nnode=${selected.nativeTools?.nodeVersion ?? "24.15.0"}\n`,
 );

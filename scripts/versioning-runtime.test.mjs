@@ -83,6 +83,29 @@ test("source-bound guard accepts both reviewed CLI majors without running a reci
     );
   }
 });
+test("Node22 requires an explicitly reviewed CLI pair and source binding", async (t) => {
+  const f = await fixture(t);
+  f.contracts.versions["2.31.1"].nodeMajors = [22, 24];
+  const selected = { ...f.qualification, nodeMajor: 22 };
+  assert.equal(
+    (await guardVersioningInputs(f.root, selected, f.contracts, "22.23.5"))
+      .node,
+    "22.23.5",
+  );
+  await assert.rejects(
+    guardVersioningInputs(f.root, f.qualification, f.contracts, "22.23.5"),
+    /Node 24/,
+  );
+  await assert.rejects(
+    guardVersioningInputs(f.root, selected, f.contracts, "24.15.0"),
+    /Node 22/,
+  );
+  delete f.contracts.versions["2.31.1"].nodeMajors;
+  await assert.rejects(
+    guardVersioningInputs(f.root, selected, f.contracts, "22.23.5"),
+    /reviewed Node/,
+  );
+});
 test("runtime, CLI bytes/config/recipe changes and unsafe paths reject", async (t) => {
   const f = await fixture(t);
   const run = (qualification = f.qualification, node = "24.15.0") =>
