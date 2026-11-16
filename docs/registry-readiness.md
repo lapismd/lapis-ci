@@ -69,3 +69,9 @@ then replace its qualified local helper at an immutable shared source pin. Each
 consumer retains frozen install/ci, publint, audit signatures, provenance,
 source/native acceptance and existing-publication skip rules. No version is
 manufactured to demonstrate recovery.
+
+Mira's existing npm12.0.2 verifier uses the separately selected
+`npm12-default-peers` profile. It keeps scripts disabled and a package lock,
+explicitly preserves default peer behavior and shares the exact same bounded
+metadata/process machinery. [Its qualification](mira-readiness-profile-qualification.md)
+records24 isolated real-tool cases; it does not claim consumer adoption.
