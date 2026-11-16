@@ -1,5 +1,5 @@
 name: Install the pinned Lapis CI GitHub CLI
-description: Use versions.json and architecture-specific archive checksums without credentials.
+description: Install the exact version-bound Linux or Darwin host CLI using reviewed checksums without credentials.
 runs:
   using: composite
   steps:
