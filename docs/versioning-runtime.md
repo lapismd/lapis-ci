@@ -379,3 +379,14 @@ input call at the selected Agent UI source passes on Node24.15.0/pnpm10.34.5 wit
 CLI2.31.1; it executes no recipe and changes no source or installation. This is
 input acceptance only; the real hosted version/changelog/unchanged-package proof
 and later consumer adoption remain pending root review.
+
+## Tasks shared-readiness helper closure
+
+The separate `tasks-readiness-changesets3` case binds Tasks draft PR30's changed
+four-file helper closure at6b896f6d. It preserves the original Tasks case and
+requires exact coordinated package/runtime versions, an unchanged dependency
+graph/public contract, version-marker-only canonical output and unchanged
+bound source/configuration. The
+[Tasks qualification contract](tasks-readiness-recipe-qualification.md) records
+the genuine historical patch input, output controls and pending hosted gate.
+Preparing this case does not qualify the changed consumer or permit its merge.

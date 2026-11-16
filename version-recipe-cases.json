@@ -543,6 +543,84 @@
           "newVersion": "0.2.7"
         }
       ]
+    },
+    "tasks-readiness-changesets3": {
+      "repository": "lapismd/lapis-plugin-tasks",
+      "sourceSha": "6b896f6d33bd5256c0838c6fde5e8effd6cff7dc",
+      "pending": {
+        "path": ".changeset/api06-host-compatibility.md",
+        "sha256": "ed91c7e51adc02324fa59b768af1f60aac233180f5b65cd322a0772b75994d5c"
+      },
+      "ignorePnpmfile": true,
+      "qualification": {
+        "schemaVersion": 1,
+        "cliVersion": "3.0.3",
+        "packageManager": "pnpm@10.34.5",
+        "configSha256": "e23cb92e18b3381ba2137da20ba040f6966e56da226bc04fbcaac6f8d3aa7caf",
+        "scripts": {
+          "release:version": "node scripts/release.mjs version"
+        },
+        "files": {
+          "scripts/release.mjs": "6e321cf3d1eaf1574a708e2ff6f1335bb16bb734b45b54780bc40966e2f055a1",
+          "pnpm-workspace.yaml": "2162ed33f9487eeab8d34d0b6048942ef27201f55d98ed49fdeac52dbe450877",
+          "scripts/release-sigstore.mjs": "3db336b33f9f0f47bfad9fe2da543450ece283189c4b66633b747aec3897f5de",
+          "scripts/release-install-readiness.mjs": "90d96b369a0c688d2de62e7bf80d909d5175b9b8da3161406aab35eb09a69949"
+        }
+      },
+      "versionOutputs": [
+        {
+          "path": "manifest.json",
+          "packageName": "@lapis-notes/lapis-plugin-tasks",
+          "kind": "json-version"
+        },
+        {
+          "path": "spec/src/plugins/tasks/index.md",
+          "packageName": "@lapis-notes/lapis-plugin-tasks",
+          "kind": "text-marker",
+          "marker": "Release package and runtime manifest version: `{{version}}`."
+        }
+      ],
+      "closureEvidence": {
+        "currentSourceSha": "6b896f6d33bd5256c0838c6fde5e8effd6cff7dc",
+        "sourceHashes": {
+          "package.json": "1f5c4184245d7cf6af59c9de46e709ffcd54b4d3eae63cb69822a2c0e9640104",
+          "pnpm-lock.yaml": "30e671144532b029e71b0ab19a18d886fb6034a597ffdb6c8a686049b019f589",
+          ".changeset/config.json": "e23cb92e18b3381ba2137da20ba040f6966e56da226bc04fbcaac6f8d3aa7caf",
+          ".github/workflows/ci.yml": "0661a37d7d5a73ba903bdd8f858966b2cbfa21e74f80b225d1745c1d2788c016",
+          ".github/versioning-runtime.json": "8f30e78f6190fd0e368223356f083d9686666c89c3a520f91aa6b3b07ae52ff5",
+          "scripts/release.mjs": "6e321cf3d1eaf1574a708e2ff6f1335bb16bb734b45b54780bc40966e2f055a1",
+          "scripts/release-sigstore.mjs": "3db336b33f9f0f47bfad9fe2da543450ece283189c4b66633b747aec3897f5de",
+          "pnpm-workspace.yaml": "2162ed33f9487eeab8d34d0b6048942ef27201f55d98ed49fdeac52dbe450877",
+          "manifest.json": "e3dbf19cdf2f07942a04c7e5e098a2e8f008e78a42865ab722efd525d664cbbd",
+          "spec/src/plugins/tasks/index.md": "47069ed08afcbfabe9828158b0aafa087656838f27539fdec9f4189af85f0fc5",
+          "scripts/release-install-readiness.mjs": "90d96b369a0c688d2de62e7bf80d909d5175b9b8da3161406aab35eb09a69949",
+          ".changeset/tasks-registry-readiness.md": "9b24771ff61955a5887f4d299d036893bcf976ed28b956fbb5249a21509e283d"
+        },
+        "currentHashes": {
+          "package.json": "1f5c4184245d7cf6af59c9de46e709ffcd54b4d3eae63cb69822a2c0e9640104",
+          "pnpm-lock.yaml": "30e671144532b029e71b0ab19a18d886fb6034a597ffdb6c8a686049b019f589",
+          ".changeset/config.json": "e23cb92e18b3381ba2137da20ba040f6966e56da226bc04fbcaac6f8d3aa7caf",
+          ".github/workflows/ci.yml": "0661a37d7d5a73ba903bdd8f858966b2cbfa21e74f80b225d1745c1d2788c016",
+          ".github/versioning-runtime.json": "8f30e78f6190fd0e368223356f083d9686666c89c3a520f91aa6b3b07ae52ff5",
+          "scripts/release.mjs": "6e321cf3d1eaf1574a708e2ff6f1335bb16bb734b45b54780bc40966e2f055a1",
+          "scripts/release-sigstore.mjs": "3db336b33f9f0f47bfad9fe2da543450ece283189c4b66633b747aec3897f5de",
+          "pnpm-workspace.yaml": "2162ed33f9487eeab8d34d0b6048942ef27201f55d98ed49fdeac52dbe450877",
+          "manifest.json": "e3dbf19cdf2f07942a04c7e5e098a2e8f008e78a42865ab722efd525d664cbbd",
+          "spec/src/plugins/tasks/index.md": "47069ed08afcbfabe9828158b0aafa087656838f27539fdec9f4189af85f0fc5",
+          "scripts/release-install-readiness.mjs": "90d96b369a0c688d2de62e7bf80d909d5175b9b8da3161406aab35eb09a69949",
+          ".changeset/tasks-registry-readiness.md": "9b24771ff61955a5887f4d299d036893bcf976ed28b956fbb5249a21509e283d"
+        },
+        "comparison": "exact-current-tuple"
+      },
+      "historicalNoteSourceSha": "00d8b1929538bb945078a303343eb4fd5410ce18",
+      "outputContract": "tasks-coordinated-v1",
+      "expectedReleases": [
+        {
+          "name": "@lapis-notes/lapis-plugin-tasks",
+          "oldVersion": "0.2.1",
+          "newVersion": "0.2.2"
+        }
+      ]
     }
   }
 }

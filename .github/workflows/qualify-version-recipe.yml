@@ -12,6 +12,7 @@ on:
           - core-changesets3
           - mira-changesets3
           - tasks-changesets3
+          - tasks-readiness-changesets3
           - docs-changesets3
           - ai-changesets2-native
           - agent-ui-changesets2
