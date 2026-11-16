@@ -315,6 +315,12 @@ try {
       example,
       changes,
     );
+  if (example.outputContract === "notebook-coordinated-v1")
+    receipt.notebookOutputsBefore = await snapshotPluginRecipe(
+      root,
+      example,
+      changes,
+    );
   await save();
   // This is the unchanged real command, including source metadata sync and
   // the actual Bases compatibility/provenance tests owned by the consumer.
@@ -352,6 +358,17 @@ try {
       example,
       changes,
       receipt.tasksOutputsBefore,
+      readGit(["diff", "--name-only"]).split("\n").filter(Boolean),
+      readGit(["ls-files", "--others", "--exclude-standard"])
+        .split("\n")
+        .filter(Boolean),
+    );
+  if (example.outputContract === "notebook-coordinated-v1")
+    receipt.notebookOutputsAfter = await verifyPluginRecipeOutputs(
+      root,
+      example,
+      changes,
+      receipt.notebookOutputsBefore,
       readGit(["diff", "--name-only"]).split("\n").filter(Boolean),
       readGit(["ls-files", "--others", "--exclude-standard"])
         .split("\n")

@@ -19,6 +19,7 @@ on:
           - ai-changesets2-native
           - agent-ui-changesets2
           - visual-delta-changesets3-corepack
+          - notebook-changesets3
 
 permissions:
   contents: read

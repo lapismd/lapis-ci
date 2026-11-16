@@ -42,13 +42,42 @@ const contracts = {
       },
     ],
   },
+  "notebook-coordinated-v1": {
+    id: "notebook",
+    runtimeId: "lapis-notebook",
+    packageManager: "pnpm@10.32.1",
+    formatterPolicy: "unconfigured",
+    increment: "patch",
+    maintenanceName: "notebook-version-runtime",
+    files: [
+      "pnpm-workspace.yaml",
+      "scripts/release.mjs",
+      "scripts/release-candidate.mjs",
+    ],
+    texts: [{ path: "spec/src/plugins/notebook/index.md", marker }],
+    additionalSourceFiles: [
+      ".github/workflows/version-packages.yml",
+      ...["core", "duckdb-assets", "duckdb", "input", "stdlib", "worker"].map(
+        (id) => "packages/" + id + "/package.json",
+      ),
+      "spec/src/SUMMARY.md",
+      "spec/src/plugins/index.md",
+      "spec/src/plugins/notebook/documents.md",
+      "spec/src/plugins/notebook/runtime.md",
+      "spec/src/spec-governance.md",
+      "spec/src/verification.md",
+    ],
+  },
 };
 function contract(example) {
   const policy = contracts[example.outputContract];
   assert(policy, "Unknown output contract");
   const packageName = "@lapis-notes/lapis-plugin-" + policy.id;
   const canonical = policy.texts[0].path;
-  const maintenance = ".changeset/" + policy.id + "-registry-readiness.md";
+  const maintenance =
+    ".changeset/" +
+    (policy.maintenanceName ?? policy.id + "-registry-readiness") +
+    ".md";
   const maintenanceNotes = [
     maintenance,
     ...(policy.previousMaintenance ? [policy.previousMaintenance] : []),
@@ -71,7 +100,14 @@ function contract(example) {
 const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const withoutVersion = ({ version, ...rest }) => rest;
 export function validatePluginRecipeCase(example) {
-  if (example.outputContract === undefined) return false;
+  if (example.outputContract === undefined) {
+    assert.notEqual(
+      example.repository,
+      "lapismd/lapis-plugin-notebook",
+      "Notebook requires its reviewed output contract",
+    );
+    return false;
+  }
   const policy = contract(example),
     { packageName } = policy;
   assert.equal(example.repository, "lapismd/lapis-plugin-" + policy.id);
@@ -83,6 +119,7 @@ export function validatePluginRecipeCase(example) {
   assert.equal(example.qualification.cliVersion, "3.0.3");
   assert.equal(example.qualification.packageManager, policy.packageManager);
   assert.equal(example.qualification.nodeMajor ?? 24, 24);
+  assert.equal(example.qualification.formatterPolicy, policy.formatterPolicy);
   assert.equal(
     example.qualification.scripts["release:version"],
     "node scripts/release.mjs version",
@@ -94,6 +131,28 @@ export function validatePluginRecipeCase(example) {
     example.closureEvidence.sourceHashes,
     example.closureEvidence.currentHashes,
   );
+  if (policy.additionalSourceFiles) {
+    const required = [
+      "package.json",
+      "manifest.json",
+      "pnpm-lock.yaml",
+      ".changeset/config.json",
+      ...policy.files,
+      ...policy.texts.map((text) => text.path),
+      ...policy.maintenanceNotes,
+      ...policy.additionalSourceFiles,
+    ];
+    assert.deepEqual(
+      Object.keys(example.closureEvidence.sourceHashes).sort(),
+      required.sort(),
+      "Notebook requires the complete reviewed source closure",
+    );
+    for (const file of required)
+      assert.match(
+        example.closureEvidence.sourceHashes[file],
+        /^[a-f0-9]{64}$/,
+      );
+  }
   assert.equal(
     example.qualification.configSha256,
     example.closureEvidence.sourceHashes[".changeset/config.json"],
@@ -164,6 +223,7 @@ export async function snapshotPluginRecipe(root, example, releases, parseYaml) {
   const {
     packageName,
     id,
+    runtimeId,
     canonical,
     maintenance,
     maintenanceNotes,
@@ -202,7 +262,7 @@ export async function snapshotPluginRecipe(root, example, releases, parseYaml) {
     stable,
   };
   assert.equal(result.package.name, packageName);
-  assert.equal(result.manifest.id, id);
+  assert.equal(result.manifest.id, runtimeId ?? id);
   assert.equal(result.manifest.distribution, "first-party-external");
   return result;
 }

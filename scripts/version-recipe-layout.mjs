@@ -26,6 +26,7 @@ export function selectRecipeCase(data, name) {
       "lapismd/mira-mde",
       "lapismd/lapis-plugin-tasks",
       "lapismd/lapis-plugin-docs",
+      "lapismd/lapis-plugin-notebook",
       "lapismd/lapis-ai",
       "lapismd/lapis-terminal",
       "lapismd/agent-ui",
