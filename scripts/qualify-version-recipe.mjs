@@ -27,7 +27,11 @@ import {
 } from "./version-recipe-layout.mjs";
 import { verifyVersionOutputs } from "./version-recipe-outputs.mjs";
 import {
-  assertTasksRecipePlan,
+  assertPluginRecipePlan,
+  snapshotPluginRecipe,
+  verifyPluginRecipeOutputs,
+} from "./plugin-version-recipe-outputs.mjs";
+import {
   snapshotTasksRecipe,
   verifyTasksRecipeOutputs,
 } from "./tasks-version-recipe-outputs.mjs";
@@ -222,7 +226,7 @@ try {
     });
   }
   assertDirectRecipePlan(example, changes);
-  assertTasksRecipePlan(example, changes);
+  assertPluginRecipePlan(example, changes);
   receipt.status = "qualified-inputs";
   receipt.releases = changes;
   receipt.versionOutputsBefore = await verifyVersionOutputs(
@@ -243,12 +247,29 @@ try {
       example,
       changes,
     );
+  if (example.outputContract === "docs-coordinated-v1")
+    receipt.docsOutputsBefore = await snapshotPluginRecipe(
+      root,
+      example,
+      changes,
+    );
   await save();
   // This is the unchanged real command, including source metadata sync and
   // the actual Bases compatibility/provenance tests owned by the consumer.
   if (example.qualification.mode === "direct") run(versionCommand, env);
   else run(["release:version"], env);
   for (const args of example.afterVersionChecks ?? []) run(args, env);
+  if (example.outputContract === "docs-coordinated-v1")
+    receipt.docsOutputsAfter = await verifyPluginRecipeOutputs(
+      root,
+      example,
+      changes,
+      receipt.docsOutputsBefore,
+      readGit(["diff", "--name-only"]).split("\n").filter(Boolean),
+      readGit(["ls-files", "--others", "--exclude-standard"])
+        .split("\n")
+        .filter(Boolean),
+    );
   if (example.outputContract === "tasks-coordinated-v1")
     receipt.tasksOutputsAfter = await verifyTasksRecipeOutputs(
       root,
