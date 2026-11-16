@@ -3,6 +3,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { validateRuntimeContracts } from "./versioning-runtime.mjs";
 
 export const repositoryRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -10,6 +11,8 @@ export const repositoryRoot = path.resolve(
 );
 
 export async function checkRepository(root = repositoryRoot) {
+  // Shared runtime contracts are source data, independent of image versions.
+  validateRuntimeContracts(JSON.parse(await readFile(new URL("../changesets-runtime.json", import.meta.url), "utf8")));
   const versions = JSON.parse(
     await readFile(path.join(root, "versions.json"), "utf8"),
   );

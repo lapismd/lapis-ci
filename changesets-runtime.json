@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "nodeMajor": 24,
+  "versions": {
+    "2.31.1": {
+      "engines": null,
+      "integrity": "sha512-uO05WTcRBwuVOJVSW8Cmpqw6q0WDL53ajGCMyszutvOe5toOnunbpM4jZzf+qxBOz7i0AzopZ8diBuewjmF40w==",
+      "sourceSha": "a897bb8ac115fa65343a8bfe53654040c1542a80",
+      "files": {
+        "bin.js": "c17dddb4b7cf4733109a995caa33f2a9bdb01ffdfe71bce6f2d184dc52276a29",
+        "changelog/dist/changesets-cli-changelog.cjs.default.js": "7a4dcba620f08d63a9902ae1258f160419421114d72314286baa31ceca166155",
+        "changelog/dist/changesets-cli-changelog.cjs.js": "eb0af434cf531d88587fff64c908c6bbf062e49eaca598d34c1e081db572e3bd",
+        "changelog/dist/changesets-cli-changelog.cjs.mjs": "2d31b379dc2e5f1e7c1e0ffa1b62f8703f07021f4993e1daa1986ee5d244f3b2",
+        "changelog/dist/changesets-cli-changelog.esm.js": "c3ec5ab5843826bb46f8f622afdd9a10645b96547afcffda2a655680a2c63f36",
+        "commit/dist/changesets-cli-commit.cjs.default.js": "f7f164bd358dde062f0b8171dc4ab509851c21c98751aa47bd71348bba6d5d8d",
+        "commit/dist/changesets-cli-commit.cjs.js": "195e356a1c4461f9a513ce0fa23dccb9451ec5afe4b3e66ed23ae76f88fa82aa",
+        "commit/dist/changesets-cli-commit.cjs.mjs": "a590b72209171a898924ce68dfa38f141c5a3bb33f1b38271ef0140c8777c3cb",
+        "commit/dist/changesets-cli-commit.esm.js": "ef6141465d2277b14e584661011e28b6e00315ac574ef499fd119bbd2356d8fd",
+        "dist/changesets-cli.cjs.js": "14d2fc22b6935df8cba876a0884fbae37d97caa24d50e727aa2b3c5a4e9a0aee",
+        "dist/changesets-cli.cjs.mjs": "020bc4600bc4ab49f1dffbd525b4c2cd12118e4c0cf45c26c404eb5198e3186d",
+        "dist/changesets-cli.esm.js": "3fa4ba5b9d057aebf248720fb1ada84200043c9f05ca85d97b985c407b5715b0",
+        "package.json": "125f72a39cf1f14126d793f016982579a491107e3441faf715e78b53ae5cabf7"
+      }
+    },
+    "3.0.3": {
+      "engines": "^22.11 || ^24 || >=26",
+      "integrity": "sha512-L1i67bMfkK6iC/kDejuNO4pFgTRcWIObsD6Qof2woP1I4M8tj17DGlcpRaTzTv1DYSP5EMwWdEtR8X0Pj5Jg3Q==",
+      "sourceSha": "c9269c01af5f3f7463adc648890fc3a8a729dd18",
+      "files": {
+        "bin.js": "322da1d9fd0f95fa4e9d47badf66e2e6f78315645986f249ae1a15e048770c2d",
+        "dist/add.mjs": "91aa8cf3146385c5ea7f914f0db55f7e282dd2d1dc82c17059228d8b07882d22",
+        "dist/changelog.mjs": "90854fc2f8f88b7e2577bbee02c64daf5f820f99259948fcfcc9165df2df875f",
+        "dist/cli-utilities.mjs": "f85db22422bd2c274184e7d2b2dc9905e86754a410da37f0015064b81079264d",
+        "dist/commit/index.mjs": "87cfdc67248beb0101df2a72cd27f34027e51118a4efab6534ebab0c1a798135",
+        "dist/getCommitFunctions.mjs": "e73c398a56e7bf10c493546a80eb486b1728ff5a664dc32cde54ba2596d4ae38",
+        "dist/getPublishPlan.mjs": "bbd3478d7cf4564b6dc3e94ed83ce2efc647d4c86eff15274512bacce9194c4b",
+        "dist/git-tag.mjs": "eba56381f6621a7b948c014ce447aff4f59368f09fa46b5ae6e129a36f5ea7dd",
+        "dist/gitTags.mjs": "27a5024decc2f31f2693654e3948f1bab8f9f51d6bb36a5a52306b56577f1f62",
+        "dist/index.mjs": "997385f3e7bb94a8c5956d0bc6ec1d868ff7473486a090430093d6d62eb1104d",
+        "dist/init.mjs": "a0dbe80063d184ec29371e3943986fdad14d0f7369813ff79df750ae799d5b6f",
+        "dist/pack.mjs": "ace64db22f90dd21598512b5fa6cf8aba13fd5317ef250475238a22fae183bd3",
+        "dist/pre.mjs": "89954024c08b09b755350c252ca9cfc9beabf5c2ba50a9fa18f0a65b9ab28a9d",
+        "dist/publish-plan.mjs": "6156d446554bb2ff920f5b7c056fdb30e3e14ce0824d7004697b1b0739b2c4c3",
+        "dist/publish.mjs": "97fa6417df6bf6991cdeaedae4537a4c738a34e1606a68faf9a1ec62c0808f37",
+        "dist/read-config.mjs": "f5d009080e39ac751e7bf1c7745d6b6f688ea0761a8c98de138a739baad4c58c",
+        "dist/shared.mjs": "3ed915b9c6fc319ce5c8aad0bb451b8eb6bdf4c9065a64543aa84d76ce478821",
+        "dist/src.mjs": "813df9e73a9066b0e95988c265cd45619f874ef79da024247a5b17a1a8493e8d",
+        "dist/status.mjs": "f73e9c68dec20e619bc8007f1413f4cb738f9a7f2c4b3f678a1cf1c606fb2d36",
+        "dist/usingCtx.mjs": "535a8c34b8ca00c47e8aa96bb61dfad0324264a4c747976e9a17a688805ea62e",
+        "dist/version.mjs": "8db4d315832ac9f2212da8a948c1f91509ee11885021689957459da6885d6b87",
+        "dist/versionablePackages.mjs": "1530f1da0b8246cec6c8739685e0c153eed198b26d4c513e3f0a793b77285ada",
+        "package.json": "efe881fbd8673c1d120e212c2f46394ace08a61ba2f4513214d801458441206b"
+      }
+    }
+  }
+}

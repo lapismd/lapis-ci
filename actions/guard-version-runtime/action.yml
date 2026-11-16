@@ -1,0 +1,19 @@
+name: Guard source-owned Node version preparation
+description: Validate reviewed Changesets bytes and exact project recipe inputs before acquiring writer authority.
+inputs:
+  working-directory:
+    description: Checked-out project directory relative to GITHUB_WORKSPACE.
+    required: false
+    default: .
+  qualification-file:
+    description: Project-relative source-owned recipe qualification JSON.
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Validate reviewed runtime and source-owned recipe inputs
+      shell: bash
+      env:
+        LAPIS_VERSIONING_ROOT: ${{ inputs.working-directory }}
+        LAPIS_VERSIONING_QUALIFICATION: ${{ inputs.qualification-file }}
+      run: node "$GITHUB_ACTION_PATH/../../scripts/versioning-runtime.mjs"
