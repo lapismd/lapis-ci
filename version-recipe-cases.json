@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "cases": {
+    "plugins-changesets2": {
+      "repository": "lapismd/lapis-plugins",
+      "sourceSha": "03edd845b35cb3e33f4c963fce3ea787f8e373c4",
+      "pending": {
+        "path": ".changeset/quiet-remotes-keyboard.md",
+        "sha256": "0e46a5c01028001efd1a88cacaf3a89a86404db04e840e0090e214c06e325267"
+      },
+      "qualification": {
+        "schemaVersion": 1,
+        "cliVersion": "2.31.1",
+        "packageManager": "pnpm@10.34.5",
+        "configSha256": "8b1dab21462dc42931b276d9b2471089fcd3728c1595b1c8a4eb74a7bdd7fed7",
+        "scripts": {
+          "release:version": "node scripts/version-public-packages.mjs",
+          "packages:sync": "node scripts/sync-package-metadata.mjs --write && node scripts/sync-package-docs.mjs --write",
+          "audit:bases": "node scripts/bases-compatibility.mjs"
+        },
+        "files": {
+          "scripts/version-public-packages.mjs": "423d4628b2932f7c9bf4f498e145d4e69a80b8216e5ab1799597b26587968eb2",
+          "scripts/sync-package-metadata.mjs": "92f5a8d981e809816a640b24d94bae7ccf08f31825a90288789bed682e5259ba",
+          "scripts/sync-package-docs.mjs": "3e74154de46c590862541b10347525756a5d37e15f77706269b94f497910bd8e",
+          "scripts/package-catalog.mjs": "c6e7fa133263135256cbf0dadb3a8fe2a7f239cc2c9acdd1600055ea496c29eb",
+          "scripts/plugin-skill-assets.mjs": "3305bbf5fa3c990f9fb743c343e3b7c8fb1df1e61f425a57d1193b852d0e1151",
+          "scripts/lib/svelte-runtime-contract.mjs": "4481d4341943902b0ec290b3d1e0939c8a8f049d78d664a126253388d65bcbfd",
+          "scripts/lib/runtime-host-modules.mjs": "b68cce6541ada1ff78f82e3162635e2caca992dffccbd9302e8301c26664e120",
+          "scripts/bases-compatibility.mjs": "a482467c06fc41ad63cd80952124aed2a3b2a5cca9e78f98025e58309071eef9",
+          "scripts/bases-compatibility-core.mjs": "d3ffac0495a78b25c35f124dcafd31e828808d7199722227e97e0fc766f022ac"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,45 @@
+name: Qualify actual portable version recipe
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: source-version-recipe-qualification
+  cancel-in-progress: false
+
+jobs:
+  plugins-changesets2:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          path: guard
+          persist-credentials: false
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          repository: lapismd/lapis-plugins
+          ref: 03edd845b35cb3e33f4c963fce3ea787f8e373c4
+          path: consumer
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: "24.15.0"
+      - name: Activate the source-owned exact package manager
+        run: corepack enable && corepack prepare pnpm@10.34.5 --activate
+      - name: Qualify genuine source version mutation without Deno or a writer App
+        run: node guard/scripts/qualify-version-recipe.mjs consumer
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
+        if: always()
+        with:
+          name: plugins-changesets2-runtime-qualification
+          path: reports/version-recipe-qualification.json
+          if-no-files-found: error
+          retention-days: 14
