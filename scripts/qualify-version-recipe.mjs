@@ -51,6 +51,10 @@ import {
   verifyTerminalRecipeTools,
 } from "./terminal-version-recipe.mjs";
 import {
+  assertTerminalRecipePlan,
+  terminalPreparedVersions,
+} from "./terminal-version-recipe-plan.mjs";
+import {
   snapshotTerminalRecipeOutputs,
   verifyTerminalRecipeOutputs,
 } from "./terminal-version-recipe-outputs.mjs";
@@ -227,6 +231,7 @@ try {
     status.releases.length > 0,
     "The genuine pending note must prepare an actual version mutation",
   );
+  if (terminalProfile) assertTerminalRecipePlan(example, status.releases);
   const manifests = await discoverRecipeManifests(root);
   const changes = [];
   for (const release of status.releases) {
@@ -244,6 +249,10 @@ try {
         }),
     });
   }
+  const preparedReleases = terminalProfile
+    ? terminalPreparedVersions(example, changes)
+    : changes;
+  if (terminalProfile) receipt.preparedReleases = preparedReleases;
   assertDirectRecipePlan(example, changes);
   assertPluginRecipePlan(example, changes);
   receipt.status = "qualified-inputs";
@@ -334,7 +343,7 @@ try {
     changes,
     "after",
   );
-  for (const change of changes) {
+  for (const change of preparedReleases) {
     const pkg = manifests.find((p) => p.name === change.name);
     assert.equal(
       JSON.parse(await readFile(pkg.file, "utf8")).version,
