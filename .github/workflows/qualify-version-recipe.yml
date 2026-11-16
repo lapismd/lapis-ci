@@ -15,6 +15,7 @@ on:
           - tasks-readiness-changesets3
           - docs-changesets3
           - docs-readiness-changesets3
+          - terminal-changesets2-native
           - ai-changesets2-native
           - agent-ui-changesets2
 
@@ -28,7 +29,7 @@ concurrency:
 jobs:
   qualify:
     if: github.ref == 'refs/heads/main'
-    runs-on: ${{ inputs.case == 'ai-changesets2-native' && 'ubuntu-24.04' || 'ubuntu-latest' }}
+    runs-on: ${{ (inputs.case == 'ai-changesets2-native' || inputs.case == 'terminal-changesets2-native') && 'ubuntu-24.04' || 'ubuntu-latest' }}
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -48,8 +49,8 @@ jobs:
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: ${{ steps.recipe.outputs.node }}
-      - name: Install the source-owned AI Rust toolchain
-        if: steps.recipe.outputs.profile == 'ai-node22-rust-offline'
+      - name: Install the source-owned native Rust toolchain
+        if: steps.recipe.outputs.profile == 'ai-node22-rust-offline' || steps.recipe.outputs.profile == 'terminal-node24-rust-offline'
         uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f
         with:
           toolchain: "1.99.0"
@@ -65,13 +66,18 @@ jobs:
         env:
           RECIPE_PNPM: ${{ steps.recipe.outputs.pnpm }}
       - name: Qualify genuine source version mutation without Deno or a writer App
-        if: steps.recipe.outputs.profile != 'ai-node22-rust-offline'
+        if: steps.recipe.outputs.profile != 'ai-node22-rust-offline' && steps.recipe.outputs.profile != 'terminal-node24-rust-offline'
         run: node guard/scripts/qualify-version-recipe.mjs consumer
         env:
           RECIPE_CASE: ${{ steps.recipe.outputs.case }}
           GITHUB_TOKEN: ${{ github.token }}
       - name: Qualify the genuine AI native recipe without credentials
         if: steps.recipe.outputs.profile == 'ai-node22-rust-offline'
+        run: node guard/scripts/qualify-version-recipe.mjs consumer
+        env:
+          RECIPE_CASE: ${{ steps.recipe.outputs.case }}
+      - name: Qualify the genuine Terminal native recipe without credentials
+        if: steps.recipe.outputs.profile == 'terminal-node24-rust-offline'
         run: node guard/scripts/qualify-version-recipe.mjs consumer
         env:
           RECIPE_CASE: ${{ steps.recipe.outputs.case }}

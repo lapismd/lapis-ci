@@ -457,3 +457,15 @@ note. [Its qualification record](docs-readiness-recipe-qualification.md)
 describes the five coordinated output checks, shared Tasks/Docs verifier and
 remaining actual hosted proof. Proposed hashes or the old recipe receipt do
 not qualify the new source.
+
+## Terminal native recipe qualification
+
+The explicit `terminal-changesets2-native` case binds Terminal source
+`6808f839e59279cec601f5b998d695ae29ad4963`, its unchanged Node24/Rust offline
+version command and a genuine historical pending note. The
+[Terminal qualification contract](terminal-version-recipe-qualification.md)
+records the native prerequisites, independent output assertions and remaining
+hosted proof. Source checks alone do not qualify the actual whole recipe or
+activate a consumer guard. The AI Node22 case retains its separate policy;
+shared code only checks executable bytes, the credential-free environment and
+canonical input hashes. Image inputs and published tools are unchanged.

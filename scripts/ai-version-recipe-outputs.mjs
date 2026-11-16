@@ -1,35 +1,14 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { createRequire } from "node:module";
-import { readFile, readdir, realpath } from "node:fs/promises";
+import { readFile, realpath } from "node:fs/promises";
 import path from "node:path";
+import { canonicalHashes } from "./native-version-recipe-outputs.mjs";
 import { validateAiRecipeProfile } from "./ai-version-recipe.mjs";
 
 const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const json = async (root, file) =>
   JSON.parse(await readFile(path.join(root, file), "utf8"));
-
-async function canonicalHashes(root, directory = "spec/src") {
-  const result = {};
-  for (const entry of await readdir(path.join(root, directory), {
-    withFileTypes: true,
-  })) {
-    const file = path.posix.join(directory, entry.name);
-    assert(
-      !entry.isSymbolicLink(),
-      "Canonical fixture input must not be a symlink",
-    );
-    if (entry.isDirectory())
-      Object.assign(result, await canonicalHashes(root, file));
-    else {
-      assert(entry.isFile(), "Unexpected canonical fixture input");
-      result[file] = hash(await readFile(path.join(root, file)));
-    }
-  }
-  return Object.fromEntries(
-    Object.entries(result).sort(([a], [b]) => a.localeCompare(b)),
-  );
-}
 
 /** Independent receipts for native metadata the real source release check also gates. */
 export async function snapshotAiRecipeOutputs(

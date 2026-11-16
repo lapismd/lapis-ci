@@ -3,6 +3,10 @@ import { readFile, realpath } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { validateVersionOutputs } from "./version-recipe-outputs.mjs";
+import {
+  validateTerminalRecipeProfile,
+  TERMINAL_RECIPE_PROFILE,
+} from "./terminal-version-recipe.mjs";
 import { validateAiRecipeProfile } from "./ai-version-recipe.mjs";
 import { validateDirectRecipeCase } from "./version-recipe-command.mjs";
 import { validatePluginRecipeCase } from "./plugin-version-recipe-outputs.mjs";
@@ -19,6 +23,7 @@ export function selectRecipeCase(data, name) {
       "lapismd/lapis-plugin-tasks",
       "lapismd/lapis-plugin-docs",
       "lapismd/lapis-ai",
+      "lapismd/lapis-terminal",
       "lapismd/agent-ui",
     ].includes(selected.repository) ||
     !/^[a-f0-9]{40}$/.test(selected.sourceSha ?? "") ||
@@ -42,7 +47,9 @@ export function selectRecipeCase(data, name) {
   validateDirectRecipeCase(selected);
   validatePluginRecipeCase(selected);
   validateVersionOutputs(selected.versionOutputs ?? []);
-  validateAiRecipeProfile(selected);
+  validateTerminalRecipeProfile(selected);
+  if (selected.profile !== TERMINAL_RECIPE_PROFILE)
+    validateAiRecipeProfile(selected);
   if (
     !/^\.changeset\/[a-zA-Z0-9_-]+\.md$/.test(selected.pending?.path ?? "") ||
     selected.pending.path === ".changeset/README.md" ||
