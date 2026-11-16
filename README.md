@@ -119,14 +119,16 @@ The reviewed data in `changesets-runtime.json` supports existing CLI2.31.1 and
 3.0.3 without a major migration. Source data binds every direct package JS module
 and package metadata, rather than trusting a tiny executable shim alone. A
 consumer qualification file binds its exact Changesets config, pnpm version,
-named commands and selected recipe source files. New lifecycle hooks, changed
+named commands and selected recipe source files. An explicit reviewed direct
+mode permits only `pnpm exec changeset version` with CLI2 on Node24 and no
+script wrapper; absent mode retains the existing `release:version` contract. New lifecycle hooks, changed
 inputs, unreviewed CLI versions and root/ancestor Deno formatter declarations
 require owning-source requalification.
 
 This is a bounded input guard, not proof that arbitrary scripts or transitive
 dependencies are portable. Actual whole-recipe qualification remains separate.
 The manual main-only `qualify-version-recipe.yml` workflow selects reviewed
-immutable Plugins, Core, Mira, Tasks or Docs cases and their exact package
+immutable Plugins, Core, Mira, Tasks, Docs or Agent UI cases and their exact package
 managers. Core, Plugins and Tasks use genuine pending-source notes; current
 Mira and Docs use exact historical notes only as explicitly labelled disposable
 validation inputs. Source-owned runtime manifests and canonical version-marker

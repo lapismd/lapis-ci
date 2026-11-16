@@ -477,6 +477,72 @@
         },
         "comparison": "exact-current-tuple"
       }
+    },
+    "agent-ui-changesets2": {
+      "repository": "lapismd/agent-ui",
+      "sourceSha": "60826d6d3910a33d3ea1c686786e690160ff2ff3",
+      "pending": {
+        "path": ".changeset/compact-identifier-pair-labels.md",
+        "sha256": "e47b7995f03dbd99bef7e44a7b3689a6ad9d1c2f55da9d915c393855b8847b76"
+      },
+      "historicalNoteSourceSha": "f2cfeceb8d4b1885694f2976a75893183bac4ea8",
+      "qualification": {
+        "schemaVersion": 1,
+        "cliVersion": "2.31.1",
+        "packageManager": "pnpm@10.34.5",
+        "configSha256": "e23cb92e18b3381ba2137da20ba040f6966e56da226bc04fbcaac6f8d3aa7caf",
+        "scripts": {},
+        "mode": "direct",
+        "argv": ["exec", "changeset", "version"],
+        "files": {
+          "pnpm-workspace.yaml": "685c40cc27d7db8efd1fd331a8688ef6ec1d9ef2a774c8a6e66eaa5ea0474621",
+          ".prettierrc.json": "b7f83b4be9d97466006aebe064d4681d3cc0420c030dcc02f6b3ff92e0a9081e",
+          ".prettierignore": "4229e0f1ab1afb744e2913eed6f35ec2cdf15063b6a2779282dffea8e3038e27",
+          "patches/bits-ui@2.20.2.patch": "debd3bc7d43917f0967f0cc1e212fc5c7721c751d3b92bf8f31030d1c96289ad"
+        }
+      },
+      "closureEvidence": {
+        "currentSourceSha": "60826d6d3910a33d3ea1c686786e690160ff2ff3",
+        "sourceHashes": {
+          "package.json": "84b7f84df6a53d4723bd5ef08dbba66c19f231ce9902aff74563e85ceba072b3",
+          "pnpm-lock.yaml": "7133a6f1f1b2a908c35698cd7682090338431416a8eae3945c4f25fb9e254d1d",
+          ".changeset/config.json": "e23cb92e18b3381ba2137da20ba040f6966e56da226bc04fbcaac6f8d3aa7caf",
+          "pnpm-workspace.yaml": "685c40cc27d7db8efd1fd331a8688ef6ec1d9ef2a774c8a6e66eaa5ea0474621",
+          ".github/workflows/changesets.yml": "17c1a0a71f86f833facf256dff500621be1a7fe754676283590594d73e83f470",
+          ".github/workflows/check.yml": "cc74b0f1a7d5062c2b18c90350574ef9cb3e4455967e38aca9f4b1a7b193e2e1",
+          ".prettierrc.json": "b7f83b4be9d97466006aebe064d4681d3cc0420c030dcc02f6b3ff92e0a9081e",
+          ".prettierignore": "4229e0f1ab1afb744e2913eed6f35ec2cdf15063b6a2779282dffea8e3038e27",
+          "patches/bits-ui@2.20.2.patch": "debd3bc7d43917f0967f0cc1e212fc5c7721c751d3b92bf8f31030d1c96289ad",
+          "packages/agent-ui/package.json": "24ef832edc4e191d041bfd560e04c3c915216feabb409dcfc97bcd2c3d163279",
+          "packages/repository-ui/package.json": "879fde271d78da2104643c2ee0cf769a5a8bb422ccbe82a38cc4d4dd23ab3189",
+          "packages/agent-ui/CHANGELOG.md": "7986dcf517b99b3621a57db7311d4086d3f818e8b7ef9cad0ad7ac19bf89c349",
+          "packages/repository-ui/CHANGELOG.md": "221b759b0ab6423bb426156edaf6ed36e6c2f0697a50f82e5a1fe07643d7736a"
+        },
+        "currentHashes": {
+          "package.json": "84b7f84df6a53d4723bd5ef08dbba66c19f231ce9902aff74563e85ceba072b3",
+          "pnpm-lock.yaml": "7133a6f1f1b2a908c35698cd7682090338431416a8eae3945c4f25fb9e254d1d",
+          ".changeset/config.json": "e23cb92e18b3381ba2137da20ba040f6966e56da226bc04fbcaac6f8d3aa7caf",
+          "pnpm-workspace.yaml": "685c40cc27d7db8efd1fd331a8688ef6ec1d9ef2a774c8a6e66eaa5ea0474621",
+          ".github/workflows/changesets.yml": "17c1a0a71f86f833facf256dff500621be1a7fe754676283590594d73e83f470",
+          ".github/workflows/check.yml": "cc74b0f1a7d5062c2b18c90350574ef9cb3e4455967e38aca9f4b1a7b193e2e1",
+          ".prettierrc.json": "b7f83b4be9d97466006aebe064d4681d3cc0420c030dcc02f6b3ff92e0a9081e",
+          ".prettierignore": "4229e0f1ab1afb744e2913eed6f35ec2cdf15063b6a2779282dffea8e3038e27",
+          "patches/bits-ui@2.20.2.patch": "debd3bc7d43917f0967f0cc1e212fc5c7721c751d3b92bf8f31030d1c96289ad",
+          "packages/agent-ui/package.json": "24ef832edc4e191d041bfd560e04c3c915216feabb409dcfc97bcd2c3d163279",
+          "packages/repository-ui/package.json": "879fde271d78da2104643c2ee0cf769a5a8bb422ccbe82a38cc4d4dd23ab3189",
+          "packages/agent-ui/CHANGELOG.md": "7986dcf517b99b3621a57db7311d4086d3f818e8b7ef9cad0ad7ac19bf89c349",
+          "packages/repository-ui/CHANGELOG.md": "221b759b0ab6423bb426156edaf6ed36e6c2f0697a50f82e5a1fe07643d7736a"
+        },
+        "comparison": "exact-current-tuple"
+      },
+      "versionOutputs": [],
+      "expectedReleases": [
+        {
+          "name": "@lapismd/repository-ui",
+          "oldVersion": "0.2.6",
+          "newVersion": "0.2.7"
+        }
+      ]
     }
   }
 }

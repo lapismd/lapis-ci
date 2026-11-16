@@ -235,3 +235,119 @@ test("reviewed stock data and hosted genuine-source proof retain read-only autho
   assert.match(proof, /run\(\["release:version"\],\s*env\)/);
   assert.doesNotMatch(proof, /npm publish|pnpm publish|release:publish/);
 });
+
+test("literal direct Changesets version accepts CLI2 without a consumer release wrapper", async (t) => {
+  const f = await fixture(t);
+  await writeFile(
+    path.join(f.root, "package.json"),
+    JSON.stringify({ packageManager: "pnpm@10.34.5", scripts: {} }),
+  );
+  const qualification = {
+    ...f.qualification,
+    mode: "direct",
+    argv: ["exec", "changeset", "version"],
+    scripts: {},
+  };
+  const result = await guardVersioningInputs(
+    f.root,
+    qualification,
+    f.contracts,
+    "24.15.0",
+  );
+  assert.equal(result.version, "2.31.1");
+  assert.equal(result.recipe, "source-bound-inputs");
+});
+
+test("direct mode retains formatter, patch, config and installed-byte qualification", async (t) => {
+  const f = await fixture(t),
+    q = {
+      ...f.qualification,
+      mode: "direct",
+      argv: ["exec", "changeset", "version"],
+      scripts: {},
+    };
+  await writeFile(
+    path.join(f.root, "package.json"),
+    JSON.stringify({ packageManager: q.packageManager, scripts: {} }),
+  );
+  const run = (value = q) =>
+    guardVersioningInputs(f.root, value, f.contracts, "24.15.0");
+  assert.equal((await run()).version, "2.31.1");
+  await assert.rejects(
+    run({ ...q, files: {} }),
+    /qualification path or binding/,
+  );
+  await assert.rejects(
+    run({ ...q, configSha256: hash("changed") }),
+    /configuration changed/,
+  );
+  await assert.rejects(
+    run({ ...q, mode: undefined, argv: undefined }),
+    /qualification path or binding/,
+  );
+  await writeFile(
+    path.join(f.root, "scripts/version.mjs"),
+    "changed bound input",
+  );
+  await assert.rejects(run(), /source bytes changed/);
+});
+
+test("literal @ patch filename remains source-bound in direct mode", async (t) => {
+  const f = await fixture(t),
+    file = "patches/bits-ui@2.20.2.patch",
+    bytes = "approved patch bytes\n";
+  await mkdir(path.join(f.root, "patches"));
+  await writeFile(path.join(f.root, file), bytes);
+  await writeFile(
+    path.join(f.root, "package.json"),
+    JSON.stringify({
+      packageManager: f.qualification.packageManager,
+      scripts: {},
+    }),
+  );
+  const q = {
+    ...f.qualification,
+    mode: "direct",
+    argv: ["exec", "changeset", "version"],
+    scripts: {},
+    files: { [file]: hash(bytes) },
+  };
+  assert.equal(
+    (await guardVersioningInputs(f.root, q, f.contracts, "24.15.0")).version,
+    "2.31.1",
+  );
+});
+
+test("@ path support retains traversal, absolute, backslash and escaped-symlink rejection", async (t) => {
+  const f = await fixture(t);
+  for (const file of [
+    "../../outside@.patch",
+    "/tmp/outside@.patch",
+    "patches\\outside@.patch",
+    "patches/../outside@.patch",
+    "patches/./inside@.patch",
+    "patches@2/inside.patch",
+  ])
+    await assert.rejects(
+      guardVersioningInputs(
+        f.root,
+        { ...f.qualification, files: { [file]: hash("x") } },
+        f.contracts,
+        "24.15.0",
+      ),
+      /qualification path or binding/,
+    );
+  await mkdir(path.join(f.root, "patches"));
+  const outside = path.join(f.parent, "outside@.patch");
+  await writeFile(outside, "x");
+  await symlink(outside, path.join(f.root, "patches/inside@.patch"));
+  await assert.rejects(
+    guardVersioningInputs(
+      f.root,
+      { ...f.qualification, files: { "patches/inside@.patch": hash("x") } },
+      f.contracts,
+      "24.15.0",
+    ),
+    /escapes its source/,
+  );
+});
