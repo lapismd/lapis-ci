@@ -594,7 +594,8 @@
           "manifest.json": "e3dbf19cdf2f07942a04c7e5e098a2e8f008e78a42865ab722efd525d664cbbd",
           "spec/src/plugins/tasks/index.md": "47069ed08afcbfabe9828158b0aafa087656838f27539fdec9f4189af85f0fc5",
           "scripts/release-install-readiness.mjs": "90d96b369a0c688d2de62e7bf80d909d5175b9b8da3161406aab35eb09a69949",
-          ".changeset/tasks-registry-readiness.md": "9b24771ff61955a5887f4d299d036893bcf976ed28b956fbb5249a21509e283d"
+          ".changeset/tasks-registry-readiness.md": "9b24771ff61955a5887f4d299d036893bcf976ed28b956fbb5249a21509e283d",
+          ".changeset/maintenance-rekor-recovery.md": "100a32a43cfb5e587cf40c059f71dbe1a24e1d31e705fe05e8695f5445dd4253"
         },
         "currentHashes": {
           "package.json": "1f5c4184245d7cf6af59c9de46e709ffcd54b4d3eae63cb69822a2c0e9640104",
@@ -608,7 +609,8 @@
           "manifest.json": "e3dbf19cdf2f07942a04c7e5e098a2e8f008e78a42865ab722efd525d664cbbd",
           "spec/src/plugins/tasks/index.md": "47069ed08afcbfabe9828158b0aafa087656838f27539fdec9f4189af85f0fc5",
           "scripts/release-install-readiness.mjs": "90d96b369a0c688d2de62e7bf80d909d5175b9b8da3161406aab35eb09a69949",
-          ".changeset/tasks-registry-readiness.md": "9b24771ff61955a5887f4d299d036893bcf976ed28b956fbb5249a21509e283d"
+          ".changeset/tasks-registry-readiness.md": "9b24771ff61955a5887f4d299d036893bcf976ed28b956fbb5249a21509e283d",
+          ".changeset/maintenance-rekor-recovery.md": "100a32a43cfb5e587cf40c059f71dbe1a24e1d31e705fe05e8695f5445dd4253"
         },
         "comparison": "exact-current-tuple"
       },
@@ -620,6 +622,10 @@
           "oldVersion": "0.2.1",
           "newVersion": "0.2.2"
         }
+      ],
+      "maintenanceNotes": [
+        ".changeset/tasks-registry-readiness.md",
+        ".changeset/maintenance-rekor-recovery.md"
       ]
     },
     "docs-readiness-changesets3": {

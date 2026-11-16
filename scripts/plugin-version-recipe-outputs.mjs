@@ -10,6 +10,7 @@ const contracts = {
     id: "tasks",
     packageManager: "pnpm@10.34.5",
     increment: "patch",
+    previousMaintenance: ".changeset/maintenance-rekor-recovery.md",
     files: [
       "pnpm-workspace.yaml",
       "scripts/release.mjs",
@@ -48,17 +49,22 @@ function contract(example) {
   const packageName = "@lapis-notes/lapis-plugin-" + policy.id;
   const canonical = policy.texts[0].path;
   const maintenance = ".changeset/" + policy.id + "-registry-readiness.md";
+  const maintenanceNotes = [
+    maintenance,
+    ...(policy.previousMaintenance ? [policy.previousMaintenance] : []),
+  ];
   return {
     ...policy,
     packageName,
     canonical,
     maintenance,
+    maintenanceNotes,
     mutable: [
       "package.json",
       "manifest.json",
       "pnpm-lock.yaml",
       ...policy.texts.map((t) => t.path),
-      maintenance,
+      ...maintenanceNotes,
     ],
   };
 }
@@ -93,6 +99,16 @@ export function validatePluginRecipeCase(example) {
     example.closureEvidence.sourceHashes[".changeset/config.json"],
   );
   assert.deepEqual(example.afterVersionChecks ?? [], []);
+  assert.deepEqual(
+    example.maintenanceNotes ?? [policy.maintenance],
+    policy.maintenanceNotes,
+  );
+  for (const note of policy.maintenanceNotes)
+    assert.match(
+      example.closureEvidence.sourceHashes[note] ?? "",
+      /^[a-f0-9]{64}$/,
+      "Every maintenance note needs an exact source hash",
+    );
   assert.deepEqual(
     Object.keys(example.qualification.files).sort(),
     [...policy.files].sort(),
@@ -145,8 +161,15 @@ export function assertPluginRecipePlan(example, releases) {
 export async function snapshotPluginRecipe(root, example, releases, parseYaml) {
   assertPluginRecipePlan(example, releases);
   assert(validatePluginRecipeCase(example));
-  const { packageName, id, canonical, maintenance, mutable, texts } =
-    contract(example);
+  const {
+    packageName,
+    id,
+    canonical,
+    maintenance,
+    maintenanceNotes,
+    mutable,
+    texts,
+  } = contract(example);
   parseYaml ??= createRequire(path.join(root, "package.json"))("yaml").parse;
   const read = (file) => readFile(path.join(root, file), "utf8");
   const stable = {};
@@ -156,6 +179,17 @@ export async function snapshotPluginRecipe(root, example, releases, parseYaml) {
     stable[file] = hash(await read(file));
   const textOutputs = {};
   for (const text of texts) textOutputs[text.path] = await read(text.path);
+  const notes = {};
+  for (const note of maintenanceNotes) {
+    notes[note] = await read(note).catch((error) => {
+      if (error.code === "ENOENT") return null;
+      throw error;
+    });
+    assert(
+      notes[note] === null || notes[note].startsWith("---\n---\n"),
+      "Current maintenance note must not create release intent",
+    );
+  }
   const result = {
     package: JSON.parse(await read("package.json")),
     manifest: JSON.parse(await read("manifest.json")),
@@ -163,19 +197,13 @@ export async function snapshotPluginRecipe(root, example, releases, parseYaml) {
     canonical: textOutputs[canonical],
     textOutputs,
     changelog: await read("CHANGELOG.md"),
-    maintenance: await read(maintenance).catch((error) => {
-      if (error.code === "ENOENT") return null;
-      throw error;
-    }),
+    maintenance: notes[maintenance],
+    maintenanceNotes: notes,
     stable,
   };
   assert.equal(result.package.name, packageName);
   assert.equal(result.manifest.id, id);
   assert.equal(result.manifest.distribution, "first-party-external");
-  assert(
-    result.maintenance === null || result.maintenance.startsWith("---\n---\n"),
-    "Current maintenance note must not create release intent",
-  );
   return result;
 }
 export async function verifyPluginRecipeOutputs(
@@ -187,7 +215,7 @@ export async function verifyPluginRecipeOutputs(
   untracked,
   parseYaml,
 ) {
-  const { mutable, texts } = contract(example);
+  const { mutable, texts, maintenanceNotes } = contract(example);
   const after = await snapshotPluginRecipe(root, example, releases, parseYaml);
   const release = example.expectedReleases[0];
   for (const key of ["package", "manifest"]) {
@@ -230,13 +258,17 @@ export async function verifyPluginRecipeOutputs(
     before.stable,
     "Plugin bound source/configuration changed",
   );
-  assert(
-    after.maintenance === null || after.maintenance === before.maintenance,
-    "Maintenance note changed instead of remaining or being consumed",
-  );
+  for (const note of maintenanceNotes)
+    assert(
+      after.maintenanceNotes[note] === null ||
+        after.maintenanceNotes[note] === before.maintenanceNotes[note],
+      "Maintenance note changed instead of remaining or being consumed: " +
+        note,
+    );
   const allowed = new Set([...mutable, "CHANGELOG.md", example.pending.path]);
-  assert(
-    changes.every((file) => allowed.has(file)),
+  assert.deepEqual(
+    changes.filter((file) => !allowed.has(file)),
+    [],
     "Plugin recipe changed an unreviewed path",
   );
   assert.deepEqual(untracked, [], "Plugin recipe created unreviewed files");
@@ -245,6 +277,7 @@ export async function verifyPluginRecipeOutputs(
     manifestVersion: after.manifest.version,
     lockGraphUnchanged: true,
     canonicalVersionOnly: true,
+    maintenanceNotesUnchangedOrConsumed: true,
     stable: after.stable,
     changedPaths: changes,
   };

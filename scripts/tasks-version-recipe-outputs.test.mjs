@@ -20,12 +20,14 @@ const selected = data.cases["tasks-readiness-changesets3"];
 const releases = selected.expectedReleases;
 const canonical = "spec/src/plugins/tasks/index.md",
   maintenance = ".changeset/tasks-registry-readiness.md";
+const previousMaintenance = ".changeset/maintenance-rekor-recovery.md";
 const changes = [
   "package.json",
   "manifest.json",
   "CHANGELOG.md",
   canonical,
   maintenance,
+  previousMaintenance,
 ];
 async function fixture(t) {
   const root = await mkdtemp(path.join(tmpdir(), "tasks-recipe-output-"));
@@ -49,6 +51,8 @@ async function fixture(t) {
       "# Tasks\n\nRelease package and runtime manifest version: `0.2.1`.\nExisting evidence.\n",
     "CHANGELOG.md": "# Tasks\n\n## 0.2.1\nPrevious release.\n",
     [maintenance]: "---\n---\n\nMaintenance only.\n",
+    [previousMaintenance]:
+      "---\n---\n\nPrevious publication maintenance only.\n",
   };
   for (const file of Object.keys(selected.closureEvidence.sourceHashes))
     files[file] ??= "unchanged source: " + file;
@@ -76,6 +80,7 @@ async function fixture(t) {
     "# Tasks\n\n## 0.2.2\nGenuine fixture note.\n\n## 0.2.1\nPrevious release.\n",
   );
   await rm(path.join(root, maintenance));
+  await rm(path.join(root, previousMaintenance));
   return {
     root,
     before,
@@ -167,6 +172,12 @@ test("Tasks case rejects old helper closures, mismatched source/config context a
     (c) => (c.expectedReleases[0].newVersion = "0.3.0"),
     (c) => (c.repository = "lapismd/lapis-server"),
     (c) => (c.outputContract = "unknown"),
+    (c) => delete c.maintenanceNotes,
+    (c) => c.maintenanceNotes.push(".changeset/unreviewed.md"),
+    (c) => {
+      delete c.closureEvidence.sourceHashes[previousMaintenance];
+      delete c.closureEvidence.currentHashes[previousMaintenance];
+    },
   ]) {
     const copy = structuredClone(selected);
     edit(copy);
@@ -184,6 +195,41 @@ test("Tasks case rejects old helper closures, mismatched source/config context a
       ...releases,
       { name: "foreign", oldVersion: "1.0.0", newVersion: "1.0.1" },
     ]),
+  );
+});
+
+test("the two bound empty maintenance notes may independently remain unchanged or be consumed", async (t) => {
+  for (const keepCurrent of [false, true])
+    for (const keepPrevious of [false, true]) {
+      const f = await fixture(t);
+      if (keepCurrent)
+        await f.write(maintenance, f.before.maintenanceNotes[maintenance]);
+      if (keepPrevious)
+        await f.write(
+          previousMaintenance,
+          f.before.maintenanceNotes[previousMaintenance],
+        );
+      assert((await f.verify()).maintenanceNotesUnchangedOrConsumed);
+    }
+});
+test("the historical empty note cannot change its reviewed body", async (t) => {
+  const f = await fixture(t);
+  await f.write(previousMaintenance, "---\n---\n\nDifferent maintenance.\n");
+  await assert.rejects(f.verify(), /Maintenance note changed/);
+});
+test("the historical empty note cannot acquire new release intent", async (t) => {
+  const f = await fixture(t);
+  await f.write(
+    previousMaintenance,
+    '---\n"@lapis-notes/lapis-plugin-tasks": patch\n---\nNew release intent\n',
+  );
+  await assert.rejects(f.verify(), /must not create release intent/);
+});
+test("binding known empty notes does not allow unrelated Changeset output paths", async (t) => {
+  const f = await fixture(t);
+  await assert.rejects(
+    f.verify([...changes, ".changeset/unreviewed.md"]),
+    /unreviewed path/,
   );
 });
 test("the real hosted command snapshots before mutation and verifies Tasks outputs afterward", async () => {
