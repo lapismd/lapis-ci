@@ -20,6 +20,7 @@ import {
   discoverRecipeManifests,
   selectRecipeCase,
 } from "./version-recipe-layout.mjs";
+import { verifyVersionOutputs } from "./version-recipe-outputs.mjs";
 
 const root = path.resolve(process.argv[2] ?? "");
 if (!process.argv[2])
@@ -109,7 +110,15 @@ try {
   );
   await save();
   // Fresh exact install; never change source configuration or dependency recipes.
-  run(["install", "--frozen-lockfile", "--ignore-scripts"], process.env);
+  run(
+    [
+      "install",
+      "--frozen-lockfile",
+      "--ignore-scripts",
+      ...(example.ignorePnpmfile ? ["--ignore-pnpmfile"] : []),
+    ],
+    process.env,
+  );
   const local = path.join(root, ".local");
   await mkdir(local, { recursive: true });
   const sandbox = await mkdtemp(path.join(local, "node-versioning-proof-")),
@@ -170,11 +179,23 @@ try {
   }
   receipt.status = "qualified-inputs";
   receipt.releases = changes;
+  receipt.versionOutputsBefore = await verifyVersionOutputs(
+    root,
+    example.versionOutputs ?? [],
+    changes,
+    "before",
+  );
   await save();
   // This is the unchanged real command, including source metadata sync and
   // the actual Bases compatibility/provenance tests owned by the consumer.
   run(["release:version"], env);
   for (const args of example.afterVersionChecks ?? []) run(args, env);
+  receipt.versionOutputsAfter = await verifyVersionOutputs(
+    root,
+    example.versionOutputs ?? [],
+    changes,
+    "after",
+  );
   for (const change of changes) {
     const pkg = manifests.find((p) => p.name === change.name);
     assert.equal(

@@ -126,9 +126,11 @@ require owning-source requalification.
 This is a bounded input guard, not proof that arbitrary scripts or transitive
 dependencies are portable. Actual whole-recipe qualification remains separate.
 The manual main-only `qualify-version-recipe.yml` workflow selects reviewed
-immutable Plugins, Core or Mira cases and their exact package managers. Core
-and Plugins use genuine pending-source notes; current Mira uses an exact
-historical note only as explicitly labelled disposable validation input.
+immutable Plugins, Core, Mira, Tasks or Docs cases and their exact package
+managers. Core, Plugins and Tasks use genuine pending-source notes; current
+Mira and Docs use exact historical notes only as explicitly labelled disposable
+validation inputs. Source-owned runtime manifests and canonical version-marker
+outputs are checked where their actual custom recipes maintain them.
 The existing read-only workflow token supplies changelog reads. The fixture
 creates no writer App, remote branch or package publication.
 See [the runtime contract and qualification procedure](docs/versioning-runtime.md).
