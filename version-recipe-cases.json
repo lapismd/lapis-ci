@@ -145,7 +145,7 @@
     },
     "tasks-changesets3": {
       "repository": "lapismd/lapis-plugin-tasks",
-      "sourceSha": "00d8b1929538bb945078a303343eb4fd5410ce18",
+      "sourceSha": "479f9c7640a452e8df24c80c7a7eef2d591975da",
       "pending": {
         "path": ".changeset/api06-host-compatibility.md",
         "sha256": "ed91c7e51adc02324fa59b768af1f60aac233180f5b65cd322a0772b75994d5c"
@@ -160,8 +160,9 @@
           "release:version": "node scripts/release.mjs version"
         },
         "files": {
-          "scripts/release.mjs": "a893fd881ebc824d1338ecda8c90f43af92d0c12cfe100368575ba3e253443f8",
-          "pnpm-workspace.yaml": "2162ed33f9487eeab8d34d0b6048942ef27201f55d98ed49fdeac52dbe450877"
+          "scripts/release.mjs": "38900c55a4aec799f50538a4b8d315d003dc37f3f9016f52f05630aed4620861",
+          "pnpm-workspace.yaml": "2162ed33f9487eeab8d34d0b6048942ef27201f55d98ed49fdeac52dbe450877",
+          "scripts/release-sigstore.mjs": "3db336b33f9f0f47bfad9fe2da543450ece283189c4b66633b747aec3897f5de"
         }
       },
       "versionOutputs": [
@@ -178,29 +179,34 @@
         }
       ],
       "closureEvidence": {
-        "currentSourceSha": "00d8b1929538bb945078a303343eb4fd5410ce18",
+        "currentSourceSha": "479f9c7640a452e8df24c80c7a7eef2d591975da",
         "sourceHashes": {
-          "package.json": "e029a89c1294f05ddc37b7b69890db40e72325634eb09033118a6603910aa192",
-          "pnpm-lock.yaml": "5fdc31934e2dfc544ff2d4772e27c9c2aca929a9df292b95318cba59ae0376e3",
+          "package.json": "1adc9ee46bdcd9c9543b1de3350b3ee8260bb06dae7561ec093a49e7c8cf5f6d",
+          "pnpm-lock.yaml": "8684aadb55b7baf2d1fd54a968111b860a0f6d550579cf732bf69e4e1e9411a8",
           ".changeset/config.json": "e23cb92e18b3381ba2137da20ba040f6966e56da226bc04fbcaac6f8d3aa7caf",
-          ".github/workflows/ci.yml": "3c67bff165ceff7ff4b9a6802c5a3688c5cadd560c0bb20b948527dcd85ff137",
-          "scripts/release.mjs": "a893fd881ebc824d1338ecda8c90f43af92d0c12cfe100368575ba3e253443f8",
+          ".github/workflows/ci.yml": "487f9c0ebe2f898af03c23ec6a8687e38e6c305ccb9981f0623da05d004d08a8",
+          ".github/versioning-runtime.json": "827020e0580d6af3ed028749c6f5a9e309ab46ff9330697c2b69e394e42e0bb9",
+          "scripts/release.mjs": "38900c55a4aec799f50538a4b8d315d003dc37f3f9016f52f05630aed4620861",
+          "scripts/release-sigstore.mjs": "3db336b33f9f0f47bfad9fe2da543450ece283189c4b66633b747aec3897f5de",
           "pnpm-workspace.yaml": "2162ed33f9487eeab8d34d0b6048942ef27201f55d98ed49fdeac52dbe450877",
-          "manifest.json": "3b05976b2649c470194dfb05eead5da53f374e8d786bfd90f213d3b14a791946",
-          "spec/src/plugins/tasks/index.md": "5db2f608c85cba94a6e535d513d2adf52ef439953f78d3758366c7115123ba9c"
+          "manifest.json": "e3dbf19cdf2f07942a04c7e5e098a2e8f008e78a42865ab722efd525d664cbbd",
+          "spec/src/plugins/tasks/index.md": "7d88b5c46695324ed9e4ab40b8b4f6d4e0ef06f73731f449be289a8aedfd18e8"
         },
         "currentHashes": {
-          "package.json": "e029a89c1294f05ddc37b7b69890db40e72325634eb09033118a6603910aa192",
-          "pnpm-lock.yaml": "5fdc31934e2dfc544ff2d4772e27c9c2aca929a9df292b95318cba59ae0376e3",
+          "package.json": "1adc9ee46bdcd9c9543b1de3350b3ee8260bb06dae7561ec093a49e7c8cf5f6d",
+          "pnpm-lock.yaml": "8684aadb55b7baf2d1fd54a968111b860a0f6d550579cf732bf69e4e1e9411a8",
           ".changeset/config.json": "e23cb92e18b3381ba2137da20ba040f6966e56da226bc04fbcaac6f8d3aa7caf",
-          ".github/workflows/ci.yml": "3c67bff165ceff7ff4b9a6802c5a3688c5cadd560c0bb20b948527dcd85ff137",
-          "scripts/release.mjs": "a893fd881ebc824d1338ecda8c90f43af92d0c12cfe100368575ba3e253443f8",
+          ".github/workflows/ci.yml": "487f9c0ebe2f898af03c23ec6a8687e38e6c305ccb9981f0623da05d004d08a8",
+          ".github/versioning-runtime.json": "827020e0580d6af3ed028749c6f5a9e309ab46ff9330697c2b69e394e42e0bb9",
+          "scripts/release.mjs": "38900c55a4aec799f50538a4b8d315d003dc37f3f9016f52f05630aed4620861",
+          "scripts/release-sigstore.mjs": "3db336b33f9f0f47bfad9fe2da543450ece283189c4b66633b747aec3897f5de",
           "pnpm-workspace.yaml": "2162ed33f9487eeab8d34d0b6048942ef27201f55d98ed49fdeac52dbe450877",
-          "manifest.json": "3b05976b2649c470194dfb05eead5da53f374e8d786bfd90f213d3b14a791946",
-          "spec/src/plugins/tasks/index.md": "5db2f608c85cba94a6e535d513d2adf52ef439953f78d3758366c7115123ba9c"
+          "manifest.json": "e3dbf19cdf2f07942a04c7e5e098a2e8f008e78a42865ab722efd525d664cbbd",
+          "spec/src/plugins/tasks/index.md": "7d88b5c46695324ed9e4ab40b8b4f6d4e0ef06f73731f449be289a8aedfd18e8"
         },
         "comparison": "exact-current-tuple"
-      }
+      },
+      "historicalNoteSourceSha": "00d8b1929538bb945078a303343eb4fd5410ce18"
     },
     "docs-changesets3": {
       "repository": "lapismd/lapis-plugin-docs",

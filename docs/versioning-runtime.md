@@ -34,7 +34,7 @@ before its existing App minting step. Supply `working-directory` and
 commit mode, activation and package publication/signing approvals unchanged.
 The actual adoption must pin the helper's reviewed commit, never a branch/tag.
 
-## Explicit AI native profile (qualification pending)
+## Explicit AI native profile (hosted recipe qualified)
 
 Node24 remains the default. A source qualification MAY explicitly select
 `nodeMajor: 22` only for a CLI whose reviewed runtime contract includes it.
@@ -95,14 +95,17 @@ and formatting pass. Unit fixtures test missing/wrong tools, disk, credentials,
 Cargo/client/range drift, stale install commands and changed canonical evidence;
 they do not stand in for real offline preparation.
 
-Actual AI whole-recipe qualification and consumer guard adoption are pending.
-The existing main-only disposable fence is preserved, so a helper PR cannot
-claim success or bypass it with simulated hosted environment variables. After
-reviewed landing, dispatch this fixed case once and inspect the complete receipt.
-Any tool, bootstrap, offline metadata or mutation failure remains a binding
-failure. Only its complete successful real proof permits a separate AI source
-adoption PR. No dummy changeset, live package/tag publication or credential
-retrieval is part of this helper slice.
+Hosted [43814544020](https://github.com/lapismd/lapis-ci/actions/runs/43814544020)
+passed on helper `2f90eb7a035f841f0757d3a2cffc959cbecdfff0`. The complete
+receipt independently matches all77 source hashes and17 stable guard inputs,
+prepares both private versions0.2.0→0.3.0 and all15 Cargo records, and preserves
+all59 canonical files. The genuine historical note remains explicitly
+`currentReleaseIntent=false`; Deno, writer App minting and publication remain
+absent. Official tool bytes, the real locked bootstrap and unchanged offline
+source command all qualified. This completes recipe proof, not consumer
+adoption: the separate AI source PR and current-source CI remain required.
+The main-only disposable fence and all missing-tool/unknown-evidence gates are
+unchanged; no dummy release or secret retrieval was used.
 
 ## Actual Plugins proof
 
@@ -284,3 +287,21 @@ formatter/actionlint; image inputs and tooling versions remain unchanged.
 These cases still need actual hosted execution before either consumer adopts
 the guard. No source product/recipe/config, Deno exclusion, approval or
 activation changes are included in this harness slice.
+
+## Tasks signing-recovery recipe refresh
+
+The current Tasks case now binds source
+`479f9c7640a452e8df24c80c7a7eef2d591975da`, ten exact source files and the new
+public-SDK signing helper imported by `release.mjs`. CLI3.0.3, pnpm10.34.5,
+configuration, workspace policy and the actual version command remain unchanged.
+All ten raw file hashes and the historical note bytes were independently read
+from that immutable source/history before updating the case.
+
+The API06 note from `00d8b1929538bb945078a303343eb4fd5410ce18` is already
+consumed. The existing disposable fence restores it only as historical input,
+never current intent, and expects0.2.1→0.2.2 plus both custom version outputs.
+The original Tasks proof/table above remains historical and cannot qualify the
+new helper bytes. Local exact-source whole-recipe receipt is
+`68162fee36d9cc11f7e4b7f0d126f5e172bbe0dee8742249439dc364ba75086d`.
+Fresh hosted execution of this refreshed case remains required before consumer
+merge; this data change grants no package publication or writer authority.
