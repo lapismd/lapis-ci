@@ -4,7 +4,6 @@ import { createHash } from "node:crypto";
 import {
   access,
   mkdir,
-  mkdtemp,
   readFile,
   realpath,
   symlink,
@@ -68,6 +67,7 @@ import {
   snapshotCorepackRecipeOutputs,
   verifyCorepackRecipeOutputs,
 } from "./corepack-version-recipe-outputs.mjs";
+import { createRecipeSandbox } from "./version-recipe-sandbox.mjs";
 
 const root = path.resolve(process.argv[2] ?? "");
 if (!process.argv[2])
@@ -109,6 +109,7 @@ const receipt = {
 await mkdir(path.dirname(output), { recursive: true });
 const save = () => writeFile(output, JSON.stringify(receipt, null, 2) + "\n");
 await save();
+let recipeSandbox;
 function readGit(args) {
   return execFileSync("git", ["-C", root, ...args], {
     encoding: "utf8",
@@ -204,11 +205,8 @@ try {
       ],
       setupEnv,
     );
-  const local = path.join(root, ".local");
-  await mkdir(local, { recursive: true });
-  const sandbox = await mkdtemp(path.join(local, "node-versioning-proof-")),
-    bin = path.join(sandbox, "bin");
-  await mkdir(bin);
+  recipeSandbox = await createRecipeSandbox(root);
+  const { bin } = recipeSandbox;
   for (const name of [
     "node",
     "pnpm",
@@ -246,7 +244,7 @@ try {
     receipt.bootstrap = bootstrapAiRecipe(root, env);
   } else if (terminalProfile)
     receipt.bootstrap = bootstrapTerminalRecipe(root, env);
-  const statusFile = path.join(sandbox, "status.json");
+  const statusFile = recipeSandbox.status;
   run(["exec", "changeset", "status", "--output", statusFile], env);
   const status = JSON.parse(await readFile(statusFile, "utf8"));
   assert(
@@ -437,4 +435,6 @@ try {
     "Immutable source, frozen install, runtime guard or unchanged whole recipe did not qualify";
   await save();
   throw error;
+} finally {
+  await recipeSandbox?.cleanup();
 }
