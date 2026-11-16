@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { validateRuntimeContracts } from "./versioning-runtime.mjs";
+import { selectRecipeCase } from "./version-recipe-layout.mjs";
 
 export const repositoryRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -12,7 +13,22 @@ export const repositoryRoot = path.resolve(
 
 export async function checkRepository(root = repositoryRoot) {
   // Shared runtime contracts are source data, independent of image versions.
-  validateRuntimeContracts(JSON.parse(await readFile(new URL("../changesets-runtime.json", import.meta.url), "utf8")));
+  validateRuntimeContracts(
+    JSON.parse(
+      await readFile(
+        new URL("../changesets-runtime.json", import.meta.url),
+        "utf8",
+      ),
+    ),
+  );
+  const recipes = JSON.parse(
+    await readFile(
+      new URL("../version-recipe-cases.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  for (const name of Object.keys(recipes.cases))
+    selectRecipeCase(recipes, name);
   const versions = JSON.parse(
     await readFile(path.join(root, "versions.json"), "utf8"),
   );
@@ -43,12 +59,19 @@ export async function checkRepository(root = repositoryRoot) {
   for (const platform of versions.platforms) {
     const ghAsset = versions.ghAssets?.[platform];
     const expectedTarget = platform.replace("/", "_");
-    if (ghAsset?.target !== expectedTarget || !/^[a-f0-9]{64}$/.test(ghAsset.sha256 ?? "")) {
-      throw new Error(`versions.json must pin the GitHub CLI asset for ${platform}.`);
+    if (
+      ghAsset?.target !== expectedTarget ||
+      !/^[a-f0-9]{64}$/.test(ghAsset.sha256 ?? "")
+    ) {
+      throw new Error(
+        `versions.json must pin the GitHub CLI asset for ${platform}.`,
+      );
     }
     const asset = versions.mdbookAssets?.[platform];
     if (!asset?.target || !/^[a-f0-9]{64}$/.test(asset.sha256 ?? "")) {
-      throw new Error(`versions.json must pin the mdBook asset for ${platform}.`);
+      throw new Error(
+        `versions.json must pin the mdBook asset for ${platform}.`,
+      );
     }
   }
 
@@ -78,7 +101,9 @@ export async function checkRepository(root = repositoryRoot) {
     throw new Error("Publish workflow must emit an SBOM.");
   }
   if (/lapis-ci:latest/.test(publishWorkflow + ciWorkflow)) {
-    throw new Error("Workflows must not publish or consume a latest image tag.");
+    throw new Error(
+      "Workflows must not publish or consume a latest image tag.",
+    );
   }
   if (!/workflow_dispatch:/.test(publishWorkflow)) {
     throw new Error("Image publication must remain manually dispatched.");
@@ -93,9 +118,7 @@ export async function checkRepository(root = repositoryRoot) {
       `corepack prepare pnpm@${versions.pnpm} --activate`,
     ]) {
       if (!workflow.includes(expected)) {
-        throw new Error(
-          `${name} workflow is out of sync: missing ${expected}`,
-        );
+        throw new Error(`${name} workflow is out of sync: missing ${expected}`);
       }
     }
   }

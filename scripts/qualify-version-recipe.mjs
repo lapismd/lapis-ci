@@ -6,25 +6,32 @@ import {
   mkdir,
   mkdtemp,
   readFile,
-  readdir,
   realpath,
   symlink,
   writeFile,
 } from "node:fs/promises";
 import path from "node:path";
 import { guardVersioningInputs } from "./versioning-runtime.mjs";
-import { establishFixtureBaseline } from "./version-recipe-fixture.mjs";
+import {
+  establishFixtureBaseline,
+  restoreHistoricalFixtureNote,
+} from "./version-recipe-fixture.mjs";
+import {
+  discoverRecipeManifests,
+  selectRecipeCase,
+} from "./version-recipe-layout.mjs";
 
 const root = path.resolve(process.argv[2] ?? "");
 if (!process.argv[2])
-  throw Error("Provide the immutable Plugins source checkout");
+  throw Error("Provide the immutable consumer source checkout");
 const cases = JSON.parse(
   await readFile(
     new URL("../version-recipe-cases.json", import.meta.url),
     "utf8",
   ),
 );
-const example = cases.cases["plugins-changesets2"];
+const caseName = process.env.RECIPE_CASE ?? "plugins-changesets2";
+const example = selectRecipeCase(cases, caseName);
 const contracts = JSON.parse(
   await readFile(
     new URL("../changesets-runtime.json", import.meta.url),
@@ -38,7 +45,7 @@ const output = path.resolve(
 );
 const receipt = {
   schemaVersion: 1,
-  case: "plugins-changesets2",
+  case: caseName,
   repository: example.repository,
   sourceSha: example.sourceSha,
   node: process.versions.node,
@@ -63,6 +70,34 @@ try {
   assert.equal(Number(process.versions.node.split(".")[0]), 24);
   assert.equal(readGit(["rev-parse", "HEAD"]), example.sourceSha);
   assert.equal(readGit(["status", "--porcelain", "--untracked-files=no"]), "");
+  if (example.historicalNoteSourceSha) {
+    receipt.validationInput = await restoreHistoricalFixtureNote(
+      root,
+      example.sourceSha,
+      {
+        ...example.pending,
+        sourceSha: example.historicalNoteSourceSha,
+      },
+    );
+  } else
+    receipt.validationInput = {
+      kind: "genuine-pending-source",
+      currentReleaseIntent: true,
+    };
+  receipt.sourceHashes = {};
+  for (const file of example.closureEvidence
+    ? Object.keys(example.closureEvidence.sourceHashes)
+    : [
+        "package.json",
+        "pnpm-lock.yaml",
+        ".changeset/config.json",
+        ...Object.keys(example.qualification.files),
+      ]) {
+    const hash = sha256(await readFile(path.join(root, file)));
+    if (example.closureEvidence)
+      assert.equal(hash, example.closureEvidence.sourceHashes[file]);
+    receipt.sourceHashes[file] = hash;
+  }
   assert.equal(
     sha256(await readFile(path.join(root, example.pending.path))),
     example.pending.sha256,
@@ -116,24 +151,7 @@ try {
     status.releases.length > 0,
     "The genuine pending note must prepare an actual version mutation",
   );
-  const manifests = [];
-  for (const entry of await readdir(path.join(root, "packages"), {
-    withFileTypes: true,
-  }))
-    if (entry.isDirectory()) {
-      const file = path.join(root, "packages", entry.name, "package.json");
-      try {
-        const pkg = JSON.parse(await readFile(file, "utf8"));
-        manifests.push({
-          name: pkg.name,
-          file,
-          oldVersion: pkg.version,
-          changelog: path.join(path.dirname(file), "CHANGELOG.md"),
-        });
-      } catch (error) {
-        if (error.code !== "ENOENT") throw error;
-      }
-    }
+  const manifests = await discoverRecipeManifests(root);
   const changes = [];
   for (const release of status.releases) {
     const pkg = manifests.find((p) => p.name === release.name);
@@ -156,6 +174,7 @@ try {
   // This is the unchanged real command, including source metadata sync and
   // the actual Bases compatibility/provenance tests owned by the consumer.
   run(["release:version"], env);
+  for (const args of example.afterVersionChecks ?? []) run(args, env);
   for (const change of changes) {
     const pkg = manifests.find((p) => p.name === change.name);
     assert.equal(
@@ -174,12 +193,14 @@ try {
   receipt.status = "passed";
   receipt.completedAt = new Date().toISOString();
   receipt.command = "pnpm release:version";
-  receipt.recipeQualification = "actual-source-node24-no-deno";
+  receipt.recipeQualification = example.historicalNoteSourceSha
+    ? "current-source-historical-validation-input-node24-no-deno"
+    : "actual-source-node24-no-deno";
   receipt.inputBindings = example.qualification;
   receipt.sourceChanges = readGit(["diff", "--name-only"]).split("\n");
   await save();
   console.log(
-    "Actual source-owned Plugins version/status/changelog/metadata/Bases recipe passed on Node24 with Deno absent; nothing published.",
+    "Actual source-owned version/status/changelog recipe passed on Node24 with Deno absent; nothing published.",
   );
 } catch (error) {
   receipt.status = "failed";

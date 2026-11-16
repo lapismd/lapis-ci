@@ -30,6 +30,118 @@
           "scripts/bases-compatibility-core.mjs": "d3ffac0495a78b25c35f124dcafd31e828808d7199722227e97e0fc766f022ac"
         }
       }
+    },
+    "core-changesets3": {
+      "repository": "lapismd/design-core",
+      "sourceSha": "1c5692bb840cce4e0541a29e5876838f483b6000",
+      "pending": {
+        "path": ".changeset/responsive-shell-focus.md",
+        "sha256": "86fc9149f91a595b37795fdddc2b7209f9e2185b286ccdfa3b65cc4ddff7a0fa"
+      },
+      "qualification": {
+        "schemaVersion": 1,
+        "cliVersion": "3.0.3",
+        "packageManager": "pnpm@10.32.1",
+        "configSha256": "e826bad3c0abecc9827fbfdbf0f3db4711f8efa14c8dc29e31123e44d77ae1e5",
+        "scripts": {
+          "release:version": "changeset version && pnpm install --lockfile-only && prettier package.json CHANGELOG.md --write"
+        },
+        "files": {
+          ".prettierrc": "a35f5446ca921c8e76779b83c74a85ea7bd0f6b06340c5d6a5445b60d9b1b6b8",
+          ".prettierignore": "054e60bae2250959ab812ce8ed6c3a36d5a1c58b4bda4171b07c0fd08178a05b",
+          "pnpm-workspace.yaml": "c2e412313313dccde580d5bcaf9dd9c60749319d1c0df39a1eff65f11297393b"
+        }
+      },
+      "closureEvidence": {
+        "currentSourceSha": "9cf94b7ce62d679aca77d6d5c65fe84405f086b9",
+        "sourceHashes": {
+          "package.json": "555d756b7e0347b55cf6bb73bba2aa5715deb88ce14a39522d3fd648016a3647",
+          "pnpm-lock.yaml": "ca42f7edc61718dd7a7646c93199d2d78164953d208018c186406bb911d588ba",
+          ".changeset/config.json": "e826bad3c0abecc9827fbfdbf0f3db4711f8efa14c8dc29e31123e44d77ae1e5",
+          ".prettierrc": "a35f5446ca921c8e76779b83c74a85ea7bd0f6b06340c5d6a5445b60d9b1b6b8",
+          ".prettierignore": "054e60bae2250959ab812ce8ed6c3a36d5a1c58b4bda4171b07c0fd08178a05b",
+          "pnpm-workspace.yaml": "c2e412313313dccde580d5bcaf9dd9c60749319d1c0df39a1eff65f11297393b"
+        },
+        "currentHashes": {
+          "package.json": "c0e3b78d868269d5f1617bd48541d05b0d8521f14e6312264897fcb23ed4e133",
+          "pnpm-lock.yaml": "ca42f7edc61718dd7a7646c93199d2d78164953d208018c186406bb911d588ba",
+          ".changeset/config.json": "e826bad3c0abecc9827fbfdbf0f3db4711f8efa14c8dc29e31123e44d77ae1e5",
+          ".prettierrc": "a35f5446ca921c8e76779b83c74a85ea7bd0f6b06340c5d6a5445b60d9b1b6b8",
+          ".prettierignore": "054e60bae2250959ab812ce8ed6c3a36d5a1c58b4bda4171b07c0fd08178a05b",
+          "pnpm-workspace.yaml": "c2e412313313dccde580d5bcaf9dd9c60749319d1c0df39a1eff65f11297393b"
+        },
+        "comparison": "root-own-version-only-difference"
+      }
+    },
+    "mira-changesets3": {
+      "repository": "lapismd/mira-mde",
+      "sourceSha": "d681bdd6b9f500a554f18e8ac3c4c9cdfa24eed5",
+      "pending": {
+        "path": ".changeset/async-embed-activation.md",
+        "sha256": "58cc622ed8014a7d75e5d678bbc0c708a523ba7bb9f7cbfbb904c0660472be70"
+      },
+      "qualification": {
+        "schemaVersion": 1,
+        "cliVersion": "3.0.3",
+        "packageManager": "pnpm@10.32.1",
+        "configSha256": "a1120c87d88168188ce855a494a8d22e417f15d85a2896d9a648b91b35a4e2de",
+        "scripts": {
+          "release:version": "changeset version && pnpm install --lockfile-only && node ./scripts/sync-release-versions.mjs --write && prettier packages/*/package.json packages/*/CHANGELOG.md packages/mira-editor/src/version.ts --write"
+        },
+        "files": {
+          ".prettierrc": "b7f83b4be9d97466006aebe064d4681d3cc0420c030dcc02f6b3ff92e0a9081e",
+          ".prettierignore": "6b3e4898ff0650a917ad9c0461f1b4b2cab406a96df639b9604ebb7aec6f2190",
+          "scripts/sync-release-versions.mjs": "31a4ef4041170f7be6d7c95450210dac260de9ddd72814443b4aa8ace9ff431e",
+          "scripts/public-packages.mjs": "332a0359734e1862d5a9645412773589d3bdbc7f4bd8c4e630cdb0d316f98d58",
+          "pnpm-workspace.yaml": "9c5f116aa1ff65a8307393496e0f7e426a7d86469eef4692bd22447afb51bbdf"
+        }
+      },
+      "historicalNoteSourceSha": "42988233a4d68e5ec8c6dfbd2d92e97868a4ad62",
+      "afterVersionChecks": [
+        ["exec", "node", "scripts/sync-release-versions.mjs", "--check"]
+      ],
+      "closureEvidence": {
+        "currentSourceSha": "d681bdd6b9f500a554f18e8ac3c4c9cdfa24eed5",
+        "sourceHashes": {
+          "package.json": "d6902cc0d4a76e6cf509a986d721a963afc65c2a4d5a44268f69ab2ff53134a2",
+          "pnpm-lock.yaml": "e1bf86c68424aded5c66f208f4b9c76e0a9a2247685d72982d1900d79e62feb4",
+          ".changeset/config.json": "a1120c87d88168188ce855a494a8d22e417f15d85a2896d9a648b91b35a4e2de",
+          ".prettierrc": "b7f83b4be9d97466006aebe064d4681d3cc0420c030dcc02f6b3ff92e0a9081e",
+          ".prettierignore": "6b3e4898ff0650a917ad9c0461f1b4b2cab406a96df639b9604ebb7aec6f2190",
+          "scripts/sync-release-versions.mjs": "31a4ef4041170f7be6d7c95450210dac260de9ddd72814443b4aa8ace9ff431e",
+          "scripts/public-packages.mjs": "332a0359734e1862d5a9645412773589d3bdbc7f4bd8c4e630cdb0d316f98d58",
+          "pnpm-workspace.yaml": "9c5f116aa1ff65a8307393496e0f7e426a7d86469eef4692bd22447afb51bbdf",
+          "packages/mira-editor/src/version.ts": "d7dc4b304d2694405ffd8f0b2bf2d9fc16d89dda91941163501823e70ced1d26",
+          "internal/adapters/solid/package.json": "bd2129a00fb19bcaa145c084d2361e9977f5d989982483822e8f3a1730879fe1",
+          "internal/adapters/vue/package.json": "f1dfb9b77199f61959ebffe8c7b390bd45d77cb473a136ccbc506c0f6a30844a",
+          "packages/mira/package.json": "446d81c386bc8407fcc4a124a5e6789bc45cfe19984955677b7b70b0ea97415e",
+          "packages/mira-editor/package.json": "5968afd48bf5623b30d85cb00cab73f7263283b3eace771a8342270c93e8dcc1",
+          "packages/mira-plugin-ai/package.json": "613b5ece54c4284b0fe6c3d95ab623e11ab64a64aad07ebb624a5b3b492b2979",
+          "packages/mira-plugin-mermaid/package.json": "2b64091c6dcc5280665c2770b63604da35f2625a1e3c4a4eff968c32eed1649d",
+          "packages/mira-react/package.json": "5025c80cbb0b14049840186ffd201454469084963ca32455f0be879b7bfa7884",
+          "packages/mira-vanilla/package.json": "ffc784cb28bf16623455469e8cb040d2685b6d714d290c19ebf4d28623088933"
+        },
+        "currentHashes": {
+          "package.json": "d6902cc0d4a76e6cf509a986d721a963afc65c2a4d5a44268f69ab2ff53134a2",
+          "pnpm-lock.yaml": "e1bf86c68424aded5c66f208f4b9c76e0a9a2247685d72982d1900d79e62feb4",
+          ".changeset/config.json": "a1120c87d88168188ce855a494a8d22e417f15d85a2896d9a648b91b35a4e2de",
+          ".prettierrc": "b7f83b4be9d97466006aebe064d4681d3cc0420c030dcc02f6b3ff92e0a9081e",
+          ".prettierignore": "6b3e4898ff0650a917ad9c0461f1b4b2cab406a96df639b9604ebb7aec6f2190",
+          "scripts/sync-release-versions.mjs": "31a4ef4041170f7be6d7c95450210dac260de9ddd72814443b4aa8ace9ff431e",
+          "scripts/public-packages.mjs": "332a0359734e1862d5a9645412773589d3bdbc7f4bd8c4e630cdb0d316f98d58",
+          "pnpm-workspace.yaml": "9c5f116aa1ff65a8307393496e0f7e426a7d86469eef4692bd22447afb51bbdf",
+          "packages/mira-editor/src/version.ts": "d7dc4b304d2694405ffd8f0b2bf2d9fc16d89dda91941163501823e70ced1d26",
+          "internal/adapters/solid/package.json": "bd2129a00fb19bcaa145c084d2361e9977f5d989982483822e8f3a1730879fe1",
+          "internal/adapters/vue/package.json": "f1dfb9b77199f61959ebffe8c7b390bd45d77cb473a136ccbc506c0f6a30844a",
+          "packages/mira/package.json": "446d81c386bc8407fcc4a124a5e6789bc45cfe19984955677b7b70b0ea97415e",
+          "packages/mira-editor/package.json": "5968afd48bf5623b30d85cb00cab73f7263283b3eace771a8342270c93e8dcc1",
+          "packages/mira-plugin-ai/package.json": "613b5ece54c4284b0fe6c3d95ab623e11ab64a64aad07ebb624a5b3b492b2979",
+          "packages/mira-plugin-mermaid/package.json": "2b64091c6dcc5280665c2770b63604da35f2625a1e3c4a4eff968c32eed1649d",
+          "packages/mira-react/package.json": "5025c80cbb0b14049840186ffd201454469084963ca32455f0be879b7bfa7884",
+          "packages/mira-vanilla/package.json": "ffc784cb28bf16623455469e8cb040d2685b6d714d290c19ebf4d28623088933"
+        },
+        "comparison": "exact-current-tuple"
+      }
     }
   }
 }
