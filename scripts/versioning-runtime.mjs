@@ -27,7 +27,18 @@ export function validateRuntimeContracts(contracts) {
   for (const [version, contract] of Object.entries(contracts.versions)) {
     if (
       !/^\d+\.\d+\.\d+$/.test(version) ||
-      !keys(contract, ["engines", "integrity", "sourceSha", "files"]) ||
+      !keys(contract, [
+        "engines",
+        "integrity",
+        "sourceSha",
+        "files",
+        "nodeMajors",
+      ]) ||
+      (contract.nodeMajors !== undefined &&
+        (!Array.isArray(contract.nodeMajors) ||
+          !contract.nodeMajors.includes(24) ||
+          new Set(contract.nodeMajors).size !== contract.nodeMajors.length ||
+          contract.nodeMajors.some((major) => ![22, 24].includes(major)))) ||
       !(contract.engines === null || typeof contract.engines === "string") ||
       !/^sha512-[A-Za-z0-9+/]{86}==$/.test(contract.integrity ?? "") ||
       !/^[a-f0-9]{40}$/.test(contract.sourceSha ?? "") ||
@@ -96,9 +107,6 @@ export async function guardVersioningInputs(
   nodeVersion = process.versions.node,
 ) {
   validateRuntimeContracts(contracts);
-  if (Number(nodeVersion.split(".")[0]) !== contracts.nodeMajor)
-    throw Error("Version preparation requires the reviewed Node 24 runtime");
-  await assertNodeProject(root);
   if (
     !keys(qualification, [
       "schemaVersion",
@@ -107,11 +115,24 @@ export async function guardVersioningInputs(
       "configSha256",
       "scripts",
       "files",
+      "nodeMajor",
     ]) ||
     qualification.schemaVersion !== 1 ||
     !contracts.versions[qualification.cliVersion]
   )
     throw Error("Version preparation needs a reviewed Changesets version");
+  const selectedMajor = qualification.nodeMajor ?? contracts.nodeMajor;
+  const reviewedMajors = contracts.versions[qualification.cliVersion]
+    .nodeMajors ?? [contracts.nodeMajor];
+  if (!reviewedMajors.includes(selectedMajor))
+    throw Error(
+      `Changesets ${qualification.cliVersion} has no reviewed Node ${selectedMajor} runtime`,
+    );
+  if (Number(nodeVersion.split(".")[0]) !== selectedMajor)
+    throw Error(
+      `Version preparation requires the reviewed Node ${selectedMajor} runtime`,
+    );
+  await assertNodeProject(root);
   if (
     !digest(qualification.configSha256) ||
     !/^pnpm@\d+\.\d+\.\d+(?:\+sha\d+\.[a-f0-9]+)?$/.test(

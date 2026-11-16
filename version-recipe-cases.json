@@ -285,6 +285,184 @@
         "comparison": "exact-current-tuple"
       },
       "historicalNoteSourceSha": "ee056bff3c8355ac40ae29e2fa40825437da7d8b"
+    },
+    "ai-changesets2-native": {
+      "repository": "lapismd/lapis-ai",
+      "sourceSha": "3e29e16f15652ba239d256af49ffcba314355a5e",
+      "profile": "ai-node22-rust-offline",
+      "pending": {
+        "path": ".changeset/bounded-stream-handoff.md",
+        "sha256": "fa167ff89119d3f8e6200b751278260bbd866118576c1bdcd3251dc8a6771ff2"
+      },
+      "historicalNoteSourceSha": "46fceebd76bfcdcc6e5e629205e1779406ead3d3",
+      "ignorePnpmfile": true,
+      "nativeTools": {
+        "nodeVersion": "22.23.5",
+        "rustVersion": "1.99.0",
+        "host": "x86_64-unknown-linux-gnu",
+        "minimumFreeGiB": 30,
+        "cargoPackages": 15,
+        "binaries": {
+          "cargo": "e951141cc55a6cd7b9876d187bd30a3720e6086b99413af95e3b8de1cdd72f14",
+          "rustc": "f3834d26669b03f6855fa54bd2381443123e860167bc0c7a8dd137e5cf6e5e4f",
+          "node": "2f822d544601dfff107f57d945b649d15c5bf6302595735a6bd9cdc7ee9669bd"
+        },
+        "archiveEvidence": {
+          "nodeSource": "https://nodejs.org/dist/v22.23.5/SHASUMS256.txt",
+          "rustSource": "https://static.rust-lang.org/dist/channel-rust-1.99.0.toml",
+          "rustDate": "2026-10-01",
+          "archives": [
+            {
+              "name": "cargo",
+              "version": "0.100.0 (5f94df478 2026-08-27)",
+              "url": "https://static.rust-lang.org/dist/2026-10-01/cargo-1.99.0-x86_64-unknown-linux-gnu.tar.xz",
+              "sha256": "d7674918d28093097614cd9728b6ca60db9ea3038f640f0bd1e9a4188c7568ce",
+              "executableSha256": "e951141cc55a6cd7b9876d187bd30a3720e6086b99413af95e3b8de1cdd72f14",
+              "member": "cargo-1.99.0-x86_64-unknown-linux-gnu/cargo/bin/cargo",
+              "archiveBytes": 10954432
+            },
+            {
+              "name": "rustc",
+              "version": "1.99.0 (b940084d7 2026-09-28)",
+              "url": "https://static.rust-lang.org/dist/2026-10-01/rustc-1.99.0-x86_64-unknown-linux-gnu.tar.xz",
+              "sha256": "77171ba2a0345fdf2abc4fedda55d6de078dae7a68527c28be8c77dcc9604bd5",
+              "executableSha256": "f3834d26669b03f6855fa54bd2381443123e860167bc0c7a8dd137e5cf6e5e4f",
+              "member": "rustc-1.99.0-x86_64-unknown-linux-gnu/rustc/bin/rustc",
+              "archiveBytes": 84044652
+            },
+            {
+              "name": "node",
+              "version": "22.23.5",
+              "url": "https://nodejs.org/dist/v22.23.5/node-v22.23.5-linux-x64.tar.xz",
+              "sha256": "cdeb8670a0c81f51b4dc4ac61919f9b1ad917b304bf8221eb939570663d240f8",
+              "executableSha256": "2f822d544601dfff107f57d945b649d15c5bf6302595735a6bd9cdc7ee9669bd",
+              "member": "node-v22.23.5-linux-x64/bin/node",
+              "archiveBytes": 31062912
+            }
+          ]
+        }
+      },
+      "qualification": {
+        "schemaVersion": 1,
+        "nodeMajor": 22,
+        "cliVersion": "2.31.1",
+        "packageManager": "pnpm@10.34.5",
+        "configSha256": "e0039887bca8bd61c77ae5bc644831a201f70332517e8ce6a85724755ac6c63c",
+        "scripts": {
+          "release:version": "node scripts/changeset-version.mjs",
+          "release:check": "node scripts/validation.mjs run release:check",
+          "dev:cargo": "node scripts/managed-cargo.mjs"
+        },
+        "files": {
+          ".prettierignore": "c35d9f7faff84acf5dc5f1e4383ee5b86de6c597d4112bd8ef9692d882960854",
+          ".prettierrc.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+          "pnpm-workspace.yaml": "daa09fb27c0b144072b39fe28fe1c3509f312a7856e118437fcf2b5e5c4d432a",
+          "release.toml": "930611ff7ef6bbcf8a4696bd8eea98ee8b132e9b2efb1355a01eb58aec9b3e57",
+          "rust-toolchain.toml": "ed26309ca00c855d0073d18fb07968ff1b16d1fe9d86f168ee96efc576218350",
+          "scripts/changeset-version.mjs": "c4918f0f11f0c279f19cac11a56a0b93ae5c5effcf9b4d7219eeb68f8269191f",
+          "scripts/dependency-automation/spec-policy.mjs": "92250b338be61199e74cdc89af684c77dc27cb81ac8d58c51272cb1f063afd8a",
+          "scripts/managed-cargo.mjs": "2d39f71feae038caca77a2ce1cc9376dabddb3749e95515be2f6e10a9bf8881f",
+          "scripts/release-state.mjs": "569fd02b85091ec2d014e60d4301abd25b8c7ee6a7ccf42ef2d419fe748db11c",
+          "scripts/release-version.mjs": "152b14aaacdd5751e9ff5d78a341fd90fbb6203db77221e1bf8e6c0d4ec1e918",
+          "scripts/validation.mjs": "8acd287c82cc6ccc7e0668464dd6f5326089aa85c19190619370070b3be0e6c1",
+          "scripts/validation/docker.mjs": "db568e8fe8826cabb1ae7552700ef059ca845121b0aae36850949ee9ef045f8a",
+          "scripts/validation/lanes.json": "8cfcf2dd75ec52bae9dd1cd07a760e8cf8ff06b0e9fe0e42c9d6b4a31abe53c5",
+          "scripts/validation/model.mjs": "3c3d776eef46abfa63b1aa0f9dfa6779733bc9a22a0314ac2e41d49460ef402c",
+          "scripts/validation/reports.mjs": "c9bd146cbf968696e4b7daf1da8ea5271544852ae8568c39ebea4913cd6042b7",
+          "scripts/validation/runs.mjs": "e8a4113b8780b1bd1729808359827cc54878a96645371c27ff0d6ad0931be640",
+          "scripts/validation/source.mjs": "d3c42818ee14a0cf2e733c517cddc7a85320d4906d29c51718e648e5b9c86078"
+        }
+      },
+      "versionOutputs": [
+        {
+          "path": "packages/ai/package.json",
+          "packageName": "@lapismd/lapis-ai",
+          "kind": "json-version"
+        }
+      ],
+      "closureEvidence": {
+        "currentSourceSha": "3e29e16f15652ba239d256af49ffcba314355a5e",
+        "sourceHashes": {
+          ".changeset/README.md": "ac4c9d41b55ae140414ec8183616f36126ca927b9f858f05a9592db69d372356",
+          ".changeset/config.json": "e0039887bca8bd61c77ae5bc644831a201f70332517e8ce6a85724755ac6c63c",
+          ".github/workflows/changesets.yml": "95cfed231f0fd28a83c4b758ae04a37a73aec7cd5ce3463e89dd0cf6becc7662",
+          ".github/workflows/ci.yml": "c037228ee9e181c9708a4d2b0cc96c9d5c938f1a80c9754e70de9e1650c421ef",
+          ".github/workflows/publish-spec-pages.yml": "116e3537e03b4788422066dd0b2ca2e2093fc9b2cb7b435b96dd1ee0fee9d246",
+          ".github/workflows/release.yml": "3656a0285bcb204c8bab66f253d5b2655c364e8ef58b92a0671f1bc6e8fd7834",
+          ".prettierignore": "c35d9f7faff84acf5dc5f1e4383ee5b86de6c597d4112bd8ef9692d882960854",
+          ".prettierrc.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+          "CHANGELOG.md": "a9f175910a134cfb509e112c652465e6d9e75636b47f2008db727a8c0333004a",
+          "Cargo.lock": "15a1592b43299658160c652dc96ec8f43f01a8baf1ae7169cfcc13c293c1b984",
+          "Cargo.toml": "0797484ca32f20c9f3d2fe240dce86cdcb0a7f959e65e968b66cdeb8abf4d7d2",
+          "README.md": "5ec4c0104ed80aac38810cde03282b94c44924b28873d4a6e96b1792bda5223b",
+          "crates/lapis-acp-agent/Cargo.toml": "e13d9aa457af43b98cf30aab3e6055a18c4ec4ab4411bf04a2f7f1caa9edabb6",
+          "crates/lapis-acp-agent/README.md": "140cebf4f9110e1d6d37f3d772466c65062e109dbcd4231d0b3ba2ba761e7aac",
+          "crates/lapis-acp-cli/Cargo.toml": "3dce1bbb4f8482c49914a27fd6e197bf0dfd56cfaae3e405a7db23aef65ad86a",
+          "crates/lapis-acp-cli/README.md": "67b98197f5477c78d952af077ad685a7564d53b09fb81a9099b7c089533fec65",
+          "crates/lapis-acp-control/Cargo.toml": "ee7ef5fd78a349fe7514431a1290a8550a5e9abffff3058db62f9267ebb384e4",
+          "crates/lapis-acp-control/README.md": "2467018a4d584b7ff64c9a7b881daec2c8c215c57fb1ae475ac51ff7d28d0cda",
+          "crates/lapis-acp-protocol/Cargo.toml": "53e19e34e978add45b0af7c56dcf340bfc016cd0953c1b4751c55c4a303b91eb",
+          "crates/lapis-acp-protocol/README.md": "d497c18670ed93f5f2af733ec02370aaf04e9715ad4821cc809f59e61cb80e2f",
+          "crates/lapis-acp-runner/Cargo.toml": "56661e217bdaaa051dcea065aa1416858a204cee4144255e198227e670a6cdfd",
+          "crates/lapis-acp-runner/README.md": "59c6a89f87ebe61bd527e8d30a7349c13c95f701b24a6e3781f1cf051e1d2da8",
+          "crates/lapis-acp-testkit/Cargo.toml": "7e69afad649d2d13c5c96dfd0c9bedb679ad3666cd4042283b593696df681441",
+          "crates/lapis-acp-testkit/README.md": "4df628ec8d1ca5b2d947d38eebf824c3f30aa21c84b59794de35f6251eb4ccc7",
+          "crates/lapis-agent-tools/Cargo.toml": "a1456d95e11e860c2d686098f0070d1137e279aba577ae713e0fce8996695f0d",
+          "crates/lapis-agent-tools/README.md": "8a2b746f45c9730aaa9b6bec2308e67f1cc32190768c11eb50b9629dac4c380d",
+          "crates/lapis-agent/Cargo.toml": "23a1e06352438c387a9e9112c5243f183b97a443072a5bd7c2a0d65c7edba2aa",
+          "crates/lapis-agent/README.md": "0a7d29ac2208c97fcb7763e398a1e5cbf0c1cc5fdc15fd86e74d4c7aedd6e2aa",
+          "crates/lapis-ai-app-tools/Cargo.toml": "fd47f9370475a307d56de2b183ccb7f014493df5cb90ef169621d2d6b60486c8",
+          "crates/lapis-ai-app-tools/README.md": "67d456b47e44169948b65f9851b629bfafd3617da9566785519168d79d79eda0",
+          "crates/lapis-ai-capture/Cargo.toml": "971d3e94362be7dc9b69df425a1796c58dfd67ccbade1e58830968713c8f2714",
+          "crates/lapis-ai-capture/README.md": "d5e239449ff524335a3be318bcd584d6efb6d000613c6a5014e302220634d82c",
+          "crates/lapis-ai-config/Cargo.toml": "fb21981826d6f76e8577a0aaa7808ae4f84b3a2a444b29c6fc2ca9a6ed92f13e",
+          "crates/lapis-ai-config/README.md": "1d4f6b146955d9ac341aace2fad2c5fc8d9767f15d54724670ad6ebddf5ab562",
+          "crates/lapis-ai-runtime/Cargo.toml": "ab00ad5f8790b6e6ea1cbef1b54be52563b31bf9fc03efa4cddbac0148afd1a5",
+          "crates/lapis-ai-runtime/README.md": "7624861ff8e0065d0d2b0d6b8096449b0ab6b2552519d865f9af0b7a4d2acb3c",
+          "crates/lapis-ai-service/Cargo.toml": "55aa4d6b3481bf35a9ff311b31068cb8cda8e030551f21eb73d309699d09ad4b",
+          "crates/lapis-ai-service/README.md": "9cc1a8b18e1307d92605f867d5a488c56747f3c2930725b26225ed1235d3fc2d",
+          "crates/lapis-compute/Cargo.toml": "aaff83ff6fbe1755f265e01969605972e8de512d5f5eb6216c95add4cc1d5dfc",
+          "crates/lapis-compute/README.md": "ad204868c0a01fd8644306211df570a7a619b8ac6b611918feb82c041e2e8582",
+          "crates/tauri-plugin-lapis-ai/Cargo.toml": "23a8cced82313306aecd0474908745ab60d4cad3d18c5c65d83dbcd6287090cb",
+          "crates/tauri-plugin-lapis-ai/README.md": "1cf0e64be6d2398468de3b990d1b06384ab8869ebeed40ee172f593694ed9281",
+          "package.json": "3a52ab4901665ecef4093447e176108e09c03248fe2e08126cfc71fb46129c30",
+          "packages/ai/CHANGELOG.md": "4e99861a1c9fcbe6bfe06cc0acafb61631b94d743d09f843bc429a984e0e87ac",
+          "packages/ai/package.json": "9e07ef8280ca1c9c9fb37105b62d3d3d5b8e5e0d68df8905d7a4e867e79725e4",
+          "pnpm-lock.yaml": "925de41aeef67f9e9e874b310003e72ddd23760dfa63ce8522699e0a5a7e4f86",
+          "pnpm-workspace.yaml": "daa09fb27c0b144072b39fe28fe1c3509f312a7856e118437fcf2b5e5c4d432a",
+          "release.toml": "930611ff7ef6bbcf8a4696bd8eea98ee8b132e9b2efb1355a01eb58aec9b3e57",
+          "rust-toolchain.toml": "ed26309ca00c855d0073d18fb07968ff1b16d1fe9d86f168ee96efc576218350",
+          "scripts/changeset-version.mjs": "c4918f0f11f0c279f19cac11a56a0b93ae5c5effcf9b4d7219eeb68f8269191f",
+          "scripts/changesets.test.mjs": "8f27256610e49db5c2a7fc85894b10e2635bd984c15f53009ee738f86995d64e",
+          "scripts/dependency-automation/spec-policy.mjs": "92250b338be61199e74cdc89af684c77dc27cb81ac8d58c51272cb1f063afd8a",
+          "scripts/managed-cargo.mjs": "2d39f71feae038caca77a2ce1cc9376dabddb3749e95515be2f6e10a9bf8881f",
+          "scripts/registry-check.mjs": "74482177da9c49bc50230ba977898841f40cebc753a96601bfcc1e3c822a43a6",
+          "scripts/release-archive.mjs": "91e1e0bc9600f11a51ca0319c7b1a6644098db4a2c00f0776bd0eb4f2e9c0720",
+          "scripts/release-assets.mjs": "a72b10c26d35f15e911eb8f6bddbba63cd7394721a4c4ab931944b76ac9bf7ab",
+          "scripts/release-identity.mjs": "170bd429392f0bc6d88323495d6fa16e9301dd88b9fdf3c96c3a1308037000e7",
+          "scripts/release-identity.test.mjs": "4f2ca0efc5260b31509b9591f22707acfa1eaf02c09836a81bd5a3d58d4921e1",
+          "scripts/release-orchestration.mjs": "a9025b794dcaec171b0371ea5ac4e7f258899bb359426c5c3d3ac83212c1ae6c",
+          "scripts/release-orchestration.test.mjs": "953a5569b1816f488344b375e0b175a6ee9617f445fe15ef6fe3de36668482a8",
+          "scripts/release-registry.mjs": "6c691d54a15cea220c5478dbad657419b781fbe3931ee16e24d7b59af41a6df1",
+          "scripts/release-state.mjs": "569fd02b85091ec2d014e60d4301abd25b8c7ee6a7ccf42ef2d419fe748db11c",
+          "scripts/release-version.mjs": "152b14aaacdd5751e9ff5d78a341fd90fbb6203db77221e1bf8e6c0d4ec1e918",
+          "scripts/validation.mjs": "8acd287c82cc6ccc7e0668464dd6f5326089aa85c19190619370070b3be0e6c1",
+          "scripts/validation/check-routing.mjs": "a2f443498cee7ec6903c7e3bcc48cbc57dafbe66ec95fc51659c1dcf148b0924",
+          "scripts/validation/docker.mjs": "db568e8fe8826cabb1ae7552700ef059ca845121b0aae36850949ee9ef045f8a",
+          "scripts/validation/install-tools.mjs": "c8349374c0ce392ff606a68ef06013677da82cd7924c20b3da0658f2e22916d9",
+          "scripts/validation/lanes.json": "8cfcf2dd75ec52bae9dd1cd07a760e8cf8ff06b0e9fe0e42c9d6b4a31abe53c5",
+          "scripts/validation/model.mjs": "3c3d776eef46abfa63b1aa0f9dfa6779733bc9a22a0314ac2e41d49460ef402c",
+          "scripts/validation/native-scripts.json": "2fbca816fba40fba18f2259b02143049b9499d74b3f127a6480743e89314e6f9",
+          "scripts/validation/reports.mjs": "c9bd146cbf968696e4b7daf1da8ea5271544852ae8568c39ebea4913cd6042b7",
+          "scripts/validation/runs.mjs": "e8a4113b8780b1bd1729808359827cc54878a96645371c27ff0d6ad0931be640",
+          "scripts/validation/smoke.mjs": "e23bbaff92b529510ed1006bbd4165ec0e272c1c69d9934101e4f6fc21450d14",
+          "scripts/validation/source.mjs": "d3c42818ee14a0cf2e733c517cddc7a85320d4906d29c51718e648e5b9c86078",
+          "scripts/validation/worker.mjs": "cf557fb691eb70095133f5c29fa763b32443ed63d825a1ef4206bbd42bdc3eff",
+          "spec/src/SUMMARY.md": "401e83fb7c90e5be83c92a6b90d36fd543ef95d70738fc685d5cce41e3b6d50d",
+          "spec/src/current/contracts/release.md": "e7e10a2dac94f9ff9e2c5c9e9ab44a1492cf4e5df73b6fb1086e1103f1de4a78"
+        },
+        "comparison": "exact-current-tuple"
+      }
     }
   }
 }
