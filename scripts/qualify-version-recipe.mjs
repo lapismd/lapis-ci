@@ -74,6 +74,7 @@ function readGit(args) {
   }).trim();
 }
 function run(args, env) {
+  if (args[0] === "install") receipt.installArgs = [...args];
   const result = spawnSync("pnpm", args, { cwd: root, env, stdio: "inherit" });
   if (result.status !== 0) throw Error("Recipe subprocess failed");
 }
@@ -139,6 +140,9 @@ try {
         "install",
         "--frozen-lockfile",
         "--ignore-scripts",
+        ...(example.strictPeerDependencies
+          ? ["--strict-peer-dependencies"]
+          : []),
         ...(example.ignorePnpmfile ? ["--ignore-pnpmfile"] : []),
       ],
       setupEnv,

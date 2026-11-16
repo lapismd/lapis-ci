@@ -29,6 +29,13 @@ export function selectRecipeCase(data, name) {
     typeof selected.ignorePnpmfile !== "boolean"
   )
     throw Error("Frozen install hook policy must be explicit");
+  if (
+    selected.strictPeerDependencies !== undefined &&
+    (typeof selected.strictPeerDependencies !== "boolean" ||
+      (selected.strictPeerDependencies &&
+        selected.repository !== "lapismd/lapis-plugin-docs"))
+  )
+    throw Error("Strict peer qualification requires the reviewed Docs policy");
   validateVersionOutputs(selected.versionOutputs ?? []);
   validateAiRecipeProfile(selected);
   if (

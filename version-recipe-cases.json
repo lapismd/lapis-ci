@@ -210,10 +210,10 @@
     },
     "docs-changesets3": {
       "repository": "lapismd/lapis-plugin-docs",
-      "sourceSha": "073f4a58ddcb414ad5ce93b4107c4262438290ff",
+      "sourceSha": "9e8e7ec23fc5d7f412f180e76ebcb3699a00cfed",
       "pending": {
-        "path": ".changeset/lapis-dependencies-142f236303c0.md",
-        "sha256": "513b55f83b942e2c5c2dcc28c1c1835f4c69603e7fa1b124063b7604cec879e4"
+        "path": ".changeset/docs-supported-host-cohort.md",
+        "sha256": "73146f3748d9ec807e59fc3c18fbe72b1e804c08ae5884cdeb147d4d8026cbc6"
       },
       "ignorePnpmfile": true,
       "qualification": {
@@ -226,7 +226,7 @@
         },
         "files": {
           "scripts/release.mjs": "3d2c5b8e427aef5eecf00d4d196c64291672ff7424bd039c77489302750b2056",
-          "pnpm-workspace.yaml": "05ff949b6fd30ec4680e6b9c60d0fa8aeafb4f37a4a6a143505ffe680497542b"
+          "pnpm-workspace.yaml": "89f23dc78ff0cadc29c72400d720748299543e9a8bec41544eef667000dbb4e5"
         }
       },
       "versionOutputs": [
@@ -261,36 +261,44 @@
         }
       ],
       "closureEvidence": {
-        "currentSourceSha": "073f4a58ddcb414ad5ce93b4107c4262438290ff",
+        "currentSourceSha": "9e8e7ec23fc5d7f412f180e76ebcb3699a00cfed",
         "sourceHashes": {
-          "package.json": "3df2cc9fa92fabd2e45321ab275e1ab0d8951309b08902d7a57d86a73d9cc4bf",
-          "pnpm-lock.yaml": "38dd03686981c527197d83b083907d1b92f3140d8403497c2ebe79558e3d77ca",
+          "package.json": "c42c00fc9614fb574556446887bb3bc736ee8e99c8c504b08d160911e58e62d6",
+          "pnpm-lock.yaml": "de2cb227ba83e06423cb2b95c67c66dc80db8fcde600ef067f77fe2c62756a0f",
           ".changeset/config.json": "7dd5cd533dff2d3e2408b6091b11ce311f3709995b6b0a215dfed6ee24b309a7",
-          ".github/workflows/ci.yml": "c850ffe891b74e6c570057becf777074249dc8eef273d8df3138ea52b9c2fb2f",
+          ".github/workflows/ci.yml": "0a1a9270cc050d128b15323b40c71ef40fa01d2ed26c3e48aa4fa5e34a62a5ff",
           "scripts/release.mjs": "3d2c5b8e427aef5eecf00d4d196c64291672ff7424bd039c77489302750b2056",
-          "pnpm-workspace.yaml": "05ff949b6fd30ec4680e6b9c60d0fa8aeafb4f37a4a6a143505ffe680497542b",
+          "pnpm-workspace.yaml": "89f23dc78ff0cadc29c72400d720748299543e9a8bec41544eef667000dbb4e5",
           "manifest.json": "3fe4fc1c0f6ca3330c21ce9cece2f9a8fc998324c0f0ae8201995c45309a6fde",
-          "spec/src/plugins/docs/index.md": "44515845e3c9b41a7f5dab3cbafd9742a2ecf16be83bd5c78f7dd1b39f2fe7ad",
+          "spec/src/plugins/docs/index.md": "f28c25f3ad20af0edc5c1d5138b98592c249cc668c4721c78eef1c80b43b0296",
           "spec-validator.config.mjs": "b364d64cd95efd2578c49375d9076bb1056f481788c3f7a2030ac94244f36fe2",
-          "spec/src/spec-governance.md": "e699a798b69d768fe85d3f54a14b0a590d290a45c99d16092c41d7d34a67b1a6",
-          "README.md": "5a9b69844918c3d81a7507648ae09a94fed05697678832ad45af08f61d05d012"
+          "spec/src/spec-governance.md": "53d12ff9b2feab6a6506075e2b8005754c4698c609a8747c292014cecfd9cabe",
+          "README.md": "5a9b69844918c3d81a7507648ae09a94fed05697678832ad45af08f61d05d012",
+          ".changeset/docs-supported-host-cohort.md": "73146f3748d9ec807e59fc3c18fbe72b1e804c08ae5884cdeb147d4d8026cbc6",
+          ".github/development-audit.json": "f28d3161efc381e809e273bc34f87fc8a95e292ca3814a09156a462119709d54",
+          ".github/actions/ci-setup/action.yml": "7bbc10077de53dfc35926bc29b068bb23d6fed30e5e110d495da1e52b23e6639",
+          "spec/records/2026-11-16-supported-host-cohort.md": "d4732ed28741528e72935b76699064ab5ba4a066857a6e77618f2b1ea2de8d1e"
         },
         "currentHashes": {
-          "package.json": "3df2cc9fa92fabd2e45321ab275e1ab0d8951309b08902d7a57d86a73d9cc4bf",
-          "pnpm-lock.yaml": "38dd03686981c527197d83b083907d1b92f3140d8403497c2ebe79558e3d77ca",
+          "package.json": "c42c00fc9614fb574556446887bb3bc736ee8e99c8c504b08d160911e58e62d6",
+          "pnpm-lock.yaml": "de2cb227ba83e06423cb2b95c67c66dc80db8fcde600ef067f77fe2c62756a0f",
           ".changeset/config.json": "7dd5cd533dff2d3e2408b6091b11ce311f3709995b6b0a215dfed6ee24b309a7",
-          ".github/workflows/ci.yml": "c850ffe891b74e6c570057becf777074249dc8eef273d8df3138ea52b9c2fb2f",
+          ".github/workflows/ci.yml": "0a1a9270cc050d128b15323b40c71ef40fa01d2ed26c3e48aa4fa5e34a62a5ff",
           "scripts/release.mjs": "3d2c5b8e427aef5eecf00d4d196c64291672ff7424bd039c77489302750b2056",
-          "pnpm-workspace.yaml": "05ff949b6fd30ec4680e6b9c60d0fa8aeafb4f37a4a6a143505ffe680497542b",
+          "pnpm-workspace.yaml": "89f23dc78ff0cadc29c72400d720748299543e9a8bec41544eef667000dbb4e5",
           "manifest.json": "3fe4fc1c0f6ca3330c21ce9cece2f9a8fc998324c0f0ae8201995c45309a6fde",
-          "spec/src/plugins/docs/index.md": "44515845e3c9b41a7f5dab3cbafd9742a2ecf16be83bd5c78f7dd1b39f2fe7ad",
+          "spec/src/plugins/docs/index.md": "f28c25f3ad20af0edc5c1d5138b98592c249cc668c4721c78eef1c80b43b0296",
           "spec-validator.config.mjs": "b364d64cd95efd2578c49375d9076bb1056f481788c3f7a2030ac94244f36fe2",
-          "spec/src/spec-governance.md": "e699a798b69d768fe85d3f54a14b0a590d290a45c99d16092c41d7d34a67b1a6",
-          "README.md": "5a9b69844918c3d81a7507648ae09a94fed05697678832ad45af08f61d05d012"
+          "spec/src/spec-governance.md": "53d12ff9b2feab6a6506075e2b8005754c4698c609a8747c292014cecfd9cabe",
+          "README.md": "5a9b69844918c3d81a7507648ae09a94fed05697678832ad45af08f61d05d012",
+          ".changeset/docs-supported-host-cohort.md": "73146f3748d9ec807e59fc3c18fbe72b1e804c08ae5884cdeb147d4d8026cbc6",
+          ".github/development-audit.json": "f28d3161efc381e809e273bc34f87fc8a95e292ca3814a09156a462119709d54",
+          ".github/actions/ci-setup/action.yml": "7bbc10077de53dfc35926bc29b068bb23d6fed30e5e110d495da1e52b23e6639",
+          "spec/records/2026-11-16-supported-host-cohort.md": "d4732ed28741528e72935b76699064ab5ba4a066857a6e77618f2b1ea2de8d1e"
         },
         "comparison": "exact-current-tuple"
       },
-      "historicalNoteSourceSha": "ee056bff3c8355ac40ae29e2fa40825437da7d8b"
+      "strictPeerDependencies": true
     },
     "ai-changesets2-native": {
       "repository": "lapismd/lapis-ai",
