@@ -54,3 +54,23 @@ code/package files. Read-only input acceptance also passes for Plugins, Core,
 Mira, Tasks, Docs, Agent UI and Terminal on Node 24.15.0 and AI on verified
 official Node 22.23.5. These checks execute no consumer version command and
 introduce no adoption or publication claim.
+
+## First hosted result and fixture correction
+
+Actual run `43976382266` at shared source
+`a462cf8fc9efdaa2f07c52b248c851db02013524` passes immutable source/runtime
+checks, the frozen install, real status and the unchanged version command.
+The final output check rejects ten untracked files. The harness creates its
+nine restricted-PATH entries and status file under the consumer's `.local/`
+directory; unlike earlier consumers, Visual Delta does not ignore that path.
+This is a failed qualification, not successful whole-recipe acceptance.
+
+Qualification metadata now lives in an owned temporary sibling outside consumer
+source, with cleanup on success and failure. A temporary root inside the
+consumer is rejected. The consumer's ignore policy, exact version command,
+zero-unexpected-output assertion and every other output guard remain unchanged.
+The new regression proves that a consumer without any local-directory ignore
+stays unchanged while proof metadata is created and removed. Existing negative
+output tests continue rejecting arbitrary tracked and untracked paths.
+The focused fixture/output suite passes nine tests and full source verification
+passes 236 tests. A new exact-source hosted run remains required after merge.
