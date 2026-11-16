@@ -112,3 +112,61 @@ No image tool/version, Docker input or application source changes in this
 slice. The Dockerfile still copies only versions.json and verify-image.mjs;
 the shared helper is downloaded as pinned action source instead of changing
 the image. Existing native image qualification remains in hosted CI.
+
+## Root and workspace CLI3 qualification cases
+
+The corrected Plugins proof [43785402039](https://github.com/lapismd/lapis-ci/actions/runs/43785402039)
+passed on helper source `c6f5827520787256cce793a1a33b75f86e14bd81`.
+Its actual status, version, changelog, metadata sync and Bases checks ran with
+Node24.15.0, pnpm10.34.5 and Deno absent. That success applies to the reviewed
+Plugins closure; it does not qualify other repositories or CLI majors.
+
+The manual workflow now offers only three source-owned case IDs. A validated
+selector reads immutable repository/SHA/pnpm coordinates from tracked data;
+dispatch input cannot supply a repository, ref or command. Each case retains
+the read-only token, full-history detached checkout, frozen scripts-disabled
+install, mandatory nonempty status, unchanged `pnpm release:version`, version/
+changelog/note-consumption assertions and no-Deno boundary. Package discovery
+uses the installed CLI's own `@manypkg/get-packages` dependency and includes
+the root manifest. This supports both a public root package and workspace
+layouts with private adapters without replacing the consumer's selection rules.
+
+| Case               | Exact recipe source                                | Pending-note source                                                                                                                    | Current closure comparison                                                                                                                                                        |
+| ------------------ | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `core-changesets3` | `1c5692bb840cce4e0541a29e5876838f483b6000`         | Genuine `responsive-shell-focus.md` at that source                                                                                     | Current `9cf94b7ce62d679aca77d6d5c65fe84405f086b9`: root manifest differs only in its own version0.13.3→0.13.4; lock, command, config, formatter and workspace policy bytes match |
+| `mira-changesets3` | Current `d681bdd6b9f500a554f18e8ac3c4c9cdfa24eed5` | Exact `async-embed-activation.md` from ancestor `42988233a4d68e5ec8c6dfbd2d92e97868a4ad62`, restored only as labelled validation input | Current lock/root manifest, all workspace manifests, editor version input, workspace/formatter/config and both local helper modules are explicitly SHA256-bound                   |
+
+Both cases retain CLI3.0.3, pnpm10.32.1 and their actual commands/configuration.
+Core's command prepares its public root package, refreshes the lock and formats
+the root manifest/changelog. Mira's command additionally runs its existing
+`sync-release-versions.mjs --write` and existing formatter globs. The fixture
+then invokes the same source helper's `--check` to verify editor metadata.
+Hashes live in `version-recipe-cases.json`, including the different raw Core
+root-manifest hashes; no equivalence is inferred from source CI alone.
+
+Mira's current three maintenance notes have empty release maps. Its historical
+note cannot qualify an older dependency graph for current adoption. Instead,
+the fixture reads the exact historical Git blob after verifying an immutable
+ancestor, absent selected-source path, reviewed SHA256 and the same disposable
+hosted checkout fence. It writes only that previously consumed note with
+exclusive create semantics. It never stages, commits, pushes, changes product
+source/config/recipes, or overwrites an existing note. The receipt labels this
+`historical-validation-input`, `currentReleaseIntent=false`, and records both
+source SHAs. This tests a real current recipe against a genuine historical
+input; it does not claim that current main requests a release or reproduce the
+historical release versions. Publication and writer App minting remain absent.
+
+Before implementation, each new focused test file failed once for its missing
+module/export. The repaired layout/selection tests and historical-note test
+pass, alongside the existing fixture/guard boundaries. Node24's actual local
+CLI discovery sees Core's root package and Mira's six public packages plus
+private root/Solid/Vue adapters. Hosted whole-recipe execution for these new
+cases remains pending review and dispatch. Neither consumer has adopted a new
+guard, changed a recipe, installed/removed Deno, or gained release authority in
+this source-only slice.
+
+Local qualification passes57/57 source tests on Node24, including13 focused
+layout/case, fixture and guard tests, plus repository contract, formatter and
+actionlint checks. Both actual local CLI3 installations also accept their
+source-owned qualification inputs on Node24.19.0; this read-only acceptance
+does not execute or qualify the whole recipe. Image inputs are unchanged.

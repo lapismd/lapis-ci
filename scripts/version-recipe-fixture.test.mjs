@@ -5,6 +5,8 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { establishFixtureBaseline } from "./version-recipe-fixture.mjs";
+import { restoreHistoricalFixtureNote } from "./version-recipe-fixture.mjs";
+import { createHash } from "node:crypto";
 
 async function fixture(t) {
   const workspace = await mkdtemp(path.join(tmpdir(), "lapis-recipe-ref-"));
@@ -150,4 +152,91 @@ test("production fixture setup precedes unchanged install/status and whole-recip
   assert(baseline < source.indexOf('run(["install"'));
   assert(baseline < source.indexOf('run(["exec", "changeset", "status"'));
   assert.match(source, /run\(\["release:version"\],\s*env\)/);
+});
+
+test("current-tuple validation restores only exact historical note bytes in the fenced fixture", async (t) => {
+  const f = await fixture(t);
+  const git = (args, input) =>
+    execFileSync("git", ["-C", f.root, ...args], {
+      input,
+      encoding: "utf8",
+      env: {
+        ...process.env,
+        GIT_AUTHOR_NAME: "Fixture",
+        GIT_AUTHOR_EMAIL: "fixture@example.invalid",
+        GIT_COMMITTER_NAME: "Fixture",
+        GIT_COMMITTER_EMAIL: "fixture@example.invalid",
+      },
+    }).trim();
+  const bytes =
+    '---\n"genuine-package": minor\n---\n\nHistorical source note.\n';
+  const blob = git(["hash-object", "-w", "--stdin"], bytes);
+  const notes = git(["mktree"], `100644 blob ${blob}\trestored.md\n`);
+  const tree = git(["mktree"], `040000 tree ${notes}\t.changeset\n`);
+  const historical = git(["commit-tree", tree], "Historical pending source\n");
+  const empty = git(["mktree"], "");
+  const current = git(
+    ["commit-tree", empty, "-p", historical],
+    "Current source without the consumed note\n",
+  );
+  await writeFile(path.join(f.git, "HEAD"), current + "\n");
+  const note = {
+    sourceSha: historical,
+    path: ".changeset/restored.md",
+    sha256: createHash("sha256").update(bytes).digest("hex"),
+  };
+  await assert.rejects(
+    restoreHistoricalFixtureNote(
+      f.root,
+      current,
+      { ...note, sha256: "0".repeat(64) },
+      f.context,
+    ),
+    /hash/,
+  );
+  await assert.rejects(
+    restoreHistoricalFixtureNote(
+      f.root,
+      current,
+      { ...note, path: "../escape.md" },
+      f.context,
+    ),
+    /note path/,
+  );
+  await assert.rejects(
+    restoreHistoricalFixtureNote(f.root, current, note, {
+      ...f.context,
+      actions: "false",
+    }),
+    /known disposable/,
+  );
+  await assert.rejects(
+    restoreHistoricalFixtureNote(
+      f.root,
+      current,
+      { ...note, sourceSha: f.sourceSha },
+      f.context,
+    ),
+    /immutable ancestor/,
+  );
+  await writeFile(path.join(f.git, "HEAD"), historical + "\n");
+  await assert.rejects(
+    restoreHistoricalFixtureNote(f.root, historical, note, f.context),
+    /already owns/,
+  );
+  await writeFile(path.join(f.git, "HEAD"), current + "\n");
+  const result = await restoreHistoricalFixtureNote(
+    f.root,
+    current,
+    note,
+    f.context,
+  );
+  assert.equal(await readFile(path.join(f.root, note.path), "utf8"), bytes);
+  assert.equal(result.kind, "historical-validation-input");
+  assert.equal(result.currentReleaseIntent, false);
+  assert.equal(f.read(["rev-parse", "HEAD"]), current);
+  await assert.rejects(
+    restoreHistoricalFixtureNote(f.root, current, note, f.context),
+    /EEXIST/,
+  );
 });

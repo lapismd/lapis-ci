@@ -2,6 +2,15 @@ name: Qualify actual portable version recipe
 
 on:
   workflow_dispatch:
+    inputs:
+      case:
+        description: Reviewed immutable source recipe
+        type: choice
+        default: plugins-changesets2
+        options:
+          - plugins-changesets2
+          - core-changesets3
+          - mira-changesets3
 
 permissions:
   contents: read
@@ -11,7 +20,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  plugins-changesets2:
+  qualify:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -20,26 +29,34 @@ jobs:
         with:
           path: guard
           persist-credentials: false
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
-        with:
-          repository: lapismd/lapis-plugins
-          ref: 03edd845b35cb3e33f4c963fce3ea787f8e373c4
-          path: consumer
-          fetch-depth: 0
-          persist-credentials: false
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: "24.15.0"
+      - name: Select reviewed immutable recipe coordinates
+        id: recipe
+        run: node guard/scripts/select-version-recipe.mjs
+        env:
+          RECIPE_CASE: ${{ inputs.case }}
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          repository: ${{ steps.recipe.outputs.repository }}
+          ref: ${{ steps.recipe.outputs.source }}
+          path: consumer
+          fetch-depth: 0
+          persist-credentials: false
       - name: Activate the source-owned exact package manager
-        run: corepack enable && corepack prepare pnpm@10.34.5 --activate
+        run: corepack enable && corepack prepare "$RECIPE_PNPM" --activate
+        env:
+          RECIPE_PNPM: ${{ steps.recipe.outputs.pnpm }}
       - name: Qualify genuine source version mutation without Deno or a writer App
         run: node guard/scripts/qualify-version-recipe.mjs consumer
         env:
+          RECIPE_CASE: ${{ steps.recipe.outputs.case }}
           GITHUB_TOKEN: ${{ github.token }}
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         if: always()
         with:
-          name: plugins-changesets2-runtime-qualification
+          name: ${{ steps.recipe.outputs.case }}-runtime-qualification
           path: reports/version-recipe-qualification.json
           if-no-files-found: error
           retention-days: 14

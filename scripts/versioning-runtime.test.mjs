@@ -187,7 +187,16 @@ test("reviewed stock data and hosted genuine-source proof retain read-only autho
   );
   assert.match(workflow, /permissions:\n  contents: read/);
   assert.match(workflow, /github.ref == 'refs\/heads\/main'/);
-  assert(workflow.includes(`ref: ${example.sourceSha}`));
+  assert(workflow.includes("ref: ${{ steps.recipe.outputs.source }}"));
+  assert(
+    workflow.includes("repository: ${{ steps.recipe.outputs.repository }}"),
+  );
+  assert(
+    workflow.includes("run: node guard/scripts/select-version-recipe.mjs"),
+  );
+  assert(workflow.includes("RECIPE_CASE: ${{ inputs.case }}"));
+  for (const name of Object.keys(cases.cases))
+    assert(workflow.includes(`- ${name}`));
   assert.match(workflow, /fetch-depth: 0/);
   assert.match(workflow, /GITHUB_TOKEN: \$\{\{ github.token \}\}/);
   assert.doesNotMatch(
