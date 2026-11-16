@@ -45,6 +45,16 @@ import {
   verifyAiRecipeOutputs,
 } from "./ai-version-recipe-outputs.mjs";
 
+import {
+  terminalRecipeEnvironment,
+  bootstrapTerminalRecipe,
+  verifyTerminalRecipeTools,
+} from "./terminal-version-recipe.mjs";
+import {
+  snapshotTerminalRecipeOutputs,
+  verifyTerminalRecipeOutputs,
+} from "./terminal-version-recipe-outputs.mjs";
+
 const root = path.resolve(process.argv[2] ?? "");
 if (!process.argv[2])
   throw Error("Provide the immutable consumer source checkout");
@@ -58,6 +68,8 @@ const caseName = process.env.RECIPE_CASE ?? "plugins-changesets2";
 const example = selectRecipeCase(cases, caseName);
 const versionCommand = versionRecipeCommand(example.qualification);
 const aiProfile = example.profile === "ai-node22-rust-offline";
+const terminalProfile = example.profile === "terminal-node24-rust-offline";
+const nativeProfile = aiProfile || terminalProfile;
 const contracts = JSON.parse(
   await readFile(
     new URL("../changesets-runtime.json", import.meta.url),
@@ -139,15 +151,21 @@ try {
   );
   await save();
   // Fresh exact install; never change source configuration or dependency recipes.
-  const setupEnv = aiProfile ? aiRecipeEnvironment(process.env) : process.env;
+  const setupEnv = aiProfile
+    ? aiRecipeEnvironment(process.env)
+    : terminalProfile
+      ? terminalRecipeEnvironment(process.env)
+      : process.env;
   const nativeTools = aiProfile
     ? await verifyAiRecipeTools(root, example, setupEnv)
-    : null;
-  if (aiProfile) {
+    : terminalProfile
+      ? await verifyTerminalRecipeTools(root, example, setupEnv)
+      : null;
+  if (nativeProfile) {
     receipt.nativeTools = nativeTools.receipt;
     await save();
   }
-  if (aiProfile)
+  if (nativeProfile)
     run(["install", "--frozen-lockfile", "--ignore-pnpmfile"], setupEnv);
   else
     run(
@@ -176,7 +194,7 @@ try {
     "sed",
     "dirname",
     "uname",
-    ...(aiProfile ? ["cargo", "rustc"] : []),
+    ...(nativeProfile ? ["cargo", "rustc"] : []),
   ]) {
     const actual =
       nativeTools?.paths[name] ??
@@ -188,7 +206,7 @@ try {
   const env = {
     ...setupEnv,
     PATH: bin,
-    ...(aiProfile ? {} : { LAPIS_PLUGINS_VALIDATION_RUNTIME: "native" }),
+    ...(nativeProfile ? {} : { LAPIS_PLUGINS_VALIDATION_RUNTIME: "native" }),
   };
   assert.equal(spawnSync("deno", ["--version"], { env }).error?.code, "ENOENT");
   receipt.denoOnPath = false;
@@ -200,7 +218,8 @@ try {
   receipt.cliVersion = guard.version;
   if (aiProfile) {
     receipt.bootstrap = bootstrapAiRecipe(root, env);
-  }
+  } else if (terminalProfile)
+    receipt.bootstrap = bootstrapTerminalRecipe(root, env);
   const statusFile = path.join(sandbox, "status.json");
   run(["exec", "changeset", "status", "--output", statusFile], env);
   const status = JSON.parse(await readFile(statusFile, "utf8"));
@@ -237,6 +256,12 @@ try {
   );
   if (aiProfile)
     receipt.nativeOutputsBefore = await snapshotAiRecipeOutputs(
+      root,
+      example,
+      changes,
+    );
+  if (terminalProfile)
+    receipt.terminalOutputsBefore = await snapshotTerminalRecipeOutputs(
       root,
       example,
       changes,
@@ -292,6 +317,17 @@ try {
         .split("\n")
         .filter(Boolean),
     );
+  if (terminalProfile)
+    receipt.terminalOutputsAfter = await verifyTerminalRecipeOutputs(
+      root,
+      example,
+      changes,
+      receipt.terminalOutputsBefore,
+      readGit(["diff", "--name-only"]).split("\n").filter(Boolean),
+      readGit(["ls-files", "--others", "--exclude-standard"])
+        .split("\n")
+        .filter(Boolean),
+    );
   receipt.versionOutputsAfter = await verifyVersionOutputs(
     root,
     example.versionOutputs ?? [],
@@ -329,9 +365,11 @@ try {
   receipt.command = `pnpm ${versionCommand.join(" ")}`;
   receipt.recipeQualification = aiProfile
     ? "current-source-historical-validation-input-node22-rust-offline-no-deno"
-    : example.historicalNoteSourceSha
-      ? "current-source-historical-validation-input-node24-no-deno"
-      : "actual-source-node24-no-deno";
+    : terminalProfile
+      ? "current-source-historical-validation-input-node24-rust-offline-no-deno"
+      : example.historicalNoteSourceSha
+        ? "current-source-historical-validation-input-node24-no-deno"
+        : "actual-source-node24-no-deno";
   receipt.inputBindings = example.qualification;
   receipt.sourceChanges = readGit(["diff", "--name-only"]).split("\n");
   await save();

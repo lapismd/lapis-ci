@@ -729,6 +729,116 @@
         }
       ],
       "outputContract": "docs-coordinated-v1"
+    },
+    "terminal-changesets2-native": {
+      "repository": "lapismd/lapis-terminal",
+      "sourceSha": "6808f839e59279cec601f5b998d695ae29ad4963",
+      "profile": "terminal-node24-rust-offline",
+      "pending": {
+        "path": ".changeset/ordered-terminal-output.md",
+        "sha256": "25274250b86f1659b9fb472a777d4babc5d89940ea1cd4907a207d5239b63874"
+      },
+      "historicalNoteSourceSha": "2a0091e715e51c7ffb35a334cb533a91a08a9410",
+      "ignorePnpmfile": true,
+      "nativeTools": {
+        "nodeVersion": "24.15.0",
+        "rustVersion": "1.99.0",
+        "host": "x86_64-unknown-linux-gnu",
+        "minimumFreeGiB": 20,
+        "cargoPackages": 4,
+        "binaries": {
+          "cargo": "e951141cc55a6cd7b9876d187bd30a3720e6086b99413af95e3b8de1cdd72f14",
+          "rustc": "f3834d26669b03f6855fa54bd2381443123e860167bc0c7a8dd137e5cf6e5e4f",
+          "node": "d1de76d8edf2fededf6f8b30d244e2c0529ac607923a018283b77e9c74bd932c"
+        },
+        "archiveEvidence": {
+          "nodeSource": "https://nodejs.org/dist/v24.15.0/SHASUMS256.txt",
+          "rustSource": "https://static.rust-lang.org/dist/channel-rust-1.99.0.toml",
+          "rustDate": "2026-10-01",
+          "archives": [
+            {
+              "name": "cargo",
+              "version": "0.100.0 (5f94df478 2026-08-27)",
+              "url": "https://static.rust-lang.org/dist/2026-10-01/cargo-1.99.0-x86_64-unknown-linux-gnu.tar.xz",
+              "sha256": "d7674918d28093097614cd9728b6ca60db9ea3038f640f0bd1e9a4188c7568ce",
+              "executableSha256": "e951141cc55a6cd7b9876d187bd30a3720e6086b99413af95e3b8de1cdd72f14",
+              "member": "cargo-1.99.0-x86_64-unknown-linux-gnu/cargo/bin/cargo",
+              "archiveBytes": 10954432
+            },
+            {
+              "name": "rustc",
+              "version": "1.99.0 (b940084d7 2026-09-28)",
+              "url": "https://static.rust-lang.org/dist/2026-10-01/rustc-1.99.0-x86_64-unknown-linux-gnu.tar.xz",
+              "sha256": "77171ba2a0345fdf2abc4fedda55d6de078dae7a68527c28be8c77dcc9604bd5",
+              "executableSha256": "f3834d26669b03f6855fa54bd2381443123e860167bc0c7a8dd137e5cf6e5e4f",
+              "member": "rustc-1.99.0-x86_64-unknown-linux-gnu/rustc/bin/rustc",
+              "archiveBytes": 84044652
+            },
+            {
+              "name": "node",
+              "version": "24.15.0",
+              "url": "https://nodejs.org/dist/v24.15.0/node-v24.15.0-linux-x64.tar.xz",
+              "sha256": "472655581fb851559730c48763e0c9d3bc25975c59d518003fc0849d3e4ba0f6",
+              "executableSha256": "d1de76d8edf2fededf6f8b30d244e2c0529ac607923a018283b77e9c74bd932c",
+              "member": "node-v24.15.0-linux-x64/bin/node",
+              "archiveBytes": 31164460
+            }
+          ]
+        },
+        "cpuCount": 4
+      },
+      "releaseRecordSha256": "b10aba3ef0e2a5413794605fb9aace11b37188f0abe707683491737e44f50e84",
+      "qualification": {
+        "schemaVersion": 1,
+        "nodeMajor": 24,
+        "cliVersion": "2.31.1",
+        "packageManager": "pnpm@10.32.1",
+        "configSha256": "5c0a4638dc640b0dffd57daee167de401a15501ac474e3debd3273a2ced18ad4",
+        "scripts": {
+          "release:version": "node scripts/changeset-version.mjs",
+          "release:check": "node scripts/release-state.mjs",
+          "dev:cargo": "node scripts/managed-cargo.mjs"
+        },
+        "files": {
+          ".prettierignore": "1ce1cc1f07211ac99c3ff19fa9c331948b383407dc392d620de1760f22f9ff44",
+          ".prettierrc.json": "b7f83b4be9d97466006aebe064d4681d3cc0420c030dcc02f6b3ff92e0a9081e",
+          "pnpm-workspace.yaml": "601742f723040ec650677bb6a3fc46fa98d0da6cb30daf53aecba97b22191f2f",
+          "rust-toolchain.toml": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228",
+          "scripts/changeset-version.mjs": "678d7bda73c4cdd63122268ccb33ebb9d4d7d5c83b56035379fc7a213e5327ca",
+          "scripts/release-state.mjs": "249e1dafb9f6702b2c63b2808eafd3ce00c60f22cd66d03dca233350d1301223",
+          "scripts/managed-cargo.mjs": "17971ec10b7585ca5f9b03ea68c98065d678880cdbd314c83c60db637bcf2dc9"
+        }
+      },
+      "closureEvidence": {
+        "currentSourceSha": "6808f839e59279cec601f5b998d695ae29ad4963",
+        "sourceHashes": {
+          ".changeset/config.json": "5c0a4638dc640b0dffd57daee167de401a15501ac474e3debd3273a2ced18ad4",
+          ".github/workflows/changesets.yml": "8c1774b2440c7495621db182d61aea6f102244db9aaa7e032c1b58b440f36950",
+          ".prettierignore": "1ce1cc1f07211ac99c3ff19fa9c331948b383407dc392d620de1760f22f9ff44",
+          ".prettierrc.json": "b7f83b4be9d97466006aebe064d4681d3cc0420c030dcc02f6b3ff92e0a9081e",
+          "Cargo.lock": "fabf3710cc9bd5e77de0dcbfbf244a301fdfb35a63667ed357a144ef3f7e5959",
+          "Cargo.toml": "f389abd610343f39053e9ed3d052c086089332c0ecccbfb58a409392af41f6c3",
+          "crates/lapis-terminal-engine/Cargo.toml": "9a63209e554d7c554e5d592849d82fc37ca53ba65203319299e7739dc1aeefaf",
+          "crates/lapis-terminal-runtime/Cargo.toml": "fa5a809560a9228adbd8c8b1f9dd44bea21017c44187456b86228a3ed53b2169",
+          "crates/tauri-plugin-lapis-terminal/Cargo.toml": "e1ca405ebc6c95d2ab8529c26917f4577f87b170e1d2ac02ed3bd3a70cdbae04",
+          "examples/desktop/CHANGELOG.md": "78dcb70b443e8b69d0741ed12c598348f741eac4936eb1026032aae80982e850",
+          "examples/desktop/package.json": "5a204e4edc983a38d1e6eefaf9c89ff5b72e4c007fe785e649add766d1eb4846",
+          "examples/desktop/src-tauri/Cargo.toml": "b87e80185225af0c142e14fcca2ead0f6dd0ab64af9c7f513a5904deb0d7204c",
+          "examples/desktop/src-tauri/tauri.conf.json": "ff75d5f2650a3d89428a3aa24510aef62cf2358e6996edefedba478ac31e3b06",
+          "package.json": "97d5a92cf996fa2915501abf2b998f8f8c06a9039782fabf95c88bef85166e6b",
+          "packages/terminal/CHANGELOG.md": "2056a0ac86c15e79968b40d4575dbd462160fb5c3156a865306771313997edee",
+          "packages/terminal/package.json": "73d84b7fb41c697062faf63b1169bde365e2d98daf54853ef71976cd4e5c5d19",
+          "pnpm-lock.yaml": "c7a41a436513ed256616f695128ec9f84a07aa6f72cf64565b91e7d16e07be58",
+          "pnpm-workspace.yaml": "601742f723040ec650677bb6a3fc46fa98d0da6cb30daf53aecba97b22191f2f",
+          "rust-toolchain.toml": "2ad6f15416572b4836585087f1d4abc53b8fa2dbd616f8dacfaa587ed6714228",
+          "scripts/changeset-version.mjs": "678d7bda73c4cdd63122268ccb33ebb9d4d7d5c83b56035379fc7a213e5327ca",
+          "scripts/managed-cargo.mjs": "17971ec10b7585ca5f9b03ea68c98065d678880cdbd314c83c60db637bcf2dc9",
+          "scripts/release-state.mjs": "249e1dafb9f6702b2c63b2808eafd3ce00c60f22cd66d03dca233350d1301223",
+          "spec/src/SUMMARY.md": "9e4d3f991fd8ea22584f5d922a1688f06e6461fb26b806d3cfbb53cfd2d6402a",
+          "spec/src/current/contracts/release.md": "4043a12aa3880d6f3e669e8b05c9f49047e313ceff7e5038f20580d713d77fa2"
+        },
+        "comparison": "exact-current-tuple"
+      }
     }
   }
 }
