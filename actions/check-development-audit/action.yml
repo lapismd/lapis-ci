@@ -1,0 +1,29 @@
+name: Check exact development advisory admission
+description: Preserve raw full/production audits and permit only a reviewed expiring development LOW against exact source and graph bindings.
+inputs:
+  working-directory:
+    description: Repository root relative to the workspace.
+    default: .
+  policy-file:
+    description: Source-owned exact development policy relative to the repository root.
+    required: true
+  report-directory:
+    description: Ephemeral raw audits and bounded decision directory relative to the repository root.
+    default: .local/dependency-audit
+outputs:
+  allowed:
+    description: True only for a clean graph or a complete exact temporary acceptance.
+    value: ${{ steps.audit.outputs.allowed }}
+  status:
+    description: Clean, temporary-development-acceptance or blocked.
+    value: ${{ steps.audit.outputs.status }}
+runs:
+  using: composite
+  steps:
+    - id: audit
+      shell: bash
+      run: node "$GITHUB_ACTION_PATH/../../scripts/run-development-audit.mjs"
+      env:
+        LAPIS_AUDIT_WORKING_DIRECTORY: ${{ inputs.working-directory }}
+        LAPIS_AUDIT_POLICY_FILE: ${{ inputs.policy-file }}
+        LAPIS_AUDIT_REPORT_DIRECTORY: ${{ inputs.report-directory }}

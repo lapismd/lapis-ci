@@ -134,3 +134,12 @@ outputs are checked where their actual custom recipes maintain them.
 The existing read-only workflow token supplies changelog reads. The fixture
 creates no writer App, remote branch or package publication.
 See [the runtime contract and qualification procedure](docs/versioning-runtime.md).
+
+## Exact development advisory guard
+
+`actions/check-development-audit` preserves raw full/production audit evidence
+and admits only a reviewed source/manifest/lock-bound, expiring development LOW
+when production is clean. Every extra finding, runtime path, changed context,
+known fix/successor, expiry or unavailable evidence remains blocking. It uses
+source-owned policy data, creates no ignore and grants no write authority.
+See [the bounded contract and operator evidence](docs/development-audit.md).
