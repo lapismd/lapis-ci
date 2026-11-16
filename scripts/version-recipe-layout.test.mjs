@@ -151,7 +151,13 @@ test("Tasks and Docs cases preserve exact current release helpers, install hook 
   }
   assert.equal(
     cases.cases["tasks-changesets3"].historicalNoteSourceSha,
-    undefined,
+    "00d8b1929538bb945078a303343eb4fd5410ce18",
+  );
+  const tasks = cases.cases["tasks-changesets3"];
+  assert.notEqual(tasks.sourceSha, tasks.historicalNoteSourceSha);
+  assert.equal(
+    tasks.qualification.files["scripts/release-sigstore.mjs"],
+    tasks.closureEvidence.sourceHashes["scripts/release-sigstore.mjs"],
   );
   assert(cases.cases["docs-changesets3"].historicalNoteSourceSha);
   assert.equal(cases.cases["docs-changesets3"].versionOutputs.length, 5);
