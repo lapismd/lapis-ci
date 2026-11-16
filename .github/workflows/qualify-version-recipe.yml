@@ -18,6 +18,7 @@ on:
           - terminal-changesets2-native
           - ai-changesets2-native
           - agent-ui-changesets2
+          - visual-delta-changesets3-corepack
 
 permissions:
   contents: read

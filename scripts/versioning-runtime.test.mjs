@@ -210,6 +210,52 @@ test("Deno formatter declarations in source or ancestry hold without replacing f
   );
 });
 
+test("unconfigured formatter policy holds new source and ancestor inputs", async (t) => {
+  const f = await fixture(t);
+  const qualification = { ...f.qualification, formatterPolicy: "unconfigured" };
+  const run = () =>
+    guardVersioningInputs(f.root, qualification, f.contracts, "24.15.0");
+  await run();
+  for (const directory of [f.root, f.parent]) {
+    for (const file of [
+      ".prettierrc",
+      "prettier.config.mts",
+      ".editorconfig",
+      ".prettierignore",
+    ]) {
+      await writeFile(path.join(directory, file), "{}");
+      await assert.rejects(run(), /formatter/);
+      await rm(path.join(directory, file));
+    }
+    const file = path.join(directory, "package.json");
+    const original = await readFile(file).catch(() => null);
+    await writeFile(
+      file,
+      JSON.stringify({
+        ...(original ? JSON.parse(original) : {}),
+        prettier: {},
+      }),
+    );
+    await assert.rejects(run(), /formatter/);
+    if (original) await writeFile(file, original);
+    else await rm(file);
+  }
+  await symlink(
+    path.join(f.parent, "absent"),
+    path.join(f.root, ".prettierrc"),
+  );
+  await assert.rejects(run(), /formatter/);
+  await assert.rejects(
+    guardVersioningInputs(
+      f.root,
+      { ...qualification, formatterPolicy: "ignore" },
+      f.contracts,
+      "24.15.0",
+    ),
+    /formatter/,
+  );
+});
+
 test("source-owned lifecycle and extra executable changes cannot bypass the bound recipe", async (t) => {
   const f = await fixture(t),
     file = path.join(f.root, "package.json");

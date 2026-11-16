@@ -853,6 +853,78 @@
           "newVersion": "0.1.2"
         }
       ]
+    },
+    "visual-delta-changesets3-corepack": {
+      "repository": "lapismd/storybook-addon-visual-delta",
+      "sourceSha": "1d8056458f19c33ba541c64ab78f1b12adc0aaa2",
+      "profile": "visual-delta-node24-corepack",
+      "historicalNoteSourceSha": "48f2f67da74ac6959bc4f59d1095f654a22de9af",
+      "pending": {
+        "path": ".changeset/visual-delta-reviewed-tooling-followup.md",
+        "sha256": "cb96707ecb8361d60e4d2575c91a959c60a7a6a5a48f6bb4dbeb73b8e40f4dad"
+      },
+      "qualification": {
+        "schemaVersion": 1,
+        "nodeMajor": 24,
+        "cliVersion": "3.0.3",
+        "packageManager": "pnpm@10.32.1",
+        "formatterPolicy": "unconfigured",
+        "configSha256": "02acb80fd533bd2e6263aca0e7d0534a7bedb1a9d20a7d3e72f8d6c10630986c",
+        "scripts": {
+          "release:version": "changeset version && corepack pnpm@10.32.1 install --lockfile-only"
+        },
+        "files": {
+          "pnpm-workspace.yaml": "c66bd306059913d20d29ac5a0aef2e0168103f485f3ca07cc2195d360bd5788d"
+        }
+      },
+      "runtimeTools": {
+        "nodeVersion": "24.15.0",
+        "nodeSha256": "d1de76d8edf2fededf6f8b30d244e2c0529ac607923a018283b77e9c74bd932c",
+        "corepackVersion": "0.34.6",
+        "source": "https://nodejs.org/dist/v24.15.0/node-v24.15.0-linux-x64.tar.xz",
+        "archiveSha256": "472655581fb851559730c48763e0c9d3bc25975c59d518003fc0849d3e4ba0f6",
+        "corepackFiles": {
+          "package.json": "ca4688703775d897ac1111c3cfec8eb9aa3801c08dfb02a59acde6225206cce9",
+          "dist/pnpm.js": "7c2a67995976b5b592b611d8b236e3b0633bd654fb49aedd96c6eb7ce04c9cbb",
+          "dist/yarn.js": "9f6dcacd3a256eedf09e382b14c4fd6a9e62e8c8009e64116997621bbd6531dd",
+          "dist/corepack.js": "3655bc798f300951f2070fee411b337d626b0c3ae80c2d24c46ccac4595d4bf9",
+          "dist/yarnpkg.js": "69110596f81458d8d37524b5d70c63b7658e05c954244c5f7658719ca2b7a165",
+          "dist/pnpx.js": "be8a28dbc76a5f76f50b336121237e451530b517d2bde9355c44e4d519ed7f28",
+          "dist/lib/corepack.cjs": "4c348070c8937f4693d6ccb128f7d034a2542932b9ed7968cbb9a3fe38158d4a",
+          "dist/npx.js": "74d56d596d3449b4d35508227bbd6f371aaa06999e53b261397d43e82655425e",
+          "dist/npm.js": "5d9704326d1ddedc5e0724c440e9052a422e616a3c21633bc955ac4a53013c06"
+        }
+      },
+      "expectedReleases": [
+        {
+          "name": "@lapismd/storybook-addon-visual-delta",
+          "oldVersion": "0.1.5",
+          "newVersion": "0.1.6"
+        }
+      ],
+      "emptyChangesets": {
+        ".changeset/node-version-tooling.md": "b9181d10a44fcdac31ce79d62844bcabc7607d4e842bc4585a9f45829ae5e199"
+      },
+      "closureEvidence": {
+        "currentSourceSha": "1d8056458f19c33ba541c64ab78f1b12adc0aaa2",
+        "comparison": "exact-current-tuple",
+        "sourceHashes": {
+          "package.json": "9f81310f115dcb29c026413efb910246c2ef1c7fb5bcbfee2c3e2141bb55b7e3",
+          "pnpm-lock.yaml": "9ebd53bee43927c8db900f698d7c8d3f2c621b218c21395233440d82d6cf96c7",
+          ".changeset/config.json": "02acb80fd533bd2e6263aca0e7d0534a7bedb1a9d20a7d3e72f8d6c10630986c",
+          "pnpm-workspace.yaml": "c66bd306059913d20d29ac5a0aef2e0168103f485f3ca07cc2195d360bd5788d",
+          ".github/workflows/release.yml": "72f9815b603ba1b059d9b50542163f790cc47a421bea7e914918116fcc34023f",
+          ".changeset/node-version-tooling.md": "b9181d10a44fcdac31ce79d62844bcabc7607d4e842bc4585a9f45829ae5e199"
+        },
+        "currentHashes": {
+          "package.json": "9f81310f115dcb29c026413efb910246c2ef1c7fb5bcbfee2c3e2141bb55b7e3",
+          "pnpm-lock.yaml": "9ebd53bee43927c8db900f698d7c8d3f2c621b218c21395233440d82d6cf96c7",
+          ".changeset/config.json": "02acb80fd533bd2e6263aca0e7d0534a7bedb1a9d20a7d3e72f8d6c10630986c",
+          "pnpm-workspace.yaml": "c66bd306059913d20d29ac5a0aef2e0168103f485f3ca07cc2195d360bd5788d",
+          ".github/workflows/release.yml": "72f9815b603ba1b059d9b50542163f790cc47a421bea7e914918116fcc34023f",
+          ".changeset/node-version-tooling.md": "b9181d10a44fcdac31ce79d62844bcabc7607d4e842bc4585a9f45829ae5e199"
+        }
+      }
     }
   }
 }

@@ -145,6 +145,12 @@ The existing read-only workflow token supplies changelog reads. The fixture
 creates no writer App, remote branch or package publication.
 See [the runtime contract and qualification procedure](docs/versioning-runtime.md).
 
+Visual Delta has a separate [Corepack recipe profile](docs/visual-delta-version-recipe-qualification.md)
+for its unchanged version command and root package layout. Its opt-in
+`formatterPolicy: "unconfigured"` binds the absence of formatter configuration
+through the lookup ancestry. Existing configured consumers retain their policy;
+whole-recipe proof remains a separate required acceptance step.
+
 ## Exact development advisory guard
 
 `actions/check-development-audit` preserves raw full/production audit evidence

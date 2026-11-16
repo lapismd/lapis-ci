@@ -10,6 +10,10 @@ import {
 import { validateAiRecipeProfile } from "./ai-version-recipe.mjs";
 import { validateDirectRecipeCase } from "./version-recipe-command.mjs";
 import { validatePluginRecipeCase } from "./plugin-version-recipe-outputs.mjs";
+import {
+  validateCorepackRecipeProfile,
+  COREPACK_RECIPE_PROFILE,
+} from "./corepack-version-recipe.mjs";
 
 export function selectRecipeCase(data, name) {
   if (data.schemaVersion !== 1 || !Object.hasOwn(data.cases ?? {}, name))
@@ -25,6 +29,7 @@ export function selectRecipeCase(data, name) {
       "lapismd/lapis-ai",
       "lapismd/lapis-terminal",
       "lapismd/agent-ui",
+      "lapismd/storybook-addon-visual-delta",
     ].includes(selected.repository) ||
     !/^[a-f0-9]{40}$/.test(selected.sourceSha ?? "") ||
     !/^pnpm@\d+\.\d+\.\d+$/.test(selected.qualification?.packageManager ?? "")
@@ -48,7 +53,12 @@ export function selectRecipeCase(data, name) {
   validatePluginRecipeCase(selected);
   validateVersionOutputs(selected.versionOutputs ?? []);
   validateTerminalRecipeProfile(selected);
-  if (selected.profile !== TERMINAL_RECIPE_PROFILE)
+  validateCorepackRecipeProfile(selected);
+  if (
+    ![TERMINAL_RECIPE_PROFILE, COREPACK_RECIPE_PROFILE].includes(
+      selected.profile,
+    )
+  )
     validateAiRecipeProfile(selected);
   if (
     !/^\.changeset\/[a-zA-Z0-9_-]+\.md$/.test(selected.pending?.path ?? "") ||
