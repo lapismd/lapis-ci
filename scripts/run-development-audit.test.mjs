@@ -80,7 +80,7 @@ async function fixture(t) {
       return { status: 0, stdout: root };
     if (command === "git" && args[0] === "log")
       return { status: 0, stdout: entry.sourceSha };
-    if (command === "git" && args[0] === "diff")
+    if (command === "git" && ["diff", "status"].includes(args[0]))
       return { status: 0, stdout: "" };
     if (command === "pnpm" && args[0] === "--version")
       return { status: 0, stdout: "10.32.1" };
@@ -284,4 +284,33 @@ test("approval expiry is evaluated after audit collection rather than at entry",
   });
   assert.equal(result.decision.allowed, false);
   assert.equal(result.decision.reason, "approval-expired-or-not-yet-valid");
+});
+
+test("untracked or ignored graph input blocks initial and final admission", async (t) => {
+  for (const late of [false, true]) {
+    const f = await fixture(t);
+    let collected = false;
+    const result = await runDevelopmentAudit({
+      ...f.options,
+      run: (command, args, root) =>
+        command === "git" && args[0] === "status"
+          ? {
+              status: 0,
+              stdout: !late || collected ? "?? pnpm-workspace.yaml\n" : "",
+            }
+          : f.run(command, args, root),
+      fetcher: async (url) => {
+        const response = await f.fetcher(url);
+        collected = true;
+        return response;
+      },
+    });
+    assert.equal(
+      result.decision.allowed,
+      false,
+      late ? "late graph input" : "initial graph input",
+    );
+    assert.equal(Boolean(result.full), late);
+    assert(!JSON.stringify(result).includes("?? pnpm-workspace.yaml"));
+  }
 });

@@ -31,7 +31,7 @@ Unknown fields, scopes, broad paths, severities or durations over seven days fai
 `sourceSha` means the latest commit touching `package.json`, `pnpm-lock.yaml` or
 `pnpm-workspace.yaml`; it does not purport to approve every product-source byte.
 Read-only Git checks require a repository-root context and no uncommitted graph
-changes. This avoids self-reference when the later reviewed policy commit adds
+changes, including untracked or ignored dependency configuration. This avoids self-reference when the later reviewed policy commit adds
 only data/docs. Manifest repository identity and actual package-manager version
 must agree with the caller. Unsafe/symlink-escaped source files fail. After audit
 and registry collection, the runner revalidates the clean graph, dependency
@@ -98,4 +98,7 @@ their complete artifact/peer acceptance and every other original source gate.
 Review regressions reproduced two late-admission failures before the fix: a
 source/policy mutation during evidence collection and expiry crossed during a
 registry read. Both now reject while retaining the raw audits. The complete
-Node24 source suite passes71 tests; no image or toolchain input changed.
+Node24 source suite passes72 tests; no image or toolchain input changed.
+
+A separate regression reproduces untracked graph admission before the repair;
+initial and late status checks now reject untracked or ignored graph inputs.

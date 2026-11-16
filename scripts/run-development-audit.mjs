@@ -74,8 +74,20 @@ export async function runDevelopmentAudit({
     ];
     const dependencySource = () =>
       checked("git", ["log", "-1", "--format=%H", "--", ...sourceFiles]);
-    const requireCleanGraph = () =>
+    const requireCleanGraph = () => {
       checked("git", ["diff", "--exit-code", "HEAD", "--", ...sourceFiles]);
+      if (
+        checked("git", [
+          "status",
+          "--porcelain=v1",
+          "--untracked-files=all",
+          "--ignored",
+          "--",
+          ...sourceFiles,
+        ])
+      )
+        throw Error("Uncommitted dependency input");
+    };
     sourceSha = dependencySource();
     requireCleanGraph();
     const manifestBytes = await readFile(await inside(root, "package.json")),
