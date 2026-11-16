@@ -59,6 +59,17 @@ shell utilities. Deno must be absent before and after execution. The existing
 read-only `github.token` supplies changelog API reads; no secret value is
 retrieved/exported by tooling and no writer App token is minted.
 
+An exact-SHA checkout is detached and may have no local `main` reference, even
+with full history. The fixture verifies its known hosted repository/workflow/
+main-ref context, exact workspace/consumer path, direct unshared Git metadata,
+detached HEAD and selected immutable source before creating an absent local
+`refs/heads/main` at that same source. Compare-and-create refuses any concurrent
+or conflicting existing ref. HEAD remains detached; source, config, command and
+genuine note bytes are unchanged. The helper cannot target another checkout or
+write a remote/user repository main ref, and a matching fixture baseline is
+idempotent. This fixture-only metadata step runs before install and Changesets
+status; it is not a product recipe or config adaptation.
+
 The script requires an actual nonempty release plan, executes the unchanged
 whole version command, verifies prepared versions and changed changelogs, and
 checks genuine note consumption. The receipt records exact bindings, resulting
@@ -84,6 +95,18 @@ succeed at the immutable genuine pending source before consumer adoption is
 qualified. The upstream PR, hosted proof receipt and consumer adoption must
 remain separately reviewable. Existing frozen Deno consumers are held rather
 than adapted to fit this guard.
+
+The first genuine hosted proof43782933999 installed the frozen graph and
+accepted the source runtime guard, then failed at Changesets status because
+the detached fixture lacked `main`; no version mutation occurred. The local
+underlying Git boundary reproduced exactly once with exit128. The fixture
+repair's four tests cover that missing-ref control, exact merge-base/HEAD
+identity, byte preservation, idempotence and non-hosted/misplaced/attached/
+wrong-source/conflicting-ref rejection. The actual status, whole-recipe and
+mutation assertions remain mandatory; hosted proof must be rerun after review.
+Local repair qualification passes4/4 focused tests and53/53 full source tests
+on Node24, plus actionlint. No Docker/image input, consumer recipe/config,
+selected source SHA, genuine note or existing proof assertion is changed.
 
 No image tool/version, Docker input or application source changes in this
 slice. The Dockerfile still copies only versions.json and verify-image.mjs;
