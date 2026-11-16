@@ -34,6 +34,64 @@ before its existing App minting step. Supply `working-directory` and
 commit mode, activation and package publication/signing approvals unchanged.
 The actual adoption must pin the helper's reviewed commit, never a branch/tag.
 
+## Optional genuine release intent
+
+`detect-release-intent: "true"` opts the existing action into a read-only
+planning step after input qualification. Its `hasChangesets` output is emitted
+only after the installed CLI's `status --output` succeeds and the runtime and
+recipe inputs pass the guard again. The default remains input validation only
+and emits no intent output. Unknown flags, unavailable package discovery or
+semver, failed CLI status, malformed/foreign/duplicate targets, nonadvancing
+versions and changed bound inputs fail the step; they never become `false`.
+
+The CLI's own package discovery and semver dependency are resolved through its
+frozen installation. Standalone roots, workspace packages and private packages
+retain that CLI's discovery/configuration semantics. A linked group may align
+its `oldVersion` to the highest installed version in its explicit named group;
+fixed groups have the same control. Unexpanded group patterns fail closed.
+`none` records remain real intent because unchanged-version dependents can
+still require dependency-range rewrites. Only an empty `releases` array means
+no planned rewrite, even when maintenance note files exist. Notes and source
+are neither deleted nor versioned by this helper.
+
+Planning has a60-second subprocess timeout, bounded4MiB command/report output
+and an owned temporary directory removed on success or failure. It installs
+nothing and runs no version command, App minting or publication. Existing
+whole-recipe proofs, frozen installation, audit, functional, signature and
+publication gates remain separate and mandatory.
+
+Consumers opting in should give the guard step an ID, route the changesets
+job's `hasChangesets` output from that guard, and acquire their writer App and
+invoke the Changesets action only when it returns the exact string `true`.
+The publisher's existing all-checks-success/`hasChangesets == 'false'`
+condition then admits the no-pending-release path. Do not use a missing output
+as evidence of an empty plan. A shared-source implementation does not alone
+qualify consumer workflow adoption or deployed publication verification.
+
+The initial regression failed1/1 before the new module existed. The exact
+target passes afterward;17 focused controls pass on Node24.15.0, including
+real CLI3.0.3 (Docs) and CLI2.31.1 (Plugins) frozen installations. Both actual
+CLIs preserve standalone/workspace manifests and empty/genuine notes, return
+false for no notes/empty notes, retain genuine intent alongside empty notes,
+and reject unknown packages or broken configuration. Default-on/off, planner
+failure and post-planning source-drift controls are separate shared guard tests.
+The complete source verification passes206/206 with those two actual CLI cases
+enabled, and actionlint passes for all workflows. Actual guarded current-source
+entry points return `hasChangesets=false` for Docs and `true` for Plugins' ten
+pending patch packages. Neither invocation changes notes, manifests or recipes.
+
+Reproduce the real CLI controls after a source's scripts-disabled frozen setup:
+
+```sh
+LAPIS_VERSION_INTENT_CLI_ROOTS=/absolute/cli3/source:/absolute/cli2/source \
+  node --test scripts/version-intent.test.mjs scripts/versioning-runtime.test.mjs
+```
+
+The normal dependency-free suite does not claim actual CLI qualification;
+the environment variable explicitly adds the installed-CLI cases. These
+fixtures initialize disposable Jujutsu repositories, never edit their source
+installations and never manufacture release intent in a consumer repository.
+
 ## Explicit AI native profile (hosted recipe qualified)
 
 Node24 remains the default. A source qualification MAY explicitly select

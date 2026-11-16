@@ -8,12 +8,22 @@ inputs:
   qualification-file:
     description: Project-relative source-owned recipe qualification JSON.
     required: true
+  detect-release-intent:
+    description: Inspect the qualified CLI's actual release plan before writer admission; empty notes alone return false.
+    required: false
+    default: "false"
+outputs:
+  hasChangesets:
+    description: Boolean release/dependency rewrite intent; emitted only when detection is explicitly enabled and succeeds.
+    value: ${{ steps.guard.outputs.hasChangesets }}
 runs:
   using: composite
   steps:
     - name: Validate reviewed runtime and source-owned recipe inputs
+      id: guard
       shell: bash
       env:
         LAPIS_VERSIONING_ROOT: ${{ inputs.working-directory }}
         LAPIS_VERSIONING_QUALIFICATION: ${{ inputs.qualification-file }}
+        LAPIS_VERSIONING_DETECT_INTENT: ${{ inputs.detect-release-intent }}
       run: node "$GITHUB_ACTION_PATH/../../scripts/versioning-runtime.mjs"

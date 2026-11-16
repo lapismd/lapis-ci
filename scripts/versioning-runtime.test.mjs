@@ -13,6 +13,7 @@ import path from "node:path";
 import test from "node:test";
 import {
   guardVersioningInputs,
+  guardVersioningWithIntent,
   validateRuntimeContracts,
 } from "./versioning-runtime.mjs";
 const hash = (value) => createHash("sha256").update(value).digest("hex");
@@ -66,6 +67,67 @@ async function fixture(t, version = "2.31.1") {
   };
   return { parent, root, folder, contracts, qualification };
 }
+test("release intent is opt-in and cannot run before qualified input acceptance", async (t) => {
+  const f = await fixture(t);
+  let calls = 0;
+  const inspect = async () => {
+    calls++;
+    return false;
+  };
+  const run = (q = f.qualification, enabled = false) =>
+    guardVersioningWithIntent(
+      f.root,
+      q,
+      f.contracts,
+      enabled,
+      "24.15.0",
+      inspect,
+    );
+  assert.equal((await run()).hasChangesets, undefined);
+  assert.equal(calls, 0);
+  assert.equal((await run(f.qualification, true)).hasChangesets, false);
+  assert.equal(calls, 1);
+  await assert.rejects(
+    run({ ...f.qualification, cliVersion: "9.0.0" }, true),
+    /reviewed/,
+  );
+  assert.equal(calls, 1);
+  await assert.rejects(run(f.qualification, "true"), /flag/);
+});
+
+test("planner errors, nonboolean results and source drift never admit publication", async (t) => {
+  const f = await fixture(t);
+  const run = (inspect) =>
+    guardVersioningWithIntent(
+      f.root,
+      f.qualification,
+      f.contracts,
+      true,
+      "24.15.0",
+      inspect,
+    );
+  await assert.rejects(
+    run(async () => {
+      throw Error("status failed");
+    }),
+    /status failed/,
+  );
+  await assert.rejects(
+    run(async () => undefined),
+    /intent result/,
+  );
+  assert.equal((await run(async () => true)).hasChangesets, true);
+  await assert.rejects(
+    run(async () => {
+      await writeFile(
+        path.join(f.root, "scripts/version.mjs"),
+        "changed during planning",
+      );
+      return false;
+    }),
+    /source bytes changed/,
+  );
+});
 test("source-bound guard accepts both reviewed CLI majors without running a recipe", async (t) => {
   for (const version of ["2.31.1", "3.0.3"]) {
     const f = await fixture(t, version);

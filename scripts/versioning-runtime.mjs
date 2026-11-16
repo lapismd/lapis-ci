@@ -1,8 +1,15 @@
-import { access, readFile, readdir, realpath } from "node:fs/promises";
+import {
+  access,
+  appendFile,
+  readFile,
+  readdir,
+  realpath,
+} from "node:fs/promises";
 import { createHash } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { versionRecipeCommand } from "./version-recipe-command.mjs";
+import { inspectVersionIntent } from "./version-intent.mjs";
 
 const keys = (value, names) =>
   value &&
@@ -222,7 +229,36 @@ export async function guardVersioningInputs(
   };
 }
 
+/** Opt-in planning is fenced by the same source/runtime guard on both sides. */
+export async function guardVersioningWithIntent(
+  root,
+  qualification,
+  contracts,
+  detect = false,
+  nodeVersion = process.versions.node,
+  inspect = inspectVersionIntent,
+) {
+  if (typeof detect !== "boolean") throw Error("Invalid release intent flag");
+  const result = await guardVersioningInputs(
+    root,
+    qualification,
+    contracts,
+    nodeVersion,
+  );
+  if (!detect) return result;
+  const pending = await inspect(root);
+  if (typeof pending !== "boolean")
+    throw Error("Invalid release intent result");
+  await guardVersioningInputs(root, qualification, contracts, nodeVersion);
+  return { ...result, hasChangesets: pending };
+}
+
 async function main() {
+  const flag = process.env.LAPIS_VERSIONING_DETECT_INTENT ?? "false";
+  if (!["false", "true"].includes(flag))
+    throw Error("Invalid release intent flag");
+  if (flag === "true" && !process.env.GITHUB_OUTPUT)
+    throw Error("Release intent requires a GitHub step output file");
   const workspace = await realpath(
     process.env.GITHUB_WORKSPACE ?? process.cwd(),
   );
@@ -244,7 +280,21 @@ async function main() {
       "utf8",
     ),
   );
-  const result = await guardVersioningInputs(root, qualification, contracts);
+  const result = await guardVersioningWithIntent(
+    root,
+    qualification,
+    contracts,
+    flag === "true",
+  );
+  if (flag === "true") {
+    await appendFile(
+      process.env.GITHUB_OUTPUT,
+      `hasChangesets=${result.hasChangesets}\n`,
+    );
+    console.log(
+      `Genuine source version/dependency intent: ${result.hasChangesets}`,
+    );
+  }
   console.log(
     `Reviewed Node runtime accepted for Changesets ${result.version}; source-bound recipe inputs unchanged.`,
   );
