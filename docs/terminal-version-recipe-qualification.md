@@ -2,8 +2,10 @@
 
 Status: source-qualified locally; actual hosted whole-recipe proof pending.
 
-Local `pnpm verify` passes225 controls, including all36 focused Terminal/AI
-native controls. Formatter and actionlint pass. No image inputs changed.
+Initial local `pnpm verify` passed225 controls, including all36 focused
+Terminal/AI native controls. Formatter and actionlint passed. No image inputs
+changed. Actual hosted43962593331 then exposed the plan distinction below;
+whole-recipe qualification remains incomplete until the corrected case runs.
 
 The manual main-only `Qualify actual portable version recipe` workflow exposes
 `terminal-changesets2-native`. It selects the immutable Terminal source
@@ -39,6 +41,12 @@ the restricted executable path before and after. Failure remains terminal.
 
 ## Independent outputs
 
+Changesets must plan exactly the public0.1.2→0.1.3 patch and the private demo
+`none` dependency entry0.1.2→0.1.2. The source wrapper subsequently coordinates
+the demo to0.1.3. Both the unchanged CLI plan and separately prepared output
+versions are retained; the receipt never rewrites the CLI result. Extra/missing
+packages, other update types or versions reject.
+
 The verifier checks the public npm package plus both private package versions,
 Tauri config, all four local Cargo lock records, workspace version and internal
 crate ranges. Public and demo changelogs must change to the prepared version.
@@ -64,3 +72,24 @@ qualify Terminal's consumer guard adoption. Terminal source and version workflow
 are not changed by this shared-source slice. Native session/browser correctness
 and publication remain separate owner gates; no new runtime or image release is
 claimed here.
+
+## Actual hosted plan correction
+
+Hosted43962593331 verified exact official executables, pnpm10.32.1, over87GiB
+free disk, frozen installation, guarded fixture and both real bootstrap commands.
+It failed before version mutation because the new verifier incorrectly expected
+one CLI plan entry; the actual CLI also retained the demo `none` entry. Its
+receipt and source6808f839 remain the exact regression boundary, not a product
+failure or a successful whole-recipe qualification.
+
+The corrected regression reproduces that same1 failure with the two actual plan
+entries before the verifier change, then passes after. The new plan controls
+require the exact public patch/private none plan and separately assert the
+wrapper's coordinated private output, preserving the original CLI receipt.
+The remaining Cargo/Tauri/canonical/changelog negative controls still reject.
+This does not weaken an assertion to tolerate extra releases or alter Terminal's
+source recipe. Normal source CI and a new-source hosted proof are still required.
+
+The corrected source passes all227 repository controls on Node24.15.0,
+including the exact repaired output target and the full native negative suite.
+Formatter and actionlint pass. Hosted re-execution remains pending.

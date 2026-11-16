@@ -17,6 +17,7 @@ const data = JSON.parse(
 );
 const releases = [
   { name: "@lapismd/terminal", oldVersion: "0.1.2", newVersion: "0.1.3" },
+  { name: "@lapismd/terminal-demo", oldVersion: "0.1.2", newVersion: "0.1.2" },
 ];
 const directories = [
   "crates/lapis-terminal-engine",

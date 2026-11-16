@@ -838,7 +838,21 @@
           "spec/src/current/contracts/release.md": "4043a12aa3880d6f3e669e8b05c9f49047e313ceff7e5038f20580d713d77fa2"
         },
         "comparison": "exact-current-tuple"
-      }
+      },
+      "expectedPlan": [
+        {
+          "name": "@lapismd/terminal",
+          "type": "patch",
+          "oldVersion": "0.1.2",
+          "newVersion": "0.1.3"
+        },
+        {
+          "name": "@lapismd/terminal-demo",
+          "type": "none",
+          "oldVersion": "0.1.2",
+          "newVersion": "0.1.2"
+        }
+      ]
     }
   }
 }

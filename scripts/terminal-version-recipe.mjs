@@ -5,6 +5,8 @@ import {
   verifyNativeRecipeTools,
 } from "./native-version-recipe.mjs";
 
+import { validateTerminalPlanBinding } from "./terminal-version-recipe-plan.mjs";
+
 export const TERMINAL_RECIPE_PROFILE = "terminal-node24-rust-offline";
 
 export function validateTerminalRecipeProfile(example) {
@@ -40,6 +42,7 @@ export function validateTerminalRecipeProfile(example) {
       ),
     "Terminal qualification needs the reviewed Node24/Rust offline profile",
   );
+  validateTerminalPlanBinding(example);
   return tools;
 }
 

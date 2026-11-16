@@ -5,6 +5,7 @@ import { readFile, realpath } from "node:fs/promises";
 import path from "node:path";
 import { canonicalHashes } from "./native-version-recipe-outputs.mjs";
 import { validateTerminalRecipeProfile } from "./terminal-version-recipe.mjs";
+import { terminalPreparedVersions } from "./terminal-version-recipe-plan.mjs";
 
 const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const json = async (root, file) =>
@@ -21,11 +22,7 @@ export async function snapshotTerminalRecipeOutputs(
   const tools = validateTerminalRecipeProfile(example);
   assert(tools, "An explicit Terminal profile is required");
   const release = releases.find((item) => item.name === "@lapismd/terminal");
-  assert.equal(
-    releases.length,
-    1,
-    "Terminal must prepare exactly its public package",
-  );
+  terminalPreparedVersions(example, releases);
   assert(release);
   if (!parseToml) {
     const require = createRequire(
@@ -132,7 +129,7 @@ export async function verifyTerminalRecipeOutputs(
     releases,
     parseToml,
   );
-  const release = releases[0],
+  const release = releases.find((item) => item.name === "@lapismd/terminal"),
     evidence = `spec/src/history/releases/${release.newVersion}.md`;
   assert.equal(before.version, release.oldVersion);
   assert.equal(after.version, release.newVersion);
