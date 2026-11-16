@@ -1,0 +1,7 @@
+name: Prepare shared registry readiness
+description: Expose the immutable source helper without installing tools, reading credentials or running a package command.
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: node "$GITHUB_ACTION_PATH/../../scripts/setup-registry-readiness.mjs"

@@ -1,5 +1,11 @@
 # Lapis CI
 
+The shared [registry readiness contract](docs/registry-readiness.md) exposes
+source-pinned install-metadata and exact-candidate retry handling for release
+consumers. Its setup action installs no tools and grants no publication or
+credential authority. Consumer adoption and genuine publication qualification
+remain separate from shared-source tests.
+
 `lapismd/lapis-ci` defines the shared, deterministic Linux CI toolchain used by
 LapisMD repositories. It provides Node, pnpm, Playwright with Chromium, mdBook, GitHub CLI,
 and the browser/system utilities required by package and Storybook validation.
