@@ -58,6 +58,16 @@ import {
   snapshotTerminalRecipeOutputs,
   verifyTerminalRecipeOutputs,
 } from "./terminal-version-recipe-outputs.mjs";
+import {
+  COREPACK_RECIPE_PROFILE,
+  corepackRecipeEnvironment,
+  verifyCorepackRecipeTools,
+} from "./corepack-version-recipe.mjs";
+import {
+  assertCorepackRecipePlan,
+  snapshotCorepackRecipeOutputs,
+  verifyCorepackRecipeOutputs,
+} from "./corepack-version-recipe-outputs.mjs";
 
 const root = path.resolve(process.argv[2] ?? "");
 if (!process.argv[2])
@@ -74,6 +84,7 @@ const versionCommand = versionRecipeCommand(example.qualification);
 const aiProfile = example.profile === "ai-node22-rust-offline";
 const terminalProfile = example.profile === "terminal-node24-rust-offline";
 const nativeProfile = aiProfile || terminalProfile;
+const corepackProfile = example.profile === COREPACK_RECIPE_PROFILE;
 const contracts = JSON.parse(
   await readFile(
     new URL("../changesets-runtime.json", import.meta.url),
@@ -159,7 +170,9 @@ try {
     ? aiRecipeEnvironment(process.env)
     : terminalProfile
       ? terminalRecipeEnvironment(process.env)
-      : process.env;
+      : corepackProfile
+        ? corepackRecipeEnvironment(process.env)
+        : process.env;
   const nativeTools = aiProfile
     ? await verifyAiRecipeTools(root, example, setupEnv)
     : terminalProfile
@@ -167,6 +180,13 @@ try {
       : null;
   if (nativeProfile) {
     receipt.nativeTools = nativeTools.receipt;
+    await save();
+  }
+  const corepackTools = corepackProfile
+    ? await verifyCorepackRecipeTools(root, example, setupEnv)
+    : null;
+  if (corepackProfile) {
+    receipt.runtimeTools = corepackTools.receipt;
     await save();
   }
   if (nativeProfile)
@@ -199,9 +219,11 @@ try {
     "dirname",
     "uname",
     ...(nativeProfile ? ["cargo", "rustc"] : []),
+    ...(corepackProfile ? ["corepack"] : []),
   ]) {
     const actual =
       nativeTools?.paths[name] ??
+      corepackTools?.paths[name] ??
       (name === "node"
         ? process.execPath
         : execFileSync("which", [name], { encoding: "utf8" }).trim());
@@ -255,6 +277,14 @@ try {
   if (terminalProfile) receipt.preparedReleases = preparedReleases;
   assertDirectRecipePlan(example, changes);
   assertPluginRecipePlan(example, changes);
+  if (corepackProfile) {
+    assertCorepackRecipePlan(example, changes);
+    receipt.corepackOutputsBefore = await snapshotCorepackRecipeOutputs(
+      root,
+      example,
+      changes,
+    );
+  }
   receipt.status = "qualified-inputs";
   receipt.releases = changes;
   receipt.versionOutputsBefore = await verifyVersionOutputs(
@@ -293,6 +323,20 @@ try {
   if (example.qualification.mode === "direct") run(versionCommand, env);
   else run(["release:version"], env);
   for (const args of example.afterVersionChecks ?? []) run(args, env);
+  if (corepackProfile) {
+    receipt.corepackOutputsAfter = await verifyCorepackRecipeOutputs(
+      root,
+      example,
+      changes,
+      receipt.corepackOutputsBefore,
+      readGit(["diff", "--name-only"]).split("\n").filter(Boolean),
+      readGit(["ls-files", "--others", "--exclude-standard"])
+        .split("\n")
+        .filter(Boolean),
+    );
+    await guardVersioningInputs(root, example.qualification, contracts);
+    await verifyCorepackRecipeTools(root, example, setupEnv);
+  }
   if (example.outputContract === "docs-coordinated-v1")
     receipt.docsOutputsAfter = await verifyPluginRecipeOutputs(
       root,

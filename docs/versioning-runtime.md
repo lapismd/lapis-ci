@@ -469,3 +469,13 @@ hosted proof. Source checks alone do not qualify the actual whole recipe or
 activate a consumer guard. The AI Node22 case retains its separate policy;
 shared code only checks executable bytes, the credential-free environment and
 canonical input hashes. Image inputs and published tools are unchanged.
+
+## Visual Delta Corepack recipe qualification
+
+The explicit `visual-delta-changesets3-corepack` profile retains the actual
+Corepack command and verifies stock Node/Corepack executable bytes. Its
+[qualification contract](visual-delta-version-recipe-qualification.md) binds
+the single root release, source closure and historical disposable input.
+The opt-in `formatterPolicy: "unconfigured"` rejects new formatter inputs
+through source ancestry without replacing a consumer's formatting policy.
+Hosted whole-recipe proof remains required before consumer activation.

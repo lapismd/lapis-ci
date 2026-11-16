@@ -10,6 +10,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { versionRecipeCommand } from "./version-recipe-command.mjs";
 import { inspectVersionIntent } from "./version-intent.mjs";
+import { assertFormatterPolicy } from "./versioning-formatter-policy.mjs";
 
 const keys = (value, names) =>
   value &&
@@ -126,6 +127,7 @@ export async function guardVersioningInputs(
       "nodeMajor",
       "mode",
       "argv",
+      "formatterPolicy",
     ]) ||
     qualification.schemaVersion !== 1 ||
     !contracts.versions[qualification.cliVersion]
@@ -144,6 +146,7 @@ export async function guardVersioningInputs(
       `Version preparation requires the reviewed Node ${selectedMajor} runtime`,
     );
   await assertNodeProject(root);
+  await assertFormatterPolicy(root, qualification.formatterPolicy);
   if (
     !digest(qualification.configSha256) ||
     !/^pnpm@\d+\.\d+\.\d+(?:\+sha\d+\.[a-f0-9]+)?$/.test(
