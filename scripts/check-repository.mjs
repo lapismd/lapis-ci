@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { validateRuntimeContracts } from "./versioning-runtime.mjs";
 import { selectRecipeCase } from "./version-recipe-layout.mjs";
+import { ghAsset } from "./setup-gh.mjs";
 
 export const repositoryRoot = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -56,6 +57,17 @@ export async function checkRepository(root = repositoryRoot) {
   ) {
     throw new Error("versions.json must declare amd64 and arm64 in order.");
   }
+  ghAsset(
+    versions,
+    "darwin",
+    "arm64",
+    JSON.parse(
+      await readFile(
+        new URL("../gh-host-assets.json", import.meta.url),
+        "utf8",
+      ),
+    ),
+  );
   for (const platform of versions.platforms) {
     const ghAsset = versions.ghAssets?.[platform];
     const expectedTarget = platform.replace("/", "_");
