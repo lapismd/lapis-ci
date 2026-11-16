@@ -390,3 +390,12 @@ bound source/configuration. The
 [Tasks qualification contract](tasks-readiness-recipe-qualification.md) records
 the genuine historical patch input, output controls and pending hosted gate.
 Preparing this case does not qualify the changed consumer or permit its merge.
+
+## Docs shared-readiness closure
+
+The separate `docs-readiness-changesets3` case qualifies the changed imported
+release helper against exact current source and a genuine historical minor
+note. [Its qualification record](docs-readiness-recipe-qualification.md)
+describes the five coordinated output checks, shared Tasks/Docs verifier and
+remaining actual hosted proof. Proposed hashes or the old recipe receipt do
+not qualify the new source.

@@ -5,7 +5,7 @@ import { pathToFileURL } from "node:url";
 import { validateVersionOutputs } from "./version-recipe-outputs.mjs";
 import { validateAiRecipeProfile } from "./ai-version-recipe.mjs";
 import { validateDirectRecipeCase } from "./version-recipe-command.mjs";
-import { validateTasksRecipeCase } from "./tasks-version-recipe-outputs.mjs";
+import { validatePluginRecipeCase } from "./plugin-version-recipe-outputs.mjs";
 
 export function selectRecipeCase(data, name) {
   if (data.schemaVersion !== 1 || !Object.hasOwn(data.cases ?? {}, name))
@@ -40,7 +40,7 @@ export function selectRecipeCase(data, name) {
   )
     throw Error("Strict peer qualification requires the reviewed Docs policy");
   validateDirectRecipeCase(selected);
-  validateTasksRecipeCase(selected);
+  validatePluginRecipeCase(selected);
   validateVersionOutputs(selected.versionOutputs ?? []);
   validateAiRecipeProfile(selected);
   if (
