@@ -13,6 +13,7 @@ import {
 } from "node:fs/promises";
 import path from "node:path";
 import { guardVersioningInputs } from "./versioning-runtime.mjs";
+import { establishFixtureBaseline } from "./version-recipe-fixture.mjs";
 
 const root = path.resolve(process.argv[2] ?? "");
 if (!process.argv[2])
@@ -67,6 +68,11 @@ try {
     example.pending.sha256,
   );
   receipt.pending = example.pending;
+  receipt.fixtureBaseline = await establishFixtureBaseline(
+    root,
+    example.sourceSha,
+  );
+  await save();
   // Fresh exact install; never change source configuration or dependency recipes.
   run(["install", "--frozen-lockfile", "--ignore-scripts"], process.env);
   const local = path.join(root, ".local");

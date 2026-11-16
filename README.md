@@ -127,5 +127,5 @@ This is a bounded input guard, not proof that arbitrary scripts or transitive
 dependencies are portable. Actual whole-recipe qualification remains separate.
 The manual main-only `qualify-version-recipe.yml` workflow executes an immutable
 Plugins source with a genuine pending changeset and existing read-only workflow
-token for changelog reads. It creates no writer App, source branch or package
+token for changelog reads. It creates no writer App, remote branch or package
 publication. See [the runtime contract and qualification procedure](docs/versioning-runtime.md).
