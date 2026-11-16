@@ -19,7 +19,7 @@ import { registryInstaller } from "./registry-install-adapters.mjs";
 const strictNpmProfile = (version) =>
   version.startsWith("12.") ? "npm12-strict-peers" : "npm-strict-peers";
 
-async function fixture(t, mode, manager) {
+async function fixture(t, mode, manager, peerPolicy = "strict") {
   const root = await mkdtemp(path.join(tmpdir(), "npm-propagation-"));
   t.after(() => rm(root, { recursive: true, force: true }));
   const source = path.join(root, "source"),
@@ -116,7 +116,13 @@ async function fixture(t, mode, manager) {
       encoding: "utf8",
     }).trim(),
     base = registryInstaller(
-      manager === "npm" ? strictNpmProfile(tool) : "pnpm-default-peers",
+      manager === "npm"
+        ? peerPolicy === "default"
+          ? tool.startsWith("12.")
+            ? "npm12-default-peers"
+            : "npm-default-peers"
+          : strictNpmProfile(tool)
+        : "pnpm-default-peers",
       tool,
     );
   const installer = {
@@ -162,13 +168,17 @@ test("real npm tool-version drift stops before installation", async (t) => {
     { code: "REGISTRY_INSTALL_TOOL" },
   );
 });
-for (const manager of ["npm", "pnpm"])
+for (const [manager, peerPolicy] of [
+  ["npm", "strict"],
+  ["npm", "default"],
+  ["pnpm", "default"],
+])
   for (const mode of ["metadata", "installation"])
     test(
-      `real ${manager} handles ${mode} propagation with its source-owned peer/script policy`,
+      `real ${manager}${manager === "npm" && peerPolicy === "default" ? " default-peers" : ""} handles ${mode} propagation with its source-owned peer/script policy`,
       { timeout: 40000 },
       async (t) => {
-        const f = await fixture(t, mode, manager);
+        const f = await fixture(t, mode, manager, peerPolicy);
         await installPublishedConsumer({
           cwd: f.cwd,
           entries: [f.entry],

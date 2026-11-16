@@ -142,6 +142,7 @@ export async function qualifyRegistryNpm12(
       [
         "--test",
         "scripts/registry-adapter-npm12.test.mjs",
+        "scripts/registry-npm12-default.test.mjs",
         "scripts/registry-readiness.test.mjs",
         "scripts/registry-install-process.test.mjs",
         "scripts/registry-npm-protocol.test.mjs",
