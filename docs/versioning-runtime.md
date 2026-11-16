@@ -334,3 +334,48 @@ pass afterward. This case must qualify the real0.2.2→0.3.0 mutation, changed
 changelog, consumed genuine note and all five custom metadata outputs with
 Deno absent. Hosted proof remains pending; neither the old Docs proof nor
 this case selection grants guard adoption, publication or a new audit exception.
+
+## Literal Agent UI direct command (source review pending)
+
+An omitted mode retains the existing named `release:version` script contract.
+Explicit `mode: "direct"` requires exactly `argv: ["exec", "changeset", "version"]`,
+CLI2.31.1 on Node24 and `scripts: {}`; every other mode/argv or hybrid script
+binding fails closed. The guard remains input-only and does not execute the
+command. Whole-recipe selection permits this direct mode only for the reviewed
+Agent UI case, retaining its installed CLI, config, formatter, workspace and
+approved package-patch bindings. Literal `@` in a final filename component supports the existing approved patch
+path; absolute/traversal/backslash paths and realpath escapes remain rejected.
+No consumer wrapper or CLI migration is added.
+
+The case selects immutable source `60826d6d3910a33d3ea1c686786e690160ff2ff3`
+from Agent UI PR40. Its source/lock/current tuple binds13 files; runtime guard
+inputs retain the four existing formatter/workspace/patch files. The genuine
+`compact-identifier-pair-labels.md` note comes only from ancestor
+`f2cfeceb8d4b1885694f2976a75893183bac4ea8`, SHA256
+`e47b7995f03dbd99bef7e44a7b3689a6ad9d1c2f55da9d915c393855b8847b76`.
+It is absent from current source and remains historical validation input with
+`currentReleaseIntent=false`, restored only inside the existing main-only
+hosted disposable fence. No source note, version intent or publication is created.
+
+The expected mutation is Repository UI0.2.6→0.2.7 only; Agent UI0.2.8 and private
+root0.1.0 remain unchanged. The whole runner executes the validated literal argv
+and records its actual command, retaining the existing frozen scripts-disabled
+fixture install, source-owned PNPM patch and no Deno/extra hook policy. Source
+functional/audit gates remain independent, including its recorded unfixed
+development LOW finding; no waiver or source guard adoption is implied.
+
+After shared-source review and merge, the operator may dispatch only the reviewed
+`agent-ui-changesets2` case on main and inspect the complete immutable receipt,
+version/changelog/note outputs and unchanged package versions before source
+adoption. Actual hosted whole-recipe acceptance remains pending. No Terminal
+case, image input, credentials, writer App or publication authority changes.
+
+Source qualification records one initial direct-mode failure and one initial
+legitimate-patch-path failure; both exact regressions pass after the shared fixes.
+The complete helper suite passes117 tests, actionlint and pinned repository/tool
+checks. Official registry integrity/engine read-back matches both reviewed CLI
+contracts (13/23 direct executable/package files). An actual read-only installed
+input call at the selected Agent UI source passes on Node24.15.0/pnpm10.34.5 with
+CLI2.31.1; it executes no recipe and changes no source or installation. This is
+input acceptance only; the real hosted version/changelog/unchanged-package proof
+and later consumer adoption remain pending root review.

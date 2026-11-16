@@ -4,6 +4,7 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { validateVersionOutputs } from "./version-recipe-outputs.mjs";
 import { validateAiRecipeProfile } from "./ai-version-recipe.mjs";
+import { validateDirectRecipeCase } from "./version-recipe-command.mjs";
 
 export function selectRecipeCase(data, name) {
   if (data.schemaVersion !== 1 || !Object.hasOwn(data.cases ?? {}, name))
@@ -17,6 +18,7 @@ export function selectRecipeCase(data, name) {
       "lapismd/lapis-plugin-tasks",
       "lapismd/lapis-plugin-docs",
       "lapismd/lapis-ai",
+      "lapismd/agent-ui",
     ].includes(selected.repository) ||
     !/^[a-f0-9]{40}$/.test(selected.sourceSha ?? "") ||
     !/^pnpm@\d+\.\d+\.\d+$/.test(selected.qualification?.packageManager ?? "")
@@ -36,6 +38,7 @@ export function selectRecipeCase(data, name) {
         selected.repository !== "lapismd/lapis-plugin-docs"))
   )
     throw Error("Strict peer qualification requires the reviewed Docs policy");
+  validateDirectRecipeCase(selected);
   validateVersionOutputs(selected.versionOutputs ?? []);
   validateAiRecipeProfile(selected);
   if (

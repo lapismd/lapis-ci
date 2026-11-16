@@ -2,6 +2,7 @@ import { access, readFile, readdir, realpath } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { versionRecipeCommand } from "./version-recipe-command.mjs";
 
 const keys = (value, names) =>
   value &&
@@ -11,7 +12,7 @@ const keys = (value, names) =>
 const digest = (value) => /^[a-f0-9]{64}$/.test(value ?? "");
 const safePath = (value) =>
   typeof value === "string" &&
-  /^(?:[\w.-]+\/)*[\w.-]+$/.test(value) &&
+  /^(?:[\w.-]+\/)*[\w.@-]+$/.test(value) &&
   !value.split("/").some((part) => part === "." || part === "..");
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 
@@ -116,11 +117,14 @@ export async function guardVersioningInputs(
       "scripts",
       "files",
       "nodeMajor",
+      "mode",
+      "argv",
     ]) ||
     qualification.schemaVersion !== 1 ||
     !contracts.versions[qualification.cliVersion]
   )
     throw Error("Version preparation needs a reviewed Changesets version");
+  versionRecipeCommand(qualification);
   const selectedMajor = qualification.nodeMajor ?? contracts.nodeMajor;
   const reviewedMajors = contracts.versions[qualification.cliVersion]
     .nodeMajors ?? [contracts.nodeMajor];
@@ -139,7 +143,8 @@ export async function guardVersioningInputs(
       qualification.packageManager ?? "",
     ) ||
     !keys(qualification.scripts, Object.keys(qualification.scripts ?? {})) ||
-    !qualification.scripts["release:version"] ||
+    (qualification.mode !== "direct" &&
+      !qualification.scripts["release:version"]) ||
     Object.entries(qualification.scripts).some(
       ([name, command]) =>
         !/^[\w:-]+$/.test(name) ||

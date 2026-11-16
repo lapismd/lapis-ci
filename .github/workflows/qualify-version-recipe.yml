@@ -14,6 +14,7 @@ on:
           - tasks-changesets3
           - docs-changesets3
           - ai-changesets2-native
+          - agent-ui-changesets2
 
 permissions:
   contents: read

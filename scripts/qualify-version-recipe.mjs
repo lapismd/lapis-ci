@@ -11,7 +11,12 @@ import {
   writeFile,
 } from "node:fs/promises";
 import path from "node:path";
+import { verifyDirectRecipeOutputs } from "./direct-version-recipe-outputs.mjs";
 import { guardVersioningInputs } from "./versioning-runtime.mjs";
+import {
+  versionRecipeCommand,
+  assertDirectRecipePlan,
+} from "./version-recipe-command.mjs";
 import {
   establishFixtureBaseline,
   restoreHistoricalFixtureNote,
@@ -42,6 +47,7 @@ const cases = JSON.parse(
 );
 const caseName = process.env.RECIPE_CASE ?? "plugins-changesets2";
 const example = selectRecipeCase(cases, caseName);
+const versionCommand = versionRecipeCommand(example.qualification);
 const aiProfile = example.profile === "ai-node22-rust-offline";
 const contracts = JSON.parse(
   await readFile(
@@ -210,6 +216,7 @@ try {
         }),
     });
   }
+  assertDirectRecipePlan(example, changes);
   receipt.status = "qualified-inputs";
   receipt.releases = changes;
   receipt.versionOutputsBefore = await verifyVersionOutputs(
@@ -227,7 +234,8 @@ try {
   await save();
   // This is the unchanged real command, including source metadata sync and
   // the actual Bases compatibility/provenance tests owned by the consumer.
-  run(["release:version"], env);
+  if (example.qualification.mode === "direct") run(versionCommand, env);
+  else run(["release:version"], env);
   for (const args of example.afterVersionChecks ?? []) run(args, env);
   if (aiProfile)
     receipt.nativeOutputsAfter = await verifyAiRecipeOutputs(
@@ -261,9 +269,20 @@ try {
     code: "ENOENT",
   });
   assert.equal(spawnSync("deno", ["--version"], { env }).error?.code, "ENOENT");
+  if (example.qualification.mode === "direct")
+    receipt.directPackageVersions = await verifyDirectRecipeOutputs(
+      root,
+      example,
+      manifests,
+      changes,
+      readGit(["diff", "--name-only"]).split("\n").filter(Boolean),
+      readGit(["ls-files", "--others", "--exclude-standard"])
+        .split("\n")
+        .filter(Boolean),
+    );
   receipt.status = "passed";
   receipt.completedAt = new Date().toISOString();
-  receipt.command = "pnpm release:version";
+  receipt.command = `pnpm ${versionCommand.join(" ")}`;
   receipt.recipeQualification = aiProfile
     ? "current-source-historical-validation-input-node22-rust-offline-no-deno"
     : example.historicalNoteSourceSha
