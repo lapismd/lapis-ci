@@ -121,7 +121,7 @@ Its actual status, version, changelog, metadata sync and Bases checks ran with
 Node24.15.0, pnpm10.34.5 and Deno absent. That success applies to the reviewed
 Plugins closure; it does not qualify other repositories or CLI majors.
 
-The manual workflow now offers only three source-owned case IDs. A validated
+The manual workflow offers only reviewed source-owned case IDs. A validated
 selector reads immutable repository/SHA/pnpm coordinates from tracked data;
 dispatch input cannot supply a repository, ref or command. Each case retains
 the read-only token, full-history detached checkout, frozen scripts-disabled
@@ -170,3 +170,47 @@ layout/case, fixture and guard tests, plus repository contract, formatter and
 actionlint checks. Both actual local CLI3 installations also accept their
 source-owned qualification inputs on Node24.19.0; this read-only acceptance
 does not execute or qualify the whole recipe. Image inputs are unchanged.
+
+## Tasks and Docs custom release helpers
+
+Two additional cases preserve the current shared recipe family without
+replacing either source's implementation: `node scripts/release.mjs version`.
+Both retain CLI3.0.3 and their actual Changesets config. Tasks uses pnpm10.34.5;
+Docs uses pnpm10.32.1. Their actual source version jobs install frozen registry
+dependencies with `--ignore-pnpmfile`; the fixture now adds that exact flag for
+these two cases alongside its existing scripts-disabled install. This retains
+Tasks' deliberate exclusion of local archive hooks. It does not modify a hook,
+consumer script, formatter or runtime prerequisite.
+
+| Case                | Current immutable tuple                    | Genuine note provenance                                                                                                                                                                            |
+| ------------------- | ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tasks-changesets3` | `00d8b1929538bb945078a303343eb4fd5410ce18` | Existing pending `.changeset/api06-host-compatibility.md`, SHA256 `ed91c7e51adc02324fa59b768af1f60aac233180f5b65cd322a0772b75994d5c`                                                               |
+| `docs-changesets3`  | `073f4a58ddcb414ad5ce93b4107c4262438290ff` | Exact consumed `.changeset/lapis-dependencies-142f236303c0.md` from ancestor `ee056bff3c8355ac40ae29e2fa40825437da7d8b`, SHA256 `513b55f83b942e2c5c2dcc28c1c1835f4c69603e7fa1b124063b7604cec879e4` |
+
+Docs main has no pending note. Its case uses the same fenced historical-blob
+restoration as Mira, explicitly recording historical validation input and
+`currentReleaseIntent=false`; it creates no repository release intent. Both
+cases record exact current root manifest/lock/config/workflow/helper/workspace
+and generated metadata hashes (eight Tasks paths, eleven Docs paths). Tasks'
+lock SHA256 is `5fdc31934e2dfc544ff2d4772e27c9c2aca929a9df292b95318cba59ae0376e3`;
+Docs' is `38dd03686981c527197d83b083907d1b92f3140d8403497c2ebe79558e3d77ca`.
+Whole-recipe proof belongs to these exact tuples; source-green or another
+consumer's success cannot supply it.
+
+The helper must synchronize the runtime manifest and its canonical release
+marker. Docs additionally updates its validator package-version pin, governance
+marker and README package-version marker. Reviewed case data declares these
+two/five output paths. The shared fixture verifies each against the actual
+planned package version before and after the unchanged full command, records
+their hashes, and retains all original version/changelog/note-consumption and
+absent-Deno assertions. Wrong/stale output, unknown package, missing marker,
+unsafe path or symlink escape fails; the fixture never repairs the consumer.
+These metadata checks neither execute an arbitrary case-provided command nor
+qualify publication behavior in the unused branches of `release.mjs`.
+
+The new output-boundary regression failed1/1 before its module existed, then
+passed after implementation. Full Node24 source verification passes59/59 with
+formatter/actionlint; image inputs and tooling versions remain unchanged.
+These cases still need actual hosted execution before either consumer adopts
+the guard. No source product/recipe/config, Deno exclusion, approval or
+activation changes are included in this harness slice.

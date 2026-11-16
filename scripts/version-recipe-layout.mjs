@@ -2,6 +2,7 @@ import { createRequire } from "node:module";
 import { readFile, realpath } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
+import { validateVersionOutputs } from "./version-recipe-outputs.mjs";
 
 export function selectRecipeCase(data, name) {
   if (data.schemaVersion !== 1 || !Object.hasOwn(data.cases ?? {}, name))
@@ -12,6 +13,8 @@ export function selectRecipeCase(data, name) {
       "lapismd/lapis-plugins",
       "lapismd/design-core",
       "lapismd/mira-mde",
+      "lapismd/lapis-plugin-tasks",
+      "lapismd/lapis-plugin-docs",
     ].includes(selected.repository) ||
     !/^[a-f0-9]{40}$/.test(selected.sourceSha ?? "") ||
     !/^pnpm@\d+\.\d+\.\d+$/.test(selected.qualification?.packageManager ?? "")
@@ -19,6 +22,12 @@ export function selectRecipeCase(data, name) {
     throw Error(
       "Recipe coordinates and package manager must be immutable reviewed values",
     );
+  if (
+    selected.ignorePnpmfile !== undefined &&
+    typeof selected.ignorePnpmfile !== "boolean"
+  )
+    throw Error("Frozen install hook policy must be explicit");
+  validateVersionOutputs(selected.versionOutputs ?? []);
   if (
     !/^\.changeset\/[a-zA-Z0-9_-]+\.md$/.test(selected.pending?.path ?? "") ||
     selected.pending.path === ".changeset/README.md" ||

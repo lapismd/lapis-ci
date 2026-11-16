@@ -120,3 +120,52 @@ test("Node3 cases distinguish historical root evidence from current-tuple valida
     ["exec", "node", "scripts/sync-release-versions.mjs", "--check"],
   ]);
 });
+
+test("Tasks and Docs cases preserve exact current release helpers, install hook policy and generated metadata", async () => {
+  const cases = JSON.parse(
+    await readFile(
+      new URL("../version-recipe-cases.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  for (const id of ["tasks-changesets3", "docs-changesets3"]) {
+    const selected = selectRecipeCase(cases, id);
+    assert.equal(selected.sourceSha, selected.closureEvidence.currentSourceSha);
+    assert.deepEqual(
+      selected.closureEvidence.sourceHashes,
+      selected.closureEvidence.currentHashes,
+    );
+    assert.equal(
+      selected.qualification.scripts["release:version"],
+      "node scripts/release.mjs version",
+    );
+    assert.equal(selected.qualification.cliVersion, "3.0.3");
+    assert.equal(selected.ignorePnpmfile, true);
+    assert.equal(
+      selected.qualification.files["scripts/release.mjs"],
+      selected.closureEvidence.sourceHashes["scripts/release.mjs"],
+    );
+    assert.equal(selected.versionOutputs[0].path, "manifest.json");
+    for (const output of selected.versionOutputs)
+      assert(selected.closureEvidence.sourceHashes[output.path]);
+  }
+  assert.equal(
+    cases.cases["tasks-changesets3"].historicalNoteSourceSha,
+    undefined,
+  );
+  assert(cases.cases["docs-changesets3"].historicalNoteSourceSha);
+  assert.equal(cases.cases["docs-changesets3"].versionOutputs.length, 5);
+  const proof = await readFile(
+    new URL("./qualify-version-recipe.mjs", import.meta.url),
+    "utf8",
+  );
+  assert.match(proof, /example\.ignorePnpmfile\s*\?\s*\["--ignore-pnpmfile"\]/);
+  assert(
+    proof.indexOf("receipt.versionOutputsBefore =") <
+      proof.indexOf('run(["release:version"], env)'),
+  );
+  assert(
+    proof.indexOf("receipt.versionOutputsAfter =") >
+      proof.indexOf('run(["release:version"], env)'),
+  );
+});

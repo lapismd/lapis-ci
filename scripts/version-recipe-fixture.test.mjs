@@ -149,7 +149,11 @@ test("production fixture setup precedes unchanged install/status and whole-recip
   );
   const baseline = source.indexOf("await establishFixtureBaseline(");
   assert(baseline > source.indexOf('readGit(["rev-parse", "HEAD"])'));
-  assert(baseline < source.indexOf('run(["install"'));
+  assert(baseline < source.indexOf('"--frozen-lockfile"'));
+  assert.match(
+    source,
+    /run\(\s*\[\s*"install",\s*"--frozen-lockfile",\s*"--ignore-scripts"/,
+  );
   assert(baseline < source.indexOf('run(["exec", "changeset", "status"'));
   assert.match(source, /run\(\["release:version"\],\s*env\)/);
 });

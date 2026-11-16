@@ -11,6 +11,8 @@ on:
           - plugins-changesets2
           - core-changesets3
           - mira-changesets3
+          - tasks-changesets3
+          - docs-changesets3
 
 permissions:
   contents: read
