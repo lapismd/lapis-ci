@@ -44,6 +44,29 @@ failure and preserved in its separate changeqlsspqvy/53028a48; it is not removed
 waived or included in this independent source branch. Image build/smoke remain
 the ordinary hosted CI gate; no image input changed in this slice.
 
+Tasks source inspection subsequently confirmed its publication workflow already
+installs npm12.0.2. The original npm11-only adapter cannot be substituted for
+that contract. An exact new profile regression reproduced1 failure before a
+separate `npm12-strict-peers` profile was added; the npm11 profiles retain their
+original major restriction.
+
+`qualify-registry-npm12.mjs` verifies the exact official npm12.0.2 tarball SHA512,
+bounds and checks archive paths/types, and extracts it into a disposable tool
+directory. It runs21 focused tests on Node24.15.0 with the isolated npm12 and
+existing pnpm10.34.5, including all four actual propagation cases. It verifies
+the original global npm version remains unchanged and removes the temporary
+tool directory. No signing credential enters this qualification environment.
+The ordinary hosted CI source job runs the same command; image/toolchain inputs
+remain unchanged. This is qualification of an existing publisher tool, not a
+consumer toolchain downgrade or a global install.
+
+The npm12 archive integrity is
+`sha512-uIXokLlBj6FpNUTQX1PmT5pz7BlIN9QlixX+zdaSNHsd0qUXsbDLr50xzY6Sw7cJVr0uzHKDOle0swmPW/p5Qw==`.
+The initial complete source suite remains recorded above; the expanded suite
+passes156 tests, including the archive/profile/workflow controls. Formatting and
+actionlint also pass. The updated exact hosted run must still pass before
+consumer adoption.
+
 Pending: hosted acceptance and shared source landing, then source-owned Tasks,
 Docs and Mira adoption at an immutable helper pin, preserving each owner's
 reviewed budget, strict peers, npm ci, signatures, provenance, publint and

@@ -4,6 +4,11 @@ import {
 } from "./registry-install-process.mjs";
 
 const profiles = {
+  "npm12-strict-peers": {
+    manager: "npm",
+    major: 12,
+    args: ["install", "--ignore-scripts", "--strict-peer-deps", "--json"],
+  },
   "npm-strict-peers": {
     manager: "npm",
     major: 11,

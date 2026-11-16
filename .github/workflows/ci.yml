@@ -29,6 +29,8 @@ jobs:
       - uses: docker/setup-buildx-action@v4
       - name: Check repository contract
         run: pnpm verify
+      - name: Qualify the existing npm12 publisher profile without changing global tools
+        run: node scripts/qualify-registry-npm12.mjs
       - name: Build native candidate image
         uses: docker/build-push-action@v7
         with:

@@ -16,6 +16,8 @@ import path from "node:path";
 import { tmpdir } from "node:os";
 import { installPublishedConsumer } from "./registry-readiness.mjs";
 import { registryInstaller } from "./registry-install-adapters.mjs";
+const strictNpmProfile = (version) =>
+  version.startsWith("12.") ? "npm12-strict-peers" : "npm-strict-peers";
 
 async function fixture(t, mode, manager) {
   const root = await mkdtemp(path.join(tmpdir(), "npm-propagation-"));
@@ -114,7 +116,7 @@ async function fixture(t, mode, manager) {
       encoding: "utf8",
     }).trim(),
     base = registryInstaller(
-      manager === "npm" ? "npm-strict-peers" : "pnpm-default-peers",
+      manager === "npm" ? strictNpmProfile(tool) : "pnpm-default-peers",
       tool,
     );
   const installer = {
@@ -146,7 +148,10 @@ test("real npm tool-version drift stops before installation", async (t) => {
     .trim()
     .split(".");
   version[2] = String(Number(version[2]) + 1);
-  const installer = registryInstaller("npm-strict-peers", version.join("."));
+  const installer = registryInstaller(
+    strictNpmProfile(version.join(".")),
+    version.join("."),
+  );
   await assert.rejects(
     installer.run({
       cwd,

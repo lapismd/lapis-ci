@@ -23,7 +23,7 @@ covers all requests, backoff and owned install processes. Missing versions and
 recognized transient transport/service failures may retry; identity, integrity,
 permission, malformed data, peer, script and unrelated dependency failures stop.
 
-Each install attempt uses a new metadata cache. Fixed npm11 and pnpm10 profiles
+Each install attempt uses a new metadata cache. Fixed npm11, npm12 and pnpm10 profiles
 retain their explicit strict/default peer and script policy. npm retries only
 the exact candidate ETARGET from its structured JSON result; pnpm retries only
 exact candidate ERR_PNPM_NO_MATCHING_VERSION NDJSON events. Other errors and
@@ -49,6 +49,7 @@ the installer with `registryInstaller(profile, exactToolVersion)`:
 | Profile              | Preserved install policy                                        |
 | -------------------- | --------------------------------------------------------------- |
 | `npm-strict-peers`   | npm11 install, ignore scripts, strict peers, structured JSON    |
+| `npm12-strict-peers` | npm12 install, ignore scripts, strict peers, structured JSON    |
 | `npm-default-peers`  | npm11 install, ignore scripts, default peers, structured JSON   |
 | `pnpm-default-peers` | pnpm10 install, explicit strict-peer-dependencies=false, NDJSON |
 
