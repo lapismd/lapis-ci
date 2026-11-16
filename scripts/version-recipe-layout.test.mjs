@@ -74,6 +74,8 @@ test("manual selection accepts reviewed immutable cases and rejects arbitrary di
     { pending: { path: "../escape.md", sha256: "b".repeat(64) } },
     { historicalNoteSourceSha: "main" },
     { afterVersionChecks: [["publish"]] },
+    { strictPeerDependencies: "false" },
+    { strictPeerDependencies: true },
   ]) {
     assert.throws(() =>
       selectRecipeCase(
@@ -82,6 +84,17 @@ test("manual selection accepts reviewed immutable cases and rejects arbitrary di
       ),
     );
   }
+});
+
+test("strict peer qualification cannot be silently downgraded to the default install", async () => {
+  const source = await readFile(
+    new URL("./qualify-version-recipe.mjs", import.meta.url),
+    "utf8",
+  );
+  assert.match(
+    source,
+    /example\.strictPeerDependencies\s*\?\s*\["--strict-peer-dependencies"\]/,
+  );
 });
 
 test("Node3 cases distinguish historical root evidence from current-tuple validation input", async () => {
@@ -159,8 +172,12 @@ test("Tasks and Docs cases preserve exact current release helpers, install hook 
     tasks.qualification.files["scripts/release-sigstore.mjs"],
     tasks.closureEvidence.sourceHashes["scripts/release-sigstore.mjs"],
   );
-  assert(cases.cases["docs-changesets3"].historicalNoteSourceSha);
-  assert.equal(cases.cases["docs-changesets3"].versionOutputs.length, 5);
+  const docs = cases.cases["docs-changesets3"];
+  assert.equal(docs.historicalNoteSourceSha, undefined);
+  assert.equal(docs.sourceSha, "9e8e7ec23fc5d7f412f180e76ebcb3699a00cfed");
+  assert.equal(docs.strictPeerDependencies, true);
+  assert.equal(docs.pending.path, ".changeset/docs-supported-host-cohort.md");
+  assert.equal(docs.versionOutputs.length, 5);
   const proof = await readFile(
     new URL("./qualify-version-recipe.mjs", import.meta.url),
     "utf8",

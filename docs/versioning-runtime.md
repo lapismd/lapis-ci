@@ -303,5 +303,34 @@ never current intent, and expects0.2.1→0.2.2 plus both custom version outputs.
 The original Tasks proof/table above remains historical and cannot qualify the
 new helper bytes. Local exact-source whole-recipe receipt is
 `68162fee36d9cc11f7e4b7f0d126f5e172bbe0dee8742249439dc364ba75086d`.
-Fresh hosted execution of this refreshed case remains required before consumer
-merge; this data change grants no package publication or writer authority.
+Hosted [43821246307](https://github.com/lapismd/lapis-ci/actions/runs/43821246307)
+passed on helper `4b9f1c5d4e51fa6bd667c0f1de5c3d4bd21b30da`. Its receipt
+SHA256 is `25f11d144537f5f89e52433d427808c5940db1acce63edf151adf21f89186b2c`.
+All ten source hashes, historical-note provenance, actual0.2.1→0.2.2 mutation,
+both custom outputs and absent Deno/writer/publication checks passed. This is
+recipe qualification; actual package publication remains a consumer gate.
+
+## Docs supported-cohort strict-peer refresh
+
+The current Docs case supersedes its old vulnerable historical tuple. It binds
+source `9e8e7ec23fc5d7f412f180e76ebcb3699a00cfed`, all15 captured source files,
+and the genuine `.changeset/docs-supported-host-cohort.md` minor note. This
+is current release intent, not a restored historical note. Source-owned peers
+and Node floor changed intentionally; the installed graph and public consumers
+passed the source's strict-peer, functional, accessibility and production-audit
+gates independently of this recipe proof.
+
+The optional `strictPeerDependencies` boolean is admitted only for this reviewed
+Docs profile and adds `--strict-peer-dependencies` to its scripts-disabled
+frozen setup. Omitted/false values preserve every other profile's existing
+installation. Nonboolean values and attempts to apply the new policy to another
+repository fail before installation. The actual install argument vector is
+retained in the receipt, including the separate unchanged AI setup. Source
+pnpm10.32.1, CLI3.0.3, ignored local hooks, config and exact
+`node scripts/release.mjs version` command remain unchanged.
+
+Two focused regressions failed before the policy validation/flag wiring and
+pass afterward. This case must qualify the real0.2.2→0.3.0 mutation, changed
+changelog, consumed genuine note and all five custom metadata outputs with
+Deno absent. Hosted proof remains pending; neither the old Docs proof nor
+this case selection grants guard adoption, publication or a new audit exception.
