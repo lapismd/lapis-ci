@@ -33,7 +33,10 @@ Unknown fields, scopes, broad paths, severities or durations over seven days fai
 Read-only Git checks require a repository-root context and no uncommitted graph
 changes. This avoids self-reference when the later reviewed policy commit adds
 only data/docs. Manifest repository identity and actual package-manager version
-must agree with the caller. Unsafe/symlink-escaped source files fail.
+must agree with the caller. Unsafe/symlink-escaped source files fail. After audit
+and registry collection, the runner revalidates the clean graph, dependency
+source, manifest, lockfile, policy and decision-record bytes. Approval expiry
+is checked at that final decision time; collection cannot extend its lifetime.
 
 ## Every other finding remains fatal
 
@@ -91,3 +94,8 @@ Docs' separate fresh consumer subsequently exposed an unrelated KaTeX finding
 through the published Mira editor/Mermaid chain; that runtime finding remains
 blocking and is not covered by this development decision. Consumers must retain
 their complete artifact/peer acceptance and every other original source gate.
+
+Review regressions reproduced two late-admission failures before the fix: a
+source/policy mutation during evidence collection and expiry crossed during a
+registry read. Both now reject while retaining the raw audits. The complete
+Node24 source suite passes71 tests; no image or toolchain input changed.

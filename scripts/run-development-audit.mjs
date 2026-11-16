@@ -47,7 +47,8 @@ export async function runDevelopmentAudit({
   policyFile,
   run = defaultRun,
   fetcher = fetch,
-  now = new Date().toISOString(),
+  now,
+  clock = () => new Date().toISOString(),
   nodeVersion = process.versions.node,
   repository = process.env.GITHUB_REPOSITORY,
 }) {
@@ -66,24 +67,17 @@ export async function runDevelopmentAudit({
       root
     )
       throw Error("Audit root must be the repository root");
-    sourceSha = checked("git", [
-      "log",
-      "-1",
-      "--format=%H",
-      "--",
+    const sourceFiles = [
       "package.json",
       "pnpm-lock.yaml",
       "pnpm-workspace.yaml",
-    ]);
-    checked("git", [
-      "diff",
-      "--exit-code",
-      "HEAD",
-      "--",
-      "package.json",
-      "pnpm-lock.yaml",
-      "pnpm-workspace.yaml",
-    ]);
+    ];
+    const dependencySource = () =>
+      checked("git", ["log", "-1", "--format=%H", "--", ...sourceFiles]);
+    const requireCleanGraph = () =>
+      checked("git", ["diff", "--exit-code", "HEAD", "--", ...sourceFiles]);
+    sourceSha = dependencySource();
+    requireCleanGraph();
     const manifestBytes = await readFile(await inside(root, "package.json")),
       lockBytes = await readFile(await inside(root, "pnpm-lock.yaml"));
     const manifest = JSON.parse(manifestBytes);
@@ -102,11 +96,14 @@ export async function runDevelopmentAudit({
       )?.[1];
     if (!manager || checked("pnpm", ["--version"]) !== manager)
       throw Error("Use the source-owned exact package manager");
-    const policy = validateDevelopmentPolicy(
-      JSON.parse(await readFile(await inside(root, policyFile), "utf8")),
-    );
+    const policyBytes = await readFile(await inside(root, policyFile));
+    const policy = validateDevelopmentPolicy(JSON.parse(policyBytes));
+    const recordHashes = new Map();
     for (const entry of policy.approvals)
-      await readFile(await inside(root, entry.record), "utf8");
+      recordHashes.set(
+        entry.record,
+        hash(await readFile(await inside(root, entry.record))),
+      );
     const audit = (args) => {
       const result = run("pnpm", args, root);
       if (![0, 1].includes(result.status))
@@ -136,6 +133,19 @@ export async function runDevelopmentAudit({
       if (!response.ok) throw Error("Fix metadata unavailable");
       registry[pkg] = await response.json();
     }
+    requireCleanGraph();
+    if (
+      dependencySource() !== sourceSha ||
+      hash(await readFile(await inside(root, "package.json"))) !==
+        manifestSha256 ||
+      hash(await readFile(await inside(root, "pnpm-lock.yaml"))) !==
+        lockSha256 ||
+      hash(await readFile(await inside(root, policyFile))) !== hash(policyBytes)
+    )
+      throw Error("Audit source or approval changed during collection");
+    for (const [record, expected] of recordHashes)
+      if (hash(await readFile(await inside(root, record))) !== expected)
+        throw Error("Audit decision record changed during collection");
     const decision = evaluateDevelopmentAudit({
       full: full.evidence,
       production: production.evidence,
@@ -146,7 +156,7 @@ export async function runDevelopmentAudit({
         manifestSha256,
         lockSha256,
         manifest,
-        now,
+        now: now ?? clock(),
         registry,
       },
     });

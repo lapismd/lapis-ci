@@ -211,3 +211,77 @@ test("resolved finding retires without requiring stale package fix metadata", as
   assert.equal(result.decision.status, "clean");
   assert.equal(result.decision.retired.length, 1);
 });
+
+test("runner rejects graph, history or approval changes during audit evidence collection", async (t) => {
+  for (const change of [
+    "manifest",
+    "lock",
+    "history",
+    "workspace",
+    "policy",
+    "record",
+  ]) {
+    const f = await fixture(t);
+    let changed = false;
+    const result = await runDevelopmentAudit({
+      ...f.options,
+      run: (command, args, root) => {
+        if (
+          changed &&
+          change === "history" &&
+          command === "git" &&
+          args[0] === "log"
+        )
+          return { status: 0, stdout: "b".repeat(40) };
+        if (
+          changed &&
+          change === "workspace" &&
+          command === "git" &&
+          args[0] === "diff"
+        )
+          return { status: 1, stdout: "private late workspace diagnostic" };
+        return f.run(command, args, root);
+      },
+      fetcher: async (url) => {
+        const response = await f.fetcher(url);
+        const files = {
+          manifest: "package.json",
+          lock: "pnpm-lock.yaml",
+          policy: "policy.json",
+          record: "spec/records/decision.md",
+        };
+        if (files[change]) {
+          const file = path.join(f.root, files[change]);
+          await writeFile(file, (await readFile(file, "utf8")) + "\n");
+        }
+        changed = true;
+        return response;
+      },
+    });
+    assert.equal(result.decision.allowed, false, change);
+    assert(
+      result.full && result.production,
+      "Retain both raw audits on late rejection",
+    );
+    assert(
+      !JSON.stringify(result).includes("private late workspace diagnostic"),
+    );
+  }
+});
+
+test("approval expiry is evaluated after audit collection rather than at entry", async (t) => {
+  const f = await fixture(t);
+  let currentTime = "2026-11-20T23:59:59.000Z";
+  const result = await runDevelopmentAudit({
+    ...f.options,
+    now: undefined,
+    clock: () => currentTime,
+    fetcher: async (url) => {
+      const response = await f.fetcher(url);
+      currentTime = "2026-11-21T00:00:01.000Z";
+      return response;
+    },
+  });
+  assert.equal(result.decision.allowed, false);
+  assert.equal(result.decision.reason, "approval-expired-or-not-yet-valid");
+});
