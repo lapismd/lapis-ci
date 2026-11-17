@@ -22,6 +22,13 @@ const keys = (value, names) =>
   !Array.isArray(value) &&
   Object.keys(value).every((key) => names.includes(key));
 const digest = (value) => /^[a-f0-9]{64}$/.test(value ?? "");
+const workspaceOnlyRecipe = (q) =>
+  q.mode !== "direct" &&
+  q.workspacePolicy !== undefined &&
+  q.scripts &&
+  Object.keys(q.scripts).length === 1 &&
+  q.scripts["release:version"] ===
+    `changeset version && corepack ${q.packageManager} install --lockfile-only`;
 const safePath = (value) =>
   typeof value === "string" &&
   /^(?:[\w.-]+\/)*[\w.@-]+$/.test(value) &&
@@ -169,7 +176,8 @@ export async function guardVersioningInputs(
         command.length > 4096,
     ) ||
     !keys(qualification.files, Object.keys(qualification.files ?? {})) ||
-    !Object.keys(qualification.files).length ||
+    (!Object.keys(qualification.files).length &&
+      !workspaceOnlyRecipe(qualification)) ||
     Object.entries(qualification.files).some(
       ([file, hash]) => !safePath(file) || !digest(hash),
     )

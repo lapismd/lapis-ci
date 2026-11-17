@@ -527,3 +527,18 @@ the single root release, source closure and historical disposable input.
 The opt-in `formatterPolicy: "unconfigured"` rejects new formatter inputs
 through source ancestry without replacing a consumer's formatting policy.
 Hosted whole-recipe proof remains required before consumer activation.
+
+## Workspace-only declarative recipe
+
+An empty extra-file map is permitted only when a source-owned workspace policy
+is present and the sole qualified script is exactly `changeset version &&
+corepack pnpm@<qualified-version> install --lockfile-only`. The workspace policy
+then supplies the real file binding; no artificial redundant file is required.
+All existing installed CLI bytes, configuration, formatter, Node/package-manager,
+lifecycle and development coordinate/digest checks remain mandatory. Direct
+mode, custom helpers, extra scripts, missing/malformed policies and changed
+workspace bytes still fail before writer admission or release-plan inspection.
+
+Visual Delta exposed one exact failing regression for this source shape. The
+new positive and negative case qualifies the bounded command, not arbitrary
+empty-file recipes. No CI image, toolchain version or publication is changed.

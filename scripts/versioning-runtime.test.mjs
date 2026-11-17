@@ -519,3 +519,63 @@ test("@ path support retains traversal, absolute, backslash and escaped-symlink 
     /escapes its source/,
   );
 });
+
+test("workspace-only version recipe retains a complete binding without artificial extra files", async (t) => {
+  const f = await fixture(t),
+    command =
+      "changeset version && corepack pnpm@10.34.5 install --lockfile-only";
+  const bytes = 'overrides:\n  "@lapismd/spec-validator": "0.2.1"\n';
+  await mkdir(path.join(f.root, "node_modules/@lapismd/spec-validator"), {
+    recursive: true,
+  });
+  await writeFile(
+    path.join(f.root, "node_modules/@lapismd/spec-validator/package.json"),
+    JSON.stringify({ name: "@lapismd/spec-validator", version: "0.2.1" }),
+  );
+  await writeFile(path.join(f.root, "pnpm-workspace.yaml"), bytes);
+  await writeFile(
+    path.join(f.root, "package.json"),
+    JSON.stringify({
+      packageManager: f.qualification.packageManager,
+      scripts: { "release:version": command },
+      devDependencies: { "@lapismd/spec-validator": "0.2.1" },
+    }),
+  );
+  const q = {
+    ...f.qualification,
+    scripts: { "release:version": command },
+    files: {},
+    workspacePolicy: {
+      schemaVersion: 1,
+      sha256: hash(bytes.replace('"0.2.1"', '"<development-override>"')),
+      developmentOverride: {
+        dependency: "@lapismd/spec-validator",
+        series: "0.2",
+        minimumPatch: 1,
+      },
+    },
+  };
+  const run = (value) =>
+    guardVersioningInputs(f.root, value, f.contracts, "24.15.0");
+  assert.equal((await run(q)).version, "2.31.1");
+  await assert.rejects(
+    run({ ...q, workspacePolicy: undefined }),
+    /qualification path or binding/,
+  );
+  await assert.rejects(
+    run({ ...q, scripts: { "release:version": "node scripts/version.mjs" } }),
+    /qualification path or binding/,
+  );
+  await assert.rejects(
+    run({
+      ...q,
+      workspacePolicy: { ...q.workspacePolicy, sha256: hash("wrong") },
+    }),
+    /workspace/,
+  );
+  await writeFile(
+    path.join(f.root, "pnpm-workspace.yaml"),
+    bytes + "unreviewed: true\n",
+  );
+  await assert.rejects(run(q), /workspace/);
+});
