@@ -925,6 +925,105 @@
           ".changeset/node-version-tooling.md": "b9181d10a44fcdac31ce79d62844bcabc7607d4e842bc4585a9f45829ae5e199"
         }
       }
+    },
+    "notebook-changesets3": {
+      "repository": "lapismd/lapis-plugin-notebook",
+      "sourceSha": "64d5f7b7e21e6e9d98a821898f9c1411a620d391",
+      "outputContract": "notebook-coordinated-v1",
+      "historicalNoteSourceSha": "cb79a6a7d294f0f9c83deea7410296db5ecc4fcc",
+      "pending": {
+        "path": ".changeset/lapis-dependencies-f6451fcc3cb2.md",
+        "sha256": "6e66a0415579039cd45e1316bf3cb1e6d31878f9589260aee443006535d0cfcd"
+      },
+      "ignorePnpmfile": true,
+      "qualification": {
+        "schemaVersion": 1,
+        "nodeMajor": 24,
+        "cliVersion": "3.0.3",
+        "packageManager": "pnpm@10.32.1",
+        "formatterPolicy": "unconfigured",
+        "configSha256": "5c0a4638dc640b0dffd57daee167de401a15501ac474e3debd3273a2ced18ad4",
+        "scripts": {
+          "release:version": "node scripts/release.mjs version"
+        },
+        "files": {
+          "pnpm-workspace.yaml": "794d93bf2404310b972f1570c8f92de5e6f1aceee017238b3dbcf8dd244c7964",
+          "scripts/release.mjs": "0e21c80d9580927f61f2faa8f155d4b2f5d343a505227b1174ed6cba4c82e28f",
+          "scripts/release-candidate.mjs": "7f2bbebf7f9a6fdaf150044ca35da5ac1302a4515c4459a73e83053cc66a5e40"
+        }
+      },
+      "versionOutputs": [
+        {
+          "path": "manifest.json",
+          "packageName": "@lapis-notes/lapis-plugin-notebook",
+          "kind": "json-version"
+        },
+        {
+          "path": "spec/src/plugins/notebook/index.md",
+          "packageName": "@lapis-notes/lapis-plugin-notebook",
+          "kind": "text-marker",
+          "marker": "Release package and runtime manifest version: `{{version}}`."
+        }
+      ],
+      "expectedReleases": [
+        {
+          "name": "@lapis-notes/lapis-plugin-notebook",
+          "oldVersion": "0.2.4",
+          "newVersion": "0.2.5"
+        }
+      ],
+      "closureEvidence": {
+        "currentSourceSha": "64d5f7b7e21e6e9d98a821898f9c1411a620d391",
+        "sourceHashes": {
+          ".changeset/config.json": "5c0a4638dc640b0dffd57daee167de401a15501ac474e3debd3273a2ced18ad4",
+          ".changeset/notebook-version-runtime.md": "d65735ad7bb054612c98011b1093c82f34196836875d59fb7c9244e800d85b38",
+          ".github/workflows/version-packages.yml": "f90da6a636d93f2d19bd95fb1b870361076fd5539fc4bab85b3e002805c5922d",
+          "manifest.json": "0f60131c4059308c5ada28048398001d73c8fbbf86670a12c20af6b6da13b21b",
+          "package.json": "76775f63aed4abd2ffda33ebbbee043f5009afcce2b6b2d2fa5ed7846b6b6de7",
+          "packages/core/package.json": "27df3b76e9cfa268d9edc97ffa7e77c8dd68a4e045d3123b73d9f0745d7c57df",
+          "packages/duckdb-assets/package.json": "8846ed7ce33ebca3ce3bd302a3c98a8a1b8ba73442e626bebe47cfaf4d0aa9c4",
+          "packages/duckdb/package.json": "2a19514961d84aa7447569ab2b012a19edbf4f58f43165945f7bb427414b0d00",
+          "packages/input/package.json": "94b8f3d0f47815bda25041eb794d4632c451aeddc39016d38f3a0737b10324be",
+          "packages/stdlib/package.json": "8d8e8d6486b2ca3ec63cff56f4067b265a27003b72f3fca4bebfde824761ef31",
+          "packages/worker/package.json": "e56eca95da5d782a4461036c348570ed5330f149b97c5dc6ba0cb5a6f2ec1ebb",
+          "pnpm-lock.yaml": "c5b55ffda1573c2dec0da44a7c19810506670d6aa3d473a8c0a740147f8a5dbe",
+          "pnpm-workspace.yaml": "794d93bf2404310b972f1570c8f92de5e6f1aceee017238b3dbcf8dd244c7964",
+          "scripts/release-candidate.mjs": "7f2bbebf7f9a6fdaf150044ca35da5ac1302a4515c4459a73e83053cc66a5e40",
+          "scripts/release.mjs": "0e21c80d9580927f61f2faa8f155d4b2f5d343a505227b1174ed6cba4c82e28f",
+          "spec/src/SUMMARY.md": "046c41145c4e1d2d236b132c64b04a5acc52246c544ceb1ba29ac94bc217438e",
+          "spec/src/plugins/index.md": "ee5286df61e500e08802e9aadfd5ffa36e8181f777013ebf116f2bccf65f9ffa",
+          "spec/src/plugins/notebook/documents.md": "a005c339bd77f3e60be5618f35446a51d1bad3a216579490c662aaac8ec8a0a3",
+          "spec/src/plugins/notebook/index.md": "c88dc5684f786308cdb22869841f316e9a7e0283fe4bce984c482b98f69f06ec",
+          "spec/src/plugins/notebook/runtime.md": "6c6babc4a8c6bb2e56178952a3a31ce694090d8b2d157a00cc22118e250bd296",
+          "spec/src/spec-governance.md": "ba16ccfcf7b5a2ff61ba01499a664bfde55aefaa7095dd592b9546935ae26619",
+          "spec/src/verification.md": "9eeb617ff126856098227ea0187c0092b1a44ff8e60b31c9bcdef4a0b73bd5c5"
+        },
+        "currentHashes": {
+          ".changeset/config.json": "5c0a4638dc640b0dffd57daee167de401a15501ac474e3debd3273a2ced18ad4",
+          ".changeset/notebook-version-runtime.md": "d65735ad7bb054612c98011b1093c82f34196836875d59fb7c9244e800d85b38",
+          ".github/workflows/version-packages.yml": "f90da6a636d93f2d19bd95fb1b870361076fd5539fc4bab85b3e002805c5922d",
+          "manifest.json": "0f60131c4059308c5ada28048398001d73c8fbbf86670a12c20af6b6da13b21b",
+          "package.json": "76775f63aed4abd2ffda33ebbbee043f5009afcce2b6b2d2fa5ed7846b6b6de7",
+          "packages/core/package.json": "27df3b76e9cfa268d9edc97ffa7e77c8dd68a4e045d3123b73d9f0745d7c57df",
+          "packages/duckdb-assets/package.json": "8846ed7ce33ebca3ce3bd302a3c98a8a1b8ba73442e626bebe47cfaf4d0aa9c4",
+          "packages/duckdb/package.json": "2a19514961d84aa7447569ab2b012a19edbf4f58f43165945f7bb427414b0d00",
+          "packages/input/package.json": "94b8f3d0f47815bda25041eb794d4632c451aeddc39016d38f3a0737b10324be",
+          "packages/stdlib/package.json": "8d8e8d6486b2ca3ec63cff56f4067b265a27003b72f3fca4bebfde824761ef31",
+          "packages/worker/package.json": "e56eca95da5d782a4461036c348570ed5330f149b97c5dc6ba0cb5a6f2ec1ebb",
+          "pnpm-lock.yaml": "c5b55ffda1573c2dec0da44a7c19810506670d6aa3d473a8c0a740147f8a5dbe",
+          "pnpm-workspace.yaml": "794d93bf2404310b972f1570c8f92de5e6f1aceee017238b3dbcf8dd244c7964",
+          "scripts/release-candidate.mjs": "7f2bbebf7f9a6fdaf150044ca35da5ac1302a4515c4459a73e83053cc66a5e40",
+          "scripts/release.mjs": "0e21c80d9580927f61f2faa8f155d4b2f5d343a505227b1174ed6cba4c82e28f",
+          "spec/src/SUMMARY.md": "046c41145c4e1d2d236b132c64b04a5acc52246c544ceb1ba29ac94bc217438e",
+          "spec/src/plugins/index.md": "ee5286df61e500e08802e9aadfd5ffa36e8181f777013ebf116f2bccf65f9ffa",
+          "spec/src/plugins/notebook/documents.md": "a005c339bd77f3e60be5618f35446a51d1bad3a216579490c662aaac8ec8a0a3",
+          "spec/src/plugins/notebook/index.md": "c88dc5684f786308cdb22869841f316e9a7e0283fe4bce984c482b98f69f06ec",
+          "spec/src/plugins/notebook/runtime.md": "6c6babc4a8c6bb2e56178952a3a31ce694090d8b2d157a00cc22118e250bd296",
+          "spec/src/spec-governance.md": "ba16ccfcf7b5a2ff61ba01499a664bfde55aefaa7095dd592b9546935ae26619",
+          "spec/src/verification.md": "9eeb617ff126856098227ea0187c0092b1a44ff8e60b31c9bcdef4a0b73bd5c5"
+        },
+        "comparison": "exact-current-tuple"
+      }
     }
   }
 }

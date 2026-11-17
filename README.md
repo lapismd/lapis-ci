@@ -145,6 +145,10 @@ The existing read-only workflow token supplies changelog reads. The fixture
 creates no writer App, remote branch or package publication.
 See [the runtime contract and qualification procedure](docs/versioning-runtime.md).
 
+Notebook has a [source-owned coordinated version proof](docs/notebook-version-recipe-qualification.md)
+that preserves its runtime identity, six private packages and Node-only version
+command. Hosted whole-recipe qualification is required before guard adoption.
+
 Visual Delta has a separate [Corepack recipe profile](docs/visual-delta-version-recipe-qualification.md)
 for its unchanged version command and root package layout. Its opt-in
 `formatterPolicy: "unconfigured"` binds the absence of formatter configuration
