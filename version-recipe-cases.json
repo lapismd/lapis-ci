@@ -1024,6 +1024,79 @@
         },
         "comparison": "exact-current-tuple"
       }
+    },
+    "server-changesets3": {
+      "repository": "lapismd/lapis-server",
+      "sourceSha": "78a3fe6f84b008af6ef11242c352a33b146e2caa",
+      "privateRootContract": "server-private-root-v1",
+      "pending": {
+        "path": ".changeset/plugin-agent-skills.md",
+        "sha256": "3195575c9c9a050bc306f897061a1df571f9354816c5baf2f478b7600e97b890"
+      },
+      "pendingNotes": [
+        {
+          "path": ".changeset/plugin-agent-skills.md",
+          "sha256": "3195575c9c9a050bc306f897061a1df571f9354816c5baf2f478b7600e97b890"
+        },
+        {
+          "path": ".changeset/server-http-renderer-security.md",
+          "sha256": "06dff0968873103e48f570a9c5275d0b7799e7b75cc12bd9b8197cdf5d5dd80b"
+        }
+      ],
+      "expectedReleases": [
+        {
+          "name": "@lapismd/lapis-server",
+          "oldVersion": "2.3.0",
+          "newVersion": "2.4.0"
+        }
+      ],
+      "qualification": {
+        "schemaVersion": 1,
+        "cliVersion": "3.0.3",
+        "packageManager": "pnpm@10.34.5",
+        "configSha256": "19305ffe9e541f65436ba32a443e5e4e1c29f732c8db323559109920aeee7bf3",
+        "scripts": {
+          "release:version": "changeset version && pnpm install --lockfile-only && prettier package.json CHANGELOG.md --write"
+        },
+        "files": {
+          ".prettierrc.json": "b7f83b4be9d97466006aebe064d4681d3cc0420c030dcc02f6b3ff92e0a9081e",
+          ".prettierignore": "dadea660708c19187c391a1d361a1663563bab996063811aacc65563a0710d1e"
+        }
+      },
+      "closureEvidence": {
+        "currentSourceSha": "78a3fe6f84b008af6ef11242c352a33b146e2caa",
+        "comparison": "exact-current-tuple",
+        "sourceHashes": {
+          "package.json": "76ada812a2956538ce5e902af2d4475d1a0465d750bce780aab3806f1d33e3cf",
+          "pnpm-lock.yaml": "7efb6873db8d5349a749ce7b9175b42210986a659731250bb3451e3006673353",
+          ".changeset/config.json": "19305ffe9e541f65436ba32a443e5e4e1c29f732c8db323559109920aeee7bf3",
+          ".prettierrc.json": "b7f83b4be9d97466006aebe064d4681d3cc0420c030dcc02f6b3ff92e0a9081e",
+          ".prettierignore": "dadea660708c19187c391a1d361a1663563bab996063811aacc65563a0710d1e",
+          ".github/workflows/release.yml": "7cf2ef69a695ec6b0cdcb83d81287c9e3af7dd01624fd8c82126e708890a927e",
+          "scripts/release-github.mjs": "62dec773184fdeeaf2c19028c02722a6b8b39f58c44cc70fab806b26e9d6dc19",
+          "Cargo.toml": "abe9374b0597c90be17592960ac104b4be784904c8ed4477648344205ded9d1d",
+          "Cargo.lock": "00884b5e5127fa86ea27c181808e5b800d498e2e123f378abfe749b554b22684",
+          "spec/records/2026-11-16-katex-audit-exception.md": "d3fc34f779e4bdb8d1828820c4f1df2c1726baede7364b666ad45a785c90b86a",
+          "CHANGELOG.md": "84bb62b6ecf3109c228165ed62b13223fefca1291da5addf2dc82a7eb5b82821",
+          ".changeset/plugin-agent-skills.md": "3195575c9c9a050bc306f897061a1df571f9354816c5baf2f478b7600e97b890",
+          ".changeset/server-http-renderer-security.md": "06dff0968873103e48f570a9c5275d0b7799e7b75cc12bd9b8197cdf5d5dd80b"
+        },
+        "currentHashes": {
+          "package.json": "76ada812a2956538ce5e902af2d4475d1a0465d750bce780aab3806f1d33e3cf",
+          "pnpm-lock.yaml": "7efb6873db8d5349a749ce7b9175b42210986a659731250bb3451e3006673353",
+          ".changeset/config.json": "19305ffe9e541f65436ba32a443e5e4e1c29f732c8db323559109920aeee7bf3",
+          ".prettierrc.json": "b7f83b4be9d97466006aebe064d4681d3cc0420c030dcc02f6b3ff92e0a9081e",
+          ".prettierignore": "dadea660708c19187c391a1d361a1663563bab996063811aacc65563a0710d1e",
+          ".github/workflows/release.yml": "7cf2ef69a695ec6b0cdcb83d81287c9e3af7dd01624fd8c82126e708890a927e",
+          "scripts/release-github.mjs": "62dec773184fdeeaf2c19028c02722a6b8b39f58c44cc70fab806b26e9d6dc19",
+          "Cargo.toml": "abe9374b0597c90be17592960ac104b4be784904c8ed4477648344205ded9d1d",
+          "Cargo.lock": "00884b5e5127fa86ea27c181808e5b800d498e2e123f378abfe749b554b22684",
+          "spec/records/2026-11-16-katex-audit-exception.md": "d3fc34f779e4bdb8d1828820c4f1df2c1726baede7364b666ad45a785c90b86a",
+          "CHANGELOG.md": "84bb62b6ecf3109c228165ed62b13223fefca1291da5addf2dc82a7eb5b82821",
+          ".changeset/plugin-agent-skills.md": "3195575c9c9a050bc306f897061a1df571f9354816c5baf2f478b7600e97b890",
+          ".changeset/server-http-renderer-security.md": "06dff0968873103e48f570a9c5275d0b7799e7b75cc12bd9b8197cdf5d5dd80b"
+        }
+      }
     }
   }
 }
