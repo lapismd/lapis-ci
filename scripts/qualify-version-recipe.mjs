@@ -68,6 +68,12 @@ import {
   verifyCorepackRecipeOutputs,
 } from "./corepack-version-recipe-outputs.mjs";
 import { createRecipeSandbox } from "./version-recipe-sandbox.mjs";
+import {
+  SERVER_CONTRACT,
+  assertServerRecipePlan,
+  snapshotServerRecipe,
+  verifyServerRecipeOutputs,
+} from "./server-version-recipe.mjs";
 
 const root = path.resolve(process.argv[2] ?? "");
 if (!process.argv[2])
@@ -275,6 +281,7 @@ try {
   if (terminalProfile) receipt.preparedReleases = preparedReleases;
   assertDirectRecipePlan(example, changes);
   assertPluginRecipePlan(example, changes);
+  assertServerRecipePlan(example, changes);
   if (corepackProfile) {
     assertCorepackRecipePlan(example, changes);
     receipt.corepackOutputsBefore = await snapshotCorepackRecipeOutputs(
@@ -321,12 +328,29 @@ try {
       example,
       changes,
     );
+  if (example.privateRootContract === SERVER_CONTRACT)
+    receipt.serverOutputsBefore = await snapshotServerRecipe(
+      root,
+      example,
+      changes,
+    );
   await save();
   // This is the unchanged real command, including source metadata sync and
   // the actual Bases compatibility/provenance tests owned by the consumer.
   if (example.qualification.mode === "direct") run(versionCommand, env);
   else run(["release:version"], env);
   for (const args of example.afterVersionChecks ?? []) run(args, env);
+  if (example.privateRootContract === SERVER_CONTRACT)
+    receipt.serverOutputsAfter = await verifyServerRecipeOutputs(
+      root,
+      example,
+      changes,
+      receipt.serverOutputsBefore,
+      readGit(["diff", "--name-only"]).split("\n").filter(Boolean),
+      readGit(["ls-files", "--others", "--exclude-standard"])
+        .split("\n")
+        .filter(Boolean),
+    );
   if (corepackProfile) {
     receipt.corepackOutputsAfter = await verifyCorepackRecipeOutputs(
       root,

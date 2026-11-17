@@ -10,6 +10,7 @@ import {
 import { validateAiRecipeProfile } from "./ai-version-recipe.mjs";
 import { validateDirectRecipeCase } from "./version-recipe-command.mjs";
 import { validatePluginRecipeCase } from "./plugin-version-recipe-outputs.mjs";
+import { validateServerRecipeCase } from "./server-version-recipe.mjs";
 import {
   validateCorepackRecipeProfile,
   COREPACK_RECIPE_PROFILE,
@@ -27,6 +28,7 @@ export function selectRecipeCase(data, name) {
       "lapismd/lapis-plugin-tasks",
       "lapismd/lapis-plugin-docs",
       "lapismd/lapis-plugin-notebook",
+      "lapismd/lapis-server",
       "lapismd/lapis-ai",
       "lapismd/lapis-terminal",
       "lapismd/agent-ui",
@@ -52,6 +54,7 @@ export function selectRecipeCase(data, name) {
     throw Error("Strict peer qualification requires the reviewed Docs policy");
   validateDirectRecipeCase(selected);
   validatePluginRecipeCase(selected);
+  validateServerRecipeCase(selected);
   validateVersionOutputs(selected.versionOutputs ?? []);
   validateTerminalRecipeProfile(selected);
   validateCorepackRecipeProfile(selected);

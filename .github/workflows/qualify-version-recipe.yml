@@ -20,6 +20,7 @@ on:
           - agent-ui-changesets2
           - visual-delta-changesets3-corepack
           - notebook-changesets3
+          - server-changesets3
 
 permissions:
   contents: read

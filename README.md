@@ -149,6 +149,10 @@ Notebook has a [source-owned coordinated version proof](docs/notebook-version-re
 that preserves its runtime identity, six private packages and Node-only version
 command. Hosted whole-recipe qualification is required before guard adoption.
 
+Server has a [private-root version proof](docs/server-version-recipe-qualification.md)
+for its genuine minor-release notes and unchanged Node command. It preserves
+dependency/audit policy and Rust source inputs without publishing a package.
+
 Visual Delta has a separate [Corepack recipe profile](docs/visual-delta-version-recipe-qualification.md)
 for its unchanged version command and root package layout. Its opt-in
 `formatterPolicy: "unconfigured"` binds the absence of formatter configuration
