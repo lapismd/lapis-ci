@@ -113,10 +113,33 @@ test("Node3 cases distinguish historical root evidence from current-tuple valida
       assert.equal(hash, item.closureEvidence.sourceHashes[file]);
   }
   assert.equal(core.historicalNoteSourceSha, undefined);
-  assert.notEqual(core.sourceSha, core.closureEvidence.currentSourceSha);
-  for (const [file, hash] of Object.entries(core.closureEvidence.sourceHashes))
-    if (file !== "package.json")
-      assert.equal(hash, core.closureEvidence.currentHashes[file]);
+  assert.equal(core.sourceSha, core.closureEvidence.currentSourceSha);
+  assert.deepEqual(
+    core.closureEvidence.sourceHashes,
+    core.closureEvidence.currentHashes,
+  );
+  assert.equal(core.closureEvidence.comparison, "exact-current-tuple");
+  assert.equal(
+    core.pending.path,
+    ".changeset/reaction-textual-fallback-names.md",
+  );
+  assert.equal(
+    core.qualification.scripts["release:version"],
+    "changeset version && pnpm install --lockfile-only && node scripts/release-spec-version.mjs --write && prettier package.json CHANGELOG.md --write",
+  );
+  assert.match(
+    core.qualification.files["scripts/release-spec-version.mjs"],
+    /^[a-f0-9]{64}$/,
+  );
+  assert.deepEqual(
+    core.versionOutputs,
+    ["spec/src/architecture.md", "spec/src/packages.md"].map((path) => ({
+      path,
+      kind: "text-marker",
+      packageName: "@lapismd/design-core",
+      marker: "Source package version: `{{version}}` (`@lapismd/design-core`).",
+    })),
+  );
   assert.equal(mira.sourceSha, mira.closureEvidence.currentSourceSha);
   assert.notEqual(mira.sourceSha, mira.historicalNoteSourceSha);
   assert.deepEqual(

@@ -33,10 +33,10 @@
     },
     "core-changesets3": {
       "repository": "lapismd/design-core",
-      "sourceSha": "1c5692bb840cce4e0541a29e5876838f483b6000",
+      "sourceSha": "8952b8e3703f5e2e71145c14f6c05bdaade25ac2",
       "pending": {
-        "path": ".changeset/responsive-shell-focus.md",
-        "sha256": "86fc9149f91a595b37795fdddc2b7209f9e2185b286ccdfa3b65cc4ddff7a0fa"
+        "path": ".changeset/reaction-textual-fallback-names.md",
+        "sha256": "5ad6e5808b46523f52c2b29583205f4894fb08203f8a5eab5861aa14156563f2"
       },
       "qualification": {
         "schemaVersion": 1,
@@ -44,34 +44,59 @@
         "packageManager": "pnpm@10.32.1",
         "configSha256": "e826bad3c0abecc9827fbfdbf0f3db4711f8efa14c8dc29e31123e44d77ae1e5",
         "scripts": {
-          "release:version": "changeset version && pnpm install --lockfile-only && prettier package.json CHANGELOG.md --write"
+          "release:version": "changeset version && pnpm install --lockfile-only && node scripts/release-spec-version.mjs --write && prettier package.json CHANGELOG.md --write"
         },
         "files": {
           ".prettierrc": "a35f5446ca921c8e76779b83c74a85ea7bd0f6b06340c5d6a5445b60d9b1b6b8",
           ".prettierignore": "054e60bae2250959ab812ce8ed6c3a36d5a1c58b4bda4171b07c0fd08178a05b",
-          "pnpm-workspace.yaml": "c2e412313313dccde580d5bcaf9dd9c60749319d1c0df39a1eff65f11297393b"
+          "pnpm-workspace.yaml": "c2e412313313dccde580d5bcaf9dd9c60749319d1c0df39a1eff65f11297393b",
+          "scripts/release-spec-version.mjs": "03a386d8431a503af4d0e40f15287baed5775420852077f6b9138a0d2d78bd56"
         }
       },
       "closureEvidence": {
-        "currentSourceSha": "9cf94b7ce62d679aca77d6d5c65fe84405f086b9",
+        "currentSourceSha": "8952b8e3703f5e2e71145c14f6c05bdaade25ac2",
         "sourceHashes": {
-          "package.json": "555d756b7e0347b55cf6bb73bba2aa5715deb88ce14a39522d3fd648016a3647",
-          "pnpm-lock.yaml": "ca42f7edc61718dd7a7646c93199d2d78164953d208018c186406bb911d588ba",
+          "package.json": "80fdd209ad4ce856e68c3fc5ddb5d60d74859271f7d7c189d5fc190d53be8070",
+          "pnpm-lock.yaml": "41d8405f554d352444bcce704a1d997787712367f29c34bcce17baa803534703",
           ".changeset/config.json": "e826bad3c0abecc9827fbfdbf0f3db4711f8efa14c8dc29e31123e44d77ae1e5",
           ".prettierrc": "a35f5446ca921c8e76779b83c74a85ea7bd0f6b06340c5d6a5445b60d9b1b6b8",
           ".prettierignore": "054e60bae2250959ab812ce8ed6c3a36d5a1c58b4bda4171b07c0fd08178a05b",
-          "pnpm-workspace.yaml": "c2e412313313dccde580d5bcaf9dd9c60749319d1c0df39a1eff65f11297393b"
+          "pnpm-workspace.yaml": "c2e412313313dccde580d5bcaf9dd9c60749319d1c0df39a1eff65f11297393b",
+          "scripts/release-spec-version.mjs": "03a386d8431a503af4d0e40f15287baed5775420852077f6b9138a0d2d78bd56",
+          ".changeset/reaction-textual-fallback-names.md": "5ad6e5808b46523f52c2b29583205f4894fb08203f8a5eab5861aa14156563f2",
+          ".changeset/readable-destructive-alert-descriptions.md": "ba1149bef4a91f09fa488cc6424541d0867522bd691b46d78322951d29b79d79",
+          "spec/src/architecture.md": "05e413cc85cadfe09db7f80eaf1154c7fa6b9abbd7fa0c79227c23c402eb1ac0",
+          "spec/src/packages.md": "7360ab537cb2f9d525dfe98d22731ff42794f1d0f91c985bbdf667af22617a83"
         },
         "currentHashes": {
-          "package.json": "c0e3b78d868269d5f1617bd48541d05b0d8521f14e6312264897fcb23ed4e133",
-          "pnpm-lock.yaml": "ca42f7edc61718dd7a7646c93199d2d78164953d208018c186406bb911d588ba",
+          "package.json": "80fdd209ad4ce856e68c3fc5ddb5d60d74859271f7d7c189d5fc190d53be8070",
+          "pnpm-lock.yaml": "41d8405f554d352444bcce704a1d997787712367f29c34bcce17baa803534703",
           ".changeset/config.json": "e826bad3c0abecc9827fbfdbf0f3db4711f8efa14c8dc29e31123e44d77ae1e5",
           ".prettierrc": "a35f5446ca921c8e76779b83c74a85ea7bd0f6b06340c5d6a5445b60d9b1b6b8",
           ".prettierignore": "054e60bae2250959ab812ce8ed6c3a36d5a1c58b4bda4171b07c0fd08178a05b",
-          "pnpm-workspace.yaml": "c2e412313313dccde580d5bcaf9dd9c60749319d1c0df39a1eff65f11297393b"
+          "pnpm-workspace.yaml": "c2e412313313dccde580d5bcaf9dd9c60749319d1c0df39a1eff65f11297393b",
+          "scripts/release-spec-version.mjs": "03a386d8431a503af4d0e40f15287baed5775420852077f6b9138a0d2d78bd56",
+          ".changeset/reaction-textual-fallback-names.md": "5ad6e5808b46523f52c2b29583205f4894fb08203f8a5eab5861aa14156563f2",
+          ".changeset/readable-destructive-alert-descriptions.md": "ba1149bef4a91f09fa488cc6424541d0867522bd691b46d78322951d29b79d79",
+          "spec/src/architecture.md": "05e413cc85cadfe09db7f80eaf1154c7fa6b9abbd7fa0c79227c23c402eb1ac0",
+          "spec/src/packages.md": "7360ab537cb2f9d525dfe98d22731ff42794f1d0f91c985bbdf667af22617a83"
         },
-        "comparison": "root-own-version-only-difference"
-      }
+        "comparison": "exact-current-tuple"
+      },
+      "versionOutputs": [
+        {
+          "path": "spec/src/architecture.md",
+          "kind": "text-marker",
+          "packageName": "@lapismd/design-core",
+          "marker": "Source package version: `{{version}}` (`@lapismd/design-core`)."
+        },
+        {
+          "path": "spec/src/packages.md",
+          "kind": "text-marker",
+          "packageName": "@lapismd/design-core",
+          "marker": "Source package version: `{{version}}` (`@lapismd/design-core`)."
+        }
+      ]
     },
     "mira-changesets3": {
       "repository": "lapismd/mira-mde",
@@ -98,7 +123,12 @@
       },
       "historicalNoteSourceSha": "42988233a4d68e5ec8c6dfbd2d92e97868a4ad62",
       "afterVersionChecks": [
-        ["exec", "node", "scripts/sync-release-versions.mjs", "--check"]
+        [
+          "exec",
+          "node",
+          "scripts/sync-release-versions.mjs",
+          "--check"
+        ]
       ],
       "closureEvidence": {
         "currentSourceSha": "d681bdd6b9f500a554f18e8ac3c4c9cdfa24eed5",
@@ -493,7 +523,11 @@
         "configSha256": "e23cb92e18b3381ba2137da20ba040f6966e56da226bc04fbcaac6f8d3aa7caf",
         "scripts": {},
         "mode": "direct",
-        "argv": ["exec", "changeset", "version"],
+        "argv": [
+          "exec",
+          "changeset",
+          "version"
+        ],
         "files": {
           "pnpm-workspace.yaml": "685c40cc27d7db8efd1fd331a8688ef6ec1d9ef2a774c8a6e66eaa5ea0474621",
           ".prettierrc.json": "b7f83b4be9d97466006aebe064d4681d3cc0420c030dcc02f6b3ff92e0a9081e",
