@@ -11,6 +11,10 @@ import { fileURLToPath } from "node:url";
 import { versionRecipeCommand } from "./version-recipe-command.mjs";
 import { inspectVersionIntent } from "./version-intent.mjs";
 import { assertFormatterPolicy } from "./versioning-formatter-policy.mjs";
+import {
+  developmentWorkspaceDigest,
+  validateWorkspacePolicy,
+} from "./versioning-workspace-input.mjs";
 
 const keys = (value, names) =>
   value &&
@@ -82,14 +86,15 @@ async function assertNodeProject(root) {
   }
 }
 
-async function digestFile(root, file) {
+async function sourceFile(root, file) {
   if (!safePath(file)) throw Error("Unsafe version qualification path");
   const base = await realpath(root),
     target = await realpath(path.join(base, file));
   if (!target.startsWith(base + path.sep))
     throw Error("Version qualification path escapes its source");
-  return sha256(await readFile(target));
+  return readFile(target);
 }
+const digestFile = async (root, file) => sha256(await sourceFile(root, file));
 
 async function executableFiles(root, directory = "") {
   const files = [];
@@ -128,6 +133,7 @@ export async function guardVersioningInputs(
       "mode",
       "argv",
       "formatterPolicy",
+      "workspacePolicy",
     ]) ||
     qualification.schemaVersion !== 1 ||
     !contracts.versions[qualification.cliVersion]
@@ -204,6 +210,29 @@ export async function guardVersioningInputs(
       throw Error(
         "Version recipe source bytes changed; requalify in its owning source",
       );
+  if (qualification.workspacePolicy !== undefined) {
+    const policy = qualification.workspacePolicy;
+    const { dependency } = validateWorkspacePolicy(policy);
+    if (Object.hasOwn(qualification.files, "pnpm-workspace.yaml"))
+      throw Error("Ambiguous exact and development workspace bindings");
+    const installed = JSON.parse(
+      await readFile(
+        path.join(root, "node_modules", dependency, "package.json"),
+        "utf8",
+      ),
+    );
+    if (
+      developmentWorkspaceDigest(
+        await sourceFile(root, "pnpm-workspace.yaml"),
+        policy,
+        manifest,
+        installed,
+      ) !== policy.sha256
+    )
+      throw Error(
+        "Version workspace policy changed; requalify in its owning source",
+      );
+  }
   const folder = path.join(root, "node_modules/@changesets/cli"),
     contract = contracts.versions[qualification.cliVersion];
   if (

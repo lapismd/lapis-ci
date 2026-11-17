@@ -34,6 +34,50 @@ before its existing App minting step. Supply `working-directory` and
 commit mode, activation and package publication/signing approvals unchanged.
 The actual adoption must pin the helper's reviewed commit, never a branch/tag.
 
+## Optional reviewed development override
+
+An unchanged version recipe may explicitly classify one pinned first-party
+development override as data after owning-source qualification. This avoids
+requiring a manual source rebind for each compatible development patch. The
+default remains exact byte binding; this option does not infer that arbitrary
+development packages are irrelevant to a recipe.
+
+```json
+{
+  "workspacePolicy": {
+    "schemaVersion": 1,
+    "sha256": "SHA256_OF_WORKSPACE_WITH_ONLY_SELECTED_VALUE_REPLACED",
+    "developmentOverride": {
+      "dependency": "@lapismd/design-core",
+      "series": "0.13",
+      "minimumPatch": 4
+    }
+  }
+}
+```
+
+The checked fingerprint is SHA256 over the complete `pnpm-workspace.yaml`
+with only the one literal direct override value replaced by
+`<development-override>`, preserving quotes, comments and every other byte.
+`developmentWorkspaceDigest` in `scripts/versioning-workspace-input.mjs`
+calculates this value after validating the opt-in and current coordinates.
+The actual field must contain64 lowercase hexadecimal characters, not the
+example placeholder. Do not also list that workspace file under `files`.
+All executable recipe files must retain their exact existing bindings.
+
+The selected root development pin and installed package name/version must
+match the one unambiguous direct root override. Runtime/optional dependencies,
+non-exact values, older patches, other major/minor series, prereleases, build
+metadata, malformed/duplicate selectors and any other workspace-byte change
+fail before writer authority. No YAML is evaluated or candidate package code
+imported. Existing Deno/formatter, lifecycle, runtime, CLI byte, frozen install,
+audit, complete candidate CI and no-intent boundaries remain in force.
+
+Qualification must include actual owning-recipe evidence at the selected
+development coordinates; hash normalization alone is not whole-command proof.
+The opt-in is source-owned review data, never an automatic exception for
+otherwise changed settings or dependencies.
+
 ## Optional genuine release intent
 
 `detect-release-intent: "true"` opts the existing action into a read-only
@@ -262,10 +306,10 @@ uses the installed CLI's own `@manypkg/get-packages` dependency and includes
 the root manifest. This supports both a public root package and workspace
 layouts with private adapters without replacing the consumer's selection rules.
 
-| Case               | Exact recipe source                                | Pending-note source                                                                                                                    | Current closure comparison                                                                                                                                                        |
-| ------------------ | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `core-changesets3` | `8952b8e3703f5e2e71145c14f6c05bdaade25ac2` | Genuine `reaction-textual-fallback-names.md` and retained contrast intent at that source | Exact current tuple binds helper, command, lock, canonical input facts, formatter/workspace policy and both notes; hosted qualification pending |
-| `mira-changesets3` | Current `d681bdd6b9f500a554f18e8ac3c4c9cdfa24eed5` | Exact `async-embed-activation.md` from ancestor `42988233a4d68e5ec8c6dfbd2d92e97868a4ad62`, restored only as labelled validation input | Current lock/root manifest, all workspace manifests, editor version input, workspace/formatter/config and both local helper modules are explicitly SHA256-bound                   |
+| Case               | Exact recipe source                                | Pending-note source                                                                                                                    | Current closure comparison                                                                                                                                      |
+| ------------------ | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `core-changesets3` | `8952b8e3703f5e2e71145c14f6c05bdaade25ac2`         | Genuine `reaction-textual-fallback-names.md` and retained contrast intent at that source                                               | Exact current tuple binds helper, command, lock, canonical input facts, formatter/workspace policy and both notes; hosted qualification pending                 |
+| `mira-changesets3` | Current `d681bdd6b9f500a554f18e8ac3c4c9cdfa24eed5` | Exact `async-embed-activation.md` from ancestor `42988233a4d68e5ec8c6dfbd2d92e97868a4ad62`, restored only as labelled validation input | Current lock/root manifest, all workspace manifests, editor version input, workspace/formatter/config and both local helper modules are explicitly SHA256-bound |
 
 Both cases retain CLI3.0.3, pnpm10.32.1 and their actual commands/configuration.
 Core's command prepares its public root package, refreshes the lock, updates

@@ -133,6 +133,12 @@ script wrapper; absent mode retains the existing `release:version` contract. New
 inputs, unreviewed CLI versions and root/ancestor Deno formatter declarations
 require owning-source requalification.
 
+An explicit `workspacePolicy` opt-in may treat one reviewed first-party
+development override as patch data. It fingerprints all other workspace bytes
+and requires the exact manifest pin, installed package and direct override to
+agree within the reviewed series/minimum patch. Other settings and every
+executable/configuration binding remain guarded; see the runtime contract.
+
 This is a bounded input guard, not proof that arbitrary scripts or transitive
 dependencies are portable. Actual whole-recipe qualification remains separate.
 The manual main-only `qualify-version-recipe.yml` workflow selects reviewed
