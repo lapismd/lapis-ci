@@ -95,6 +95,66 @@ test("release intent is opt-in and cannot run before qualified input acceptance"
   await assert.rejects(run(f.qualification, "true"), /flag/);
 });
 
+test("reviewed development patch data preserves every other runtime input binding", async (t) => {
+  const f = await fixture(t);
+  const dependency = "@lapismd/design-core";
+  const workspace =
+    'packages: ["packages/*"]\noverrides:\n  "@lapismd/design-core": "0.13.4"\n  typescript: "5.9.3"\n';
+  f.qualification.workspacePolicy = {
+    schemaVersion: 1,
+    sha256: hash(workspace.replace('"0.13.4"', '"<development-override>"')),
+    developmentOverride: { dependency, series: "0.13", minimumPatch: 4 },
+  };
+  const manifestPath = path.join(f.root, "package.json");
+  const manifest = JSON.parse(await readFile(manifestPath));
+  manifest.devDependencies = { [dependency]: "0.13.4" };
+  const installed = path.join(f.root, "node_modules/@lapismd/design-core");
+  await mkdir(installed, { recursive: true });
+  const select = async (version) => {
+    manifest.devDependencies[dependency] = version;
+    await writeFile(manifestPath, JSON.stringify(manifest));
+    await writeFile(
+      path.join(installed, "package.json"),
+      JSON.stringify({ name: dependency, version }),
+    );
+    await writeFile(
+      path.join(f.root, "pnpm-workspace.yaml"),
+      workspace.replace('"0.13.4"', JSON.stringify(version)),
+    );
+  };
+  const run = () =>
+    guardVersioningInputs(f.root, f.qualification, f.contracts, "24.15.0");
+  await select("0.13.4");
+  assert.equal((await run()).version, "2.31.1");
+  await select("0.13.5");
+  assert.equal((await run()).version, "2.31.1");
+  assert.equal(
+    (
+      await guardVersioningWithIntent(
+        f.root,
+        f.qualification,
+        f.contracts,
+        true,
+        "24.15.0",
+        async () => false,
+      )
+    ).hasChangesets,
+    false,
+  );
+  await writeFile(
+    path.join(f.root, "pnpm-workspace.yaml"),
+    workspace.replace('"0.13.4"', '"0.13.5"').replace('"5.9.3"', '"5.9.4"'),
+  );
+  await assert.rejects(run(), /workspace policy changed/);
+  await select("0.13.4");
+  f.qualification.files["pnpm-workspace.yaml"] = hash(workspace);
+  await assert.rejects(run(), /Ambiguous exact and development workspace/);
+  delete f.qualification.workspacePolicy;
+  assert.equal((await run()).version, "2.31.1");
+  await select("0.13.5");
+  await assert.rejects(run(), /source bytes changed/);
+});
+
 test("planner errors, nonboolean results and source drift never admit publication", async (t) => {
   const f = await fixture(t);
   const run = (inspect) =>
