@@ -264,16 +264,20 @@ layouts with private adapters without replacing the consumer's selection rules.
 
 | Case               | Exact recipe source                                | Pending-note source                                                                                                                    | Current closure comparison                                                                                                                                                        |
 | ------------------ | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `core-changesets3` | `1c5692bb840cce4e0541a29e5876838f483b6000`         | Genuine `responsive-shell-focus.md` at that source                                                                                     | Current `9cf94b7ce62d679aca77d6d5c65fe84405f086b9`: root manifest differs only in its own version0.13.3→0.13.4; lock, command, config, formatter and workspace policy bytes match |
+| `core-changesets3` | `8952b8e3703f5e2e71145c14f6c05bdaade25ac2` | Genuine `reaction-textual-fallback-names.md` and retained contrast intent at that source | Exact current tuple binds helper, command, lock, canonical input facts, formatter/workspace policy and both notes; hosted qualification pending |
 | `mira-changesets3` | Current `d681bdd6b9f500a554f18e8ac3c4c9cdfa24eed5` | Exact `async-embed-activation.md` from ancestor `42988233a4d68e5ec8c6dfbd2d92e97868a4ad62`, restored only as labelled validation input | Current lock/root manifest, all workspace manifests, editor version input, workspace/formatter/config and both local helper modules are explicitly SHA256-bound                   |
 
 Both cases retain CLI3.0.3, pnpm10.32.1 and their actual commands/configuration.
-Core's command prepares its public root package, refreshes the lock and formats
-the root manifest/changelog. Mira's command additionally runs its existing
+Core's command prepares its public root package, refreshes the lock, updates
+only the current version facts in Architecture/Packages and formats the root
+manifest/changelog. Mira's command additionally runs its existing
 `sync-release-versions.mjs --write` and existing formatter globs. The fixture
 then invokes the same source helper's `--check` to verify editor metadata.
-Hashes live in `version-recipe-cases.json`, including the different raw Core
-root-manifest hashes; no equivalence is inferred from source CI alone.
+Hashes live in `version-recipe-cases.json`; both Core canonical facts must
+match the old version before mutation and actual prepared version afterward.
+The earlier root-version-only closure remains historical evidence; its proof
+does not qualify the new helper or command. Hosted qualification of the exact
+new tuple and generated-candidate strict coverage are required before adoption.
 
 Mira's current three maintenance notes have empty release maps. Its historical
 note cannot qualify an older dependency graph for current adoption. Instead,
