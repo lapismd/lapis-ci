@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import {
@@ -198,7 +199,11 @@ export async function runDevelopmentAudit({
   }
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (
+  process.argv[1] &&
+  (await realpath(process.argv[1]).catch(() => null)) ===
+    fileURLToPath(import.meta.url)
+) {
   const root = path.resolve(
     process.env.GITHUB_WORKSPACE ?? process.cwd(),
     process.env.LAPIS_AUDIT_WORKING_DIRECTORY ?? ".",

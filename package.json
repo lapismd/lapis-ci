@@ -17,5 +17,13 @@
     "image:build:amd64": "docker buildx build --load --platform linux/amd64 --tag lapismd/lapis-ci:candidate-amd64 .",
     "image:build:arm64": "docker buildx build --load --platform linux/arm64 --tag lapismd/lapis-ci:candidate-arm64 .",
     "image:smoke": "docker run --rm lapismd/lapis-ci:candidate node /usr/local/share/lapis-ci/verify-image.mjs"
-  }
+  },
+  "bin": {
+    "lapis-development-audit": "scripts/run-development-audit.mjs"
+  },
+  "files": [
+    "scripts/run-development-audit.mjs",
+    "scripts/development-audit.mjs",
+    "scripts/development-audit-scope.mjs"
+  ]
 }

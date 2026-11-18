@@ -38,6 +38,38 @@ and registry collection, the runner revalidates the clean graph, dependency
 source, manifest, lockfile, policy and decision-record bytes. Approval expiry
 is checked at that final decision time; collection cannot extend its lifetime.
 
+## Explicit multi-path development decisions
+
+Schema1 retains its existing single LOW/seven-day contract and conservative
+successor rule unchanged. Schema2 MAY contain up to four distinct exact path
+approvals, with at most one LOW. HIGH entries MUST use `explicit-user`
+authority, last at most 48 hours, and bind the same complete repository,
+dependency-source, manifest, lock, version, path, severity and decision-record
+identities as LOW. MODERATE, CRITICAL and unknown severities remain unsupported.
+No shared code change constitutes approval; an empty approvals array continues
+to block every finding.
+
+A HIGH entry MUST have an exact advisory range of the form `<=X.Y.Z`, with its
+approved version at or below that stable ceiling and no recorded patch. The
+fresh audit MUST retain exactly that range. Every approved installed version
+and the ceiling MUST exist in fresh official npm metadata. Any stable successor
+above that ceiling blocks for review immediately, including before a patched
+range is recorded. Existing newer versions still inside the known vulnerable
+range do not constitute a fix or broaden the approved path/version scope.
+Duplicate approval identities and any unmatched finding remain blocking. Raw
+counts continue to count finding groups, including multiple versions inside
+one advisory object; individual paths remain independently matched.
+
+The same reviewed source MUST be callable by both the composite action and a
+private source-distributed `lapis-development-audit` executable. A consumer MAY
+use the public GitHub package pinned to an immutable 40-character commit with
+pnpm build scripts disabled. This installs only the dependency-free tool in an
+ephemeral execution environment; it MUST NOT alter the consumer's dependency
+manifest or lock, install its dependencies, retrieve credentials, or require an
+image rebuild. The source CLI keeps Node24 and exact caller-pnpm checks and
+fails closed on unavailable source/evidence. This does not publish an npm
+package or change toolchain image contents.
+
 ## Every other finding remains fatal
 
 - Both commands must return complete legacy pnpm JSON, consistent per-severity
@@ -46,7 +78,7 @@ is checked at that final decision time; collection cannot extend its lifetime.
 - Production must have no findings at any severity. The approved path's first
   hop must be a declared root development dependency; a direct production,
   optional or peer exposure of that hop or affected package blocks admission.
-- Each full finding must match the sole approval and every source/graph/time
+- Each full finding must match its exact approval and every source/graph/time
   binding. Additional paths, versions, findings, changed metadata or expired/
   future approval block. No package-wide or severity-wide ignore is emitted.
 - Fix metadata comes only from the official public npm registry and is never
@@ -102,3 +134,24 @@ Node24 source suite passes72 tests; no image or toolchain input changed.
 
 A separate regression reproduces untracked graph admission before the repair;
 initial and late status checks now reject untracked or ignored graph inputs.
+
+## Schema2 implementation evidence
+
+The two-version/one-advisory positive regression initially failed while strict
+schema1 rejected all HIGH entries. The bounded schema2 evaluator now retains
+that original LOW contract and passes the complete raw group/path accounting,
+explicit authority, exact48-hour boundary, source/hash drift, duplicate/extra/
+missing path, production, suppression, fix/range/successor and mixed LOW/HIGH
+controls. The same private CLI runs through a package-manager symlink and
+rejects unavailable source metadata rather than silently exiting successfully.
+No repository policy is activated by this implementation.
+
+The actual packed CLI was also run with build scripts disabled against the
+isolated, frozen Docs source `b9d3dace06f6eab9e72ac265c2b926f9cad9a2cc`.
+With schema2 `approvals: []` it returned exit1/unapproved-finding, retained the
+complete raw full audit (one HIGH) and production audit (zero findings), and
+reported exact source/manifest/lock hashes. No finding was suppressed or
+approved. The earlier immutable Mira probe failed closed before audit because
+its private root omitted repository identity; that source metadata prerequisite
+must be fixed by Mira before adoption. The final full source suite passes309
+cases, actionlint and formatter; no image or tool version changes.

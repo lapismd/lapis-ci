@@ -1,8 +1,14 @@
+import {
+  stable,
+  isNewer,
+  validDevelopmentScope,
+  uniqueDevelopmentApprovals,
+  developmentSuccessorFloor,
+} from "./development-audit-scope.mjs";
 const levels = ["info", "low", "moderate", "high", "critical"];
 const sha = /^[a-f0-9]{40}$/;
 const digest = /^[a-f0-9]{64}$/;
 const name = /^(?:@[a-z0-9_.-]+\/)?[a-z0-9_.-]+$/;
-const stable = /^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)$/;
 const keys = (object, allowed) =>
   object &&
   typeof object === "object" &&
@@ -35,10 +41,11 @@ const publicFinding = (finding) => ({
 export function validateDevelopmentPolicy(policy) {
   if (
     !keys(policy, ["schemaVersion", "repository", "approvals"]) ||
-    policy.schemaVersion !== 1 ||
+    ![1, 2].includes(policy.schemaVersion) ||
     !/^lapismd\/[a-z0-9-]+$/.test(policy.repository ?? "") ||
     !Array.isArray(policy.approvals) ||
-    policy.approvals.length > 1
+    policy.approvals.length > (policy.schemaVersion === 1 ? 1 : 4) ||
+    !uniqueDevelopmentApprovals(policy.approvals)
   )
     throw Error("Unsupported development audit policy");
   for (const entry of policy.approvals) {
@@ -65,7 +72,7 @@ export function validateDevelopmentPolicy(policy) {
       ) ||
       !name.test(entry.package ?? "") ||
       !stable.test(entry.version ?? "") ||
-      entry.severity !== "low" ||
+      !validDevelopmentScope(entry, policy.schemaVersion) ||
       entry.scope !== "development-only" ||
       !dependencyPath(entry.path) ||
       entry.path.split(">").at(-1) !== entry.package ||
@@ -79,9 +86,6 @@ export function validateDevelopmentPolicy(policy) {
       !timestamp(entry.approvedAt) ||
       !timestamp(entry.expiresAt) ||
       Date.parse(entry.expiresAt) <= Date.parse(entry.approvedAt) ||
-      Date.parse(entry.expiresAt) - Date.parse(entry.approvedAt) >
-        7 * 86400000 ||
-      !["delegated-operator", "explicit-user"].includes(entry.authority) ||
       !relative(entry.record) ||
       !entry.record.startsWith("spec/records/") ||
       !entry.record.endsWith(".md")
@@ -164,13 +168,6 @@ export function parseAuditEvidence(audit) {
   return findings;
 }
 
-function isNewer(candidate, approved) {
-  const a = candidate.split(".").map(BigInt),
-    b = approved.split(".").map(BigInt);
-  for (let i = 0; i < 3; i++) if (a[i] !== b[i]) return a[i] > b[i];
-  return false;
-}
-
 /** Bounded development graph acceptance, never a source/workflow security analysis. */
 export function evaluateDevelopmentAudit({
   full,
@@ -217,6 +214,18 @@ export function evaluateDevelopmentAudit({
         status: "clean",
         retired: policy.approvals.map(publicFinding),
       };
+    if (
+      policy.approvals.some(
+        (entry) =>
+          entry.severity === "high" &&
+          !findings.some((finding) =>
+            ["advisory", "package", "version", "path", "severity"].every(
+              (key) => entry[key] === finding[key],
+            ),
+          ),
+      )
+    )
+      return { ...result, ...blocked("approved-finding-missing") };
     for (const finding of findings) {
       const entry = policy.approvals.find((a) =>
         ["advisory", "package", "version", "path", "severity"].every(
@@ -261,12 +270,14 @@ export function evaluateDevelopmentAudit({
         registry.versions[finding.version]?.version !== finding.version
       )
         return { ...result, ...blocked("fix-metadata-unavailable") };
+      const floor = developmentSuccessorFloor(entry, registry);
+      if (!floor) return { ...result, ...blocked("fix-metadata-unavailable") };
       // A successor is conservatively held for review even before an advisory
       // database learns whether it fixes this finding; never wait out a fix.
       if (
         Object.keys(registry.versions)
           .filter((version) => stable.test(version))
-          .some((version) => isNewer(version, finding.version))
+          .some((version) => isNewer(version, floor))
       )
         return {
           ...result,

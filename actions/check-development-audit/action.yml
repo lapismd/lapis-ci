@@ -1,5 +1,5 @@
 name: Check exact development advisory admission
-description: Preserve raw full/production audits and permit only a reviewed expiring development LOW against exact source and graph bindings.
+description: Preserve raw full/production audits and permit only reviewed expiring development decisions against exact source and graph bindings.
 inputs:
   working-directory:
     description: Repository root relative to the workspace.
