@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { withInstallDiagnostics } from "./registry-install-diagnostics.mjs";
 
 export function registryFailure(code, message, details = {}) {
   return Object.assign(new Error(`${code}: ${message}`), { code, ...details });
@@ -88,10 +89,14 @@ export function runInstallCommand(
       if (stopped) return reject(stopped);
       if (code === 0) return resolve({ stdout, stderr });
       reject(
-        registryFailure(
-          "REGISTRY_INSTALL_FAILED",
-          "Package-manager install failed",
-          { stdout, stderr, exitCode: code, signal },
+        withInstallDiagnostics(
+          registryFailure(
+            "REGISTRY_INSTALL_FAILED",
+            "Package-manager install failed",
+            { exitCode: code, signal },
+          ),
+          stdout,
+          stderr,
         ),
       );
     });

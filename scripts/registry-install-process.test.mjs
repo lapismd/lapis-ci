@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { inspect } from "node:util";
 import { execFileSync } from "node:child_process";
 import {
   mkdtemp,
@@ -13,11 +14,11 @@ import { tmpdir } from "node:os";
 import test from "node:test";
 import { runInstallCommand } from "./registry-install-process.mjs";
 
-async function fakeManager(t, program) {
+async function fakeManager(t, program, manager = "npm") {
   const cwd = await mkdtemp(path.join(tmpdir(), "registry-process-")),
     bin = path.join(cwd, "bin");
   await mkdir(bin);
-  const executable = path.join(bin, "npm");
+  const executable = path.join(bin, manager);
   await writeFile(executable, `#!${process.execPath}\n${program}\n`);
   await chmod(executable, 0o755);
   t.after(() => rm(cwd, { recursive: true, force: true }));
@@ -80,5 +81,49 @@ test("real output bounds terminate the owned installer instead of collecting unb
   await assert.rejects(
     runInstallCommand("npm", ["install"], { ...f, timeoutMs: 5000 }),
     { code: "REGISTRY_INSTALL_OUTPUT_LIMIT" },
+  );
+});
+
+test("a terminal pnpm error remains visible after a large progress prefix", async (t) => {
+  const event = {
+    level: "error",
+    name: "pnpm",
+    code: "ERR_PNPM_FETCH_404",
+    package: {
+      name: "@lapis-notes/api",
+      version: "0.6.9",
+      bareSpecifier: "0.6.9",
+    },
+    request: {
+      url: "https://user:secret@registry.npmjs.org/@lapis-notes/api/-/api-0.6.9.tgz?token=secret#secret",
+    },
+    authorization: "Bearer secret",
+  };
+  const f = await fakeManager(
+    t,
+    `process.stdout.write(JSON.stringify({level:'debug',name:'pnpm:progress',data:'x'.repeat(20000)})+String.fromCharCode(10)+JSON.stringify(${JSON.stringify(event)})+String.fromCharCode(10));process.exitCode=1;`,
+    "pnpm",
+  );
+  await assert.rejects(
+    runInstallCommand("pnpm", ["install"], { ...f, timeoutMs: 5000 }),
+    (error) => {
+      assert.equal(error.code, "REGISTRY_INSTALL_FAILED");
+      const printed = inspect(error);
+      assert(
+        printed.includes("ERR_PNPM_FETCH_404"),
+        "terminal error must survive default Node inspection",
+      );
+      assert(printed.includes("@lapis-notes/api"));
+      assert(
+        !printed.includes("secret"),
+        "failure rendering must redact credentials and tokens",
+      );
+      assert(printed.length < 12000);
+      assert(
+        error.stdout.includes("secret"),
+        "original bounded bytes remain available only to the unchanged classifier",
+      );
+      return true;
+    },
   );
 });
