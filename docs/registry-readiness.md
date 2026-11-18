@@ -33,6 +33,15 @@ cannot bypass the owner's absolute deadline. Metadata bodies are capped at4MiB;
 combined process diagnostics at8MiB. Each report includes UTC time, deadline,
 phase, exact candidate identities, attempt count and elapsed budget.
 
+Failed installs expose a bounded JSON projection of the last four typed terminal
+errors: code, package/version/exact specifier, and HTTP URL without credentials,
+query or fragment. Arbitrary messages, headers, environment and local paths are
+not rendered. The original bounded stdout/stderr remain non-enumerable inputs
+to the unchanged strict classifier; diagnostic projection cannot admit retries.
+The projection stays visible through default Node error inspection after large
+progress output. [Qualification](registry-install-diagnostics-qualification.md)
+keeps the actual Notes publication failure distinct from later controls.
+
 ## Source-pinned integration
 
 Use `lapismd/lapis-ci/actions/setup-registry-readiness` at the reviewed immutable
